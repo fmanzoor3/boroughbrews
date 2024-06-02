@@ -1,0 +1,37 @@
+data-chairs="unknown" data-safe="unknown" data-social-table="high" data-welcoming="unknown" data-owner-approved="unknown" data-staff="unknown"  data-smoke-free="unknown" data-morning="unknown" data-afternoon="unknown" data-evening="unknown" data-night="unknown" data-capacity="medium" data-affordable="unknown" data-music="unknown" data-i-like-it="high" data-independent="unknown" data-outdoor-sockets="unknown" data-free-entry="unknown" data-score="84" href="/london/thingy-cafe" style="order: 33;">
+
+Data:
+-name
+-address
+-maps_url
+-location (from maps)
+-img_url
+-opening hours
+
+-wifi
+-sockets
+-long-stay
+-tables
+-quiet
+-calls
+-vibe (work/focused vibe)
+-groups
+-coffee
+-food
+-veggie
+-alcohol
+-cards
+-light
+-outdoor
+-spacious
+-toilets
+-access
+-a/c
+-smoke-free
+-pets
+-parking
+
+-user_scores
+-score
+
+link to a second database to keep track of users reviews of each cafe; relational databases (see day 69)

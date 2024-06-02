@@ -1,0 +1,333 @@
+{% include "header.html" %}
+
+<div class="container-fluid" id="location">
+    <div class="row">
+    <div id="places-title">
+    <div class="position-relative d-lg-none my-2" id="filter-commands">
+    <button class="btn btn-default d-md-none" data-show="#places-filters" data-toggle="button" type="button">
+    <i class="fa fa-fw fa-filter"></i>
+    <span></span>
+    </button>
+    <button class="btn btn-default d-md-none" data-show="#places-map" data-toggle="button" id="places-map-button" type="button">
+    <i class="fa fa-fw fa-map"></i>
+    <span></span>
+    </button>
+    </div>
+    {%if all_cafes%}
+    <h1 class="px-3 offset-lg-3 offset-md-4 col-lg-5 col-md-8">{{all_cafes[0].cafe.location}}</h1>
+    </div>
+    <!-- Places Filters -->
+    <div class="position-relative col-lg-3 col-md-4 d-md-block" id="places-filters">
+    <h2 class="d-none d-md-block">
+    Filters
+    <span id="filters-count"></span>
+    </h2>
+    <div class="filters">
+    <h3>My Places</h3>
+    <div class="row no-gutters">
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-action="liked" data-toggle="button" disabled="">
+    <div data-content="Please log in to use this feature." data-original-title="Warning" data-template="<div class='popover low-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-toggle="popover">
+    <i class="fa fa-heart"></i>
+    <br>
+    <span title="Liked">Liked</span>
+    </div>
+    </button>
+    </div>
+    </div>
+    <h3>Productivity</h3>
+    <div class="row no-gutters">
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="wifi" data-toggle="button">
+    <i class="fa fa-fw fa-wifi"></i>
+    <br>
+    <span title="Stable Wi-Fi">
+    Wi-Fi
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="sockets" data-toggle="button">
+    <i class="fa fa-fw fa-plug"></i>
+    <br>
+    <span title="Power sockets">
+    Sockets
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="long-stay" data-toggle="button">
+    <i class="fa fa-fw fa-user-clock"></i>
+    <br>
+    <span title="Long stays">
+    Long stays
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="tables" data-toggle="button">
+    <i class="fa fa-fw fa-pen-square"></i>
+    <br>
+    <span title="Work-friendly tables">
+    Tables
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="quiet" data-toggle="button">
+    <i class="fa fa-fw fa-volume-down"></i>
+    <br>
+    <span title="Quiet">
+    Quiet
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="skype" data-toggle="button">
+    <i class="fa fa-fw fa-headset"></i>
+    <br>
+    <span title="Video/audio calls">
+    Calls
+    </span>
+    </button>
+    </div>
+    </div>
+    
+    <h3>Community</h3>
+    <div class="row no-gutters">
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="lf-vibe" data-toggle="button">
+    <i class="fa fa-fw fa-laptop"></i>
+    <br>
+    <span title="People working">
+    Work vibe
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="social-table" data-toggle="button">
+    <i class="fa fa-fw fa-users"></i>
+    <br>
+    <span title="Group tables">
+    Groups
+    </span>
+    </button>
+    </div>
+    </div>
+    
+    <h3>Service</h3>
+    <div class="row no-gutters">
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="coffee" data-toggle="button">
+    <i class="fa fa-fw fa-coffee"></i>
+    <br>
+    <span title="Coffee">
+    Coffee
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="food" data-toggle="button">
+    <i class="fa fa-fw fa-utensils"></i>
+    <br>
+    <span title="Food">
+    Food
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="veggie" data-toggle="button">
+    <i class="fa fa-fw fa-leaf"></i>
+    <br>
+    <span title="Veggie">
+    Veggie
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="alcohol" data-toggle="button">
+    <i class="fa fa-fw fa-glass-martini"></i>
+    <br>
+    <span title="Alcohol">
+    Alcohol
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="credit-cards" data-toggle="button">
+    <i class="fa fa-fw fa-credit-card"></i>
+    <br>
+    <span title="Credit cards">
+    Cards
+    </span>
+    </button>
+    </div>
+    </div>
+    
+    <h3>Space</h3>
+    <div class="row no-gutters">
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="light" data-toggle="button">
+    <i class="fa fa-fw fa-sun"></i>
+    <br>
+    <span title="Natural light">
+    Light
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="outdoor" data-toggle="button">
+    <i class="fa fa-fw fa-tree"></i>
+    <br>
+    <span title="Outdoor area">
+    Outdoor
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="capacity" data-toggle="button">
+    <i class="fa fa-fw fa-arrows-alt"></i>
+    <br>
+    <span title="Spacious">
+    Spacious
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="toilet" data-toggle="button">
+    <i class="fa fa-fw fa-toilet-paper"></i>
+    <br>
+    <span title="Restroom">
+    Restroom
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="accessible" data-toggle="button">
+    <i class="fa fa-fw fa-wheelchair"></i>
+    <br>
+    <span title="Accessible">
+    Accessible
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="ac" data-toggle="button">
+    <i class="fa fa-fw fa-thermometer-half"></i>
+    <br>
+    <span title="Air conditioned">
+    A/C
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="pet-friendly" data-toggle="button">
+    <i class="fa fa-fw fa-dog"></i>
+    <br>
+    <span title="Pet friendly">
+    Pets
+    </span>
+    </button>
+    </div>
+    <div class="col-3 col-xl-3 col-lg-4 py-1">
+    <button class="btn btn-filter" data-criteria="parking" data-toggle="button">
+    <i class="fa fa-fw fa-car"></i>
+    <br>
+    <span title="Parking">
+    Parking
+    </span>
+    </button>
+    </div>
+    </div>
+    
+    </div>
+    
+    </div>
+    <!-- Places List -->
+    <div class="offset-lg-3 offset-md-4 col-lg-5 col-md-8 order-2" id="places-list">
+    <p>The best work and study-friendly cafes, restaurants, libraries, and hotel lobbies in {{all_cafes[0].cafe.location}}. Find venues with free and reliable Wi-Fi hotspots, ample power sockets, and comfy seating areas.</p>
+    {%endif%}
+    <!-- Vibes -->
+    
+    <!-- List -->
+    <h2 data-places="275" id="best_match">{{all_cafes|length}} Work-Friendly Places</h2>
+    <div class="list">
+    <!-- LaptopFriendly Hubs -->
+    <!-- All Places -->
+    {%for cafe in all_cafes%}
+    <a id={{cafe.slugged_name}} class="place" data-wifi="high" data-sockets="low" data-long-stay="high" data-light="low" data-quiet="high" data-skype="medium" data-lf-vibe="medium" data-ac="low" data-tables="medium" data-chairs="unknown" data-safe="unknown" data-social-table="medium" data-welcoming="unknown" data-owner-approved="unknown" data-food="medium" data-credit-cards="high" data-staff="unknown" data-parking="medium" data-accessible="high" data-smoke-free="unknown" data-outdoor="low" data-pet-friendly="high" data-morning="unknown" data-afternoon="unknown" data-evening="unknown" data-night="unknown" data-capacity="medium" data-affordable="unknown" data-music="unknown" data-coffee="high" data-alcohol="low" data-veggie="medium" data-i-like-it="high" data-independent="unknown" data-toilet="high" data-outdoor-sockets="unknown" data-score="65" href="/{{location_slug}}/{{cafe.slugged_name}}" style="order: 124;"><div class="card-img-top">
+    <img alt={{cafe.cafe.name}} src={{cafe.cafe.img_url}}>
+    </div>
+    <div class="card-body">
+    <h3 class="card-title">{{cafe.cafe.name}}</h3>
+    <p class="card-text">
+    <i class="fa fa-location-arrow"></i>
+    Address
+    </p>
+    <div class="active-filters"></div>
+    </div>
+    </a>
+    {%endfor%}
+    </div>
+    <!-- Suggest a Place -->
+    <a id="suggest_link" class="suggest" href="/suggest"><div class="card-img-top">
+    <i class="fa fa-plus-circle fa-4x"></i>
+    <img src="/static/assets/gray-place-d2bdb4477600e061c01bd816cc0f2ef0cfcb1ca9e3ad78868dd16fb2af073a21.png">
+    </div>
+    <div class="card-body">
+    <h3 class="card-title">Suggest a Venue</h3>
+    <p class="card-text">Work from your neighborhood</p>
+    </div>
+    </a>
+    </div>
+    <!-- Places Map -->
+    <script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}"></script>
+    <div id="map-container">
+    <div id="map"></div>
+  </div>
+  <script>
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 51.5074, lng: -0.1278}, // London coordinates
+          zoom: 10,
+          disableDefaultUI: true, // Disable default UI controls
+          zoomControl: true, // Enable zoom control
+          scaleControl: true, // Enable scale control
+          mapTypeControl: false // Disable map type controls
+        });
+  
+        // Array of locations in London with their coordinates
+        var locations = [
+          {lat: 51.5074, lng: -0.1278, name: 'London Bridge'},
+          {lat: 51.5074, lng: -0.118092, name: 'Tower Bridge'},
+          {lat: 51.5081, lng: -0.0761, name: 'The O2 Arena'}
+          // Add more locations as needed
+        ];
+  
+        // Loop through the locations array and add markers
+        locations.forEach(function(location) {
+          var marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            title: location.name // Marker title
+          });
+  
+          var infowindow = new google.maps.InfoWindow({
+            content: location.name
+          });
+  
+          // Add event listeners to show and hide the info window for each marker
+          marker.addListener('mouseover', function() {
+            infowindow.open(map, this);
+          });
+  
+          marker.addListener('mouseout', function() {
+            infowindow.close();
+          });
+        });
+      }
+
+    window.onload = function() {
+      initMap();
+    };
+  </script>

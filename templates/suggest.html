@@ -1,0 +1,127 @@
+{% include "header.html" %}
+
+<!-- Suggest section -->
+<div id="suggest">
+    <div class="container">
+    <div class="row">
+    <div class="col-md-7 col-sm-10">
+    <h1>Add new Place</h1>
+    <p>Let freelancers, digital nomads, and other remote workers know about a new work-friendly venue!</p>
+    <!-- <form class="new_place" id="new_place" enctype="multipart/form-data" action="{{ url_for('suggest') }}" accept-charset="UTF-8" method="post"> -->
+    <form id="search_location" action="{{ url_for('suggests') }}" method="POST">
+    <section class="pt-0" id="step1">
+    <div class="form-group">
+    <label>
+    <h2>1. Search for the venue</h2>
+    </label>
+    <input name="location", class="form-control pac-target-input" id="geocomplete" type="text" placeholder="Enter a location" autocomplete="off">
+    <input type="hidden" name="place" id="place">
+    <!-- Google Autocomplete API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&libraries=places&callback=initAutocomplete" async defer></script>
+    <script src="/static/js/scripts.js"></script>
+    <input data-geo="place_id" autocomplete="off" type="hidden" name="place[google_place_gid]" id="place_google_place_gid">
+    </div>
+    </section>
+    {%if False%}
+    <section class="pt-0" id="step_exists">
+    <h3>
+    This place is already listed! Check it out
+    <a class="text-primary" href="false">here</a>
+    </h3>
+    </section>
+    {%endif%}
+    <section class="pt-0" id="step2" style="display: none;">
+    <div class="form-group">
+    <label>
+    <h2>2. Check the location</h2>
+    </label>
+</div>
+    <div id="geocomplete-map" style="height: 250px; width: 650px"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&libraries=places&callback=initMap" async defer></script>
+    <div class="form-group">
+    <label>
+    <h2>3. Choose a photo</h2>
+    </label>
+    <select class="image-picker show-html" name="place[google_photo]" id="place_google_photo" style="display: none;"></select>
+    <ul class="thumbnails image_picker_selector"></ul>
+    </div>
+    </section>
+    <!-- Basic venue information -->
+    <section class="pt-0 fade-in" id="step3" style="display: none;">
+    <h2>Venue Information</h2>
+    <!-- General -->
+    <div class="form-group">
+    <label>Name</label>
+    <input required="required" data-geo="name" class="form-control" type="text" name="place[name]" id="place_name">
+    </div>
+    <!-- Location -->
+    <div class="form-group">
+    <label>Street</label>
+    <input autocomplete="off" type="hidden" name="place[location][street_number]" id="place_location_street_number">
+    <input required="required" class="form-control" type="text" name="place[location][address]" id="place_location_address">
+    </div>
+    <input data-geo="postal_code" autocomplete="off" type="hidden" name="place[location][postal_code]" id="place_location_postal_code">
+    <input value="0" data-geo="lat" autocomplete="off" type="hidden" name="place[location][lat]" id="place_location_lat">
+    <input value="0" data-geo="lng" autocomplete="off" type="hidden" name="place[location][lng]" id="place_location_lng">
+    <div class="hidden" id="gmaps_info"></div>
+    </section>
+    <section id="controls" style="display: none;">
+    <div class="row">
+    <div class="col-6"><a name="button" type="button" class="col btn btn-lg btn-large btn-default" rel="retry" href="{{ url_for('suggest') }}">Retry</a></div>
+    <div class="col-6"><a name="button" type="submit" class="col btn btn-lg btn-large btn-warning" rel="next" id="nextButton">Next</a></div>
+    <script>
+      let currentStep = 1;
+      const form = document.getElementById("search_location");
+      document.getElementById("nextButton").addEventListener("click", function(event) {
+        if (currentStep === 1) {
+            event.preventDefault();
+            // Code to show the next part of the form
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'none';
+            var step3=document.getElementById('step3');
+            setTimeout(function() {
+                step3.style.display = '';
+                setTimeout(function() {
+                  step3.classList.add('visible');
+                }, 50); // Adjust the delay as needed
+              }, 1);
+            currentStep++;
+        } else {
+            form.submit(); // Submits the form
+        }
+    });
+    </script>
+    <!-- <script>
+        var buttonPressCount = 0;
+      
+        // Function to handle button click
+        document.getElementById('nextButton').addEventListener('click', function() {
+          buttonPressCount++;
+      
+          if (buttonPressCount === 1) {
+            // Show the section on the first press
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'none';
+            var step3=document.getElementById('step3');
+            setTimeout(function() {
+                step3.style.display = '';
+                setTimeout(function() {
+                  step3.classList.add('visible');
+                }, 50); // Adjust the delay as needed
+              }, 1);
+          } else if (buttonPressCount === 2) {
+            
+            // Redirect to a separate URL on the second press
+            var slug = generateSlug(globalPlaceName); // Generate the slug from the global variable
+            var url = "{{ url_for('under_review', cafe_name='PLACEHOLDER') }}".replace('PLACEHOLDER', slug); // Replace placeholder with slug
+            window.location.href = url;
+          }
+        });
+      </script> -->
+    </div>
+    </section>
+    </form></div>
+    </div>
+    </div>
+    </div>
+{% include "footer.html" %}

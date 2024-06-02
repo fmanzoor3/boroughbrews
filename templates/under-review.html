@@ -1,0 +1,526 @@
+{% include "header.html" %}
+
+<div id="suggest">
+    <div class="container">
+    <h1>{{cafe_name}} - Review</h1>
+    <p>
+    <strong>Note:</strong>
+    For "Unknown" criteria, leave blank or deselect an already chosen option.
+    </p>
+    <form class="new_criterion" id="new_criterion" accept-charset="UTF-8" method="post"><input type="hidden" name="_method" value="put" autocomplete="off"><input type="hidden" name="authenticity_token" value="LoM5l2pZfmV0OFI1KR8FiWOA1rZPnKztVjubD-UasB1Qu5O3aY1oLh58q6KTcwaVOItHkAQJLQsCxvGJSC5DDA" autocomplete="off">
+    <section>
+    <h2>Productivity</h2>
+    <div class="row">
+    <div class="col-lg-6">
+    <div class="form-group">
+        <label class="criterion-title">
+            <i class="fa fa-fw fa-wifi"></i>
+            Is there Wi-Fi?
+        </label>
+        <div class="criteria">
+            <input autocomplete="off" type="hidden" name="criterion[wifi]" id="criterion_wifi">
+            <label class="btn btn-review red" data-color="red">
+                <input type="radio" value="1" name="criterion[wifi]" id="criterion_wifi_1">
+                No
+            </label>
+            <label class="btn btn-review yellow" data-color="yellow">
+                <input type="radio" value="2" name="criterion[wifi]" id="criterion_wifi_2">
+                Yes, but can be unstable or limited
+            </label>
+            <label class="btn btn-review green" data-color="green">
+                <input type="radio" value="3" name="criterion[wifi]" id="criterion_wifi_3">
+                Definitely, it's very reliable!
+            </label>
+        </div>
+    </div>
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-plug"></i>
+    Is it easy to find power sockets?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[sockets]" id="criterion_sockets">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[sockets]" id="criterion_sockets_1">
+    No (&lt; 10% of seats have power sockets)
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[sockets]" id="criterion_sockets_2">
+    So-so (10-50% of seats have power sockets)
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[sockets]" id="criterion_sockets_3">
+    Definitely! (&gt; 50% of seats have power sockets)
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-user-clock"></i>
+    How long can you comfortably stay and work? 
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[long_stay]" id="criterion_long_stay">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[long_stay]" id="criterion_long_stay_1">
+    While eating or drinking only
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[long_stay]" id="criterion_long_stay_2">
+    Depends on how busy it gets
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[long_stay]" id="criterion_long_stay_3">
+    I can stay as long as I want!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-pen-square"></i>
+    Are tables and chairs comfortable for work?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[tables]" id="criterion_tables">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[tables]" id="criterion_tables_1">
+    No (or very small amount)
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[tables]" id="criterion_tables_2">
+    Somewhat / It's mixed
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[tables]" id="criterion_tables_3">
+    All tables and chairs are work-friendly!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-volume-down"></i>
+    Is it quiet?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[quiet]" id="criterion_quiet">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[quiet]" id="criterion_quiet_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[quiet]" id="criterion_quiet_2">
+    So-so / Depends
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[quiet]" id="criterion_quiet_3">
+    Definitely!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-headset"></i>
+    Can you comfortably make audio/video calls?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[skype]" id="criterion_skype">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[skype]" id="criterion_skype_1">
+    No</label>
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[skype]" id="criterion_skype_2">
+    Maybe / Depends
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[skype]" id="criterion_skype_3">
+    Definitely!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    </section>
+    <section>
+    <h2>Community</h2>
+    <div class="row">
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-laptop"></i>
+    Is it common to see other people working?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[lf_vibe]" id="criterion_lf_vibe">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[lf_vibe]" id="criterion_lf_vibe_1">
+    No, nobody is working
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[lf_vibe]" id="criterion_lf_vibe_2">
+    Yes, some people are working
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[lf_vibe]" id="criterion_lf_vibe_3">
+    Definitely, almost everyone is working!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-users"></i>
+    Are there group tables (for 6+ people)?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[social_table]" id="criterion_social_table">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[social_table]" id="criterion_social_table_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[social_table]" id="criterion_social_table_2">
+    Yes
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[social_table]" id="criterion_social_table_3">
+    Definitely! There's also a big community table!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    </div>
+    </section>
+    <section>
+    <h2>Service</h2>
+    <div class="row">
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-coffee"></i>
+    Is coffee available?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[coffee]" id="criterion_coffee">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[coffee]" id="criterion_coffee_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[coffee]" id="criterion_coffee_2">
+    Yes, but average quality
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[coffee]" id="criterion_coffee_3">
+    Yes, and it's of high quality!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-utensils"></i>
+    Is food offered?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[food]" id="criterion_food">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[food]" id="criterion_food_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[food]" id="criterion_food_2">
+    Only snacks, pastries, or salads
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[food]" id="criterion_food_3">
+    Definitely, proper meals!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-leaf"></i>
+    Are there veggie options?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[veggie]" id="criterion_veggie">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[veggie]" id="criterion_veggie_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[veggie]" id="criterion_veggie_2">
+    Yes, but limited
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[veggie]" id="criterion_veggie_3">
+    Definitely, with great veggie meals!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-glass-martini"></i>
+    Is alcohol offered?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[alcohol]" id="criterion_alcohol">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[alcohol]" id="criterion_alcohol_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[alcohol]" id="criterion_alcohol_2">
+    Only a small selection (Beers, wines, ciders)
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[alcohol]" id="criterion_alcohol_3">
+    Definitely, a wide selection (Liquors, cocktails, etc.)
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-credit-card"></i>
+    Are credit cards accepted?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[credit_cards]" id="criterion_credit_cards">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[credit_cards]" id="criterion_credit_cards_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[credit_cards]" id="criterion_credit_cards_2">
+    Only some cards or amounts
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[credit_cards]" id="criterion_credit_cards_3">
+    Definitely!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    </div>
+    </section>
+    <section>
+    <h2>Space</h2>
+    <div class="row">
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-sun"></i>
+    Is the space full of natural light?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[light]" id="criterion_light">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[light]" id="criterion_light_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[light]" id="criterion_light_2">
+    So-so / Only some areas
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[light]" id="criterion_light_3">
+    Definitely!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-tree"></i>
+    Is there an outdoor area? (Assuming nice weather.)
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[outdoor]" id="criterion_outdoor">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[outdoor]" id="criterion_outdoor_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[outdoor]" id="criterion_outdoor_2">
+    Yes, but without power sockets
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[outdoor]" id="criterion_outdoor_3">
+    Yes, with outdoor power sockets available too!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-arrows-alt"></i>
+    How large is the place?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[capacity]" id="criterion_capacity">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[capacity]" id="criterion_capacity_1">
+    It's small (less than 10 tables)
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[capacity]" id="criterion_capacity_2">
+    It's medium (between 10 and 30 tables)
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[capacity]" id="criterion_capacity_3">
+    It's large (more than 30 tables)
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-toilet-paper"></i>
+    Is there a restroom?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[toilet]" id="criterion_toilet">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[toilet]" id="criterion_toilet_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[toilet]" id="criterion_toilet_2">
+    Yes, but far away, dirty, or inconvenient
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[toilet]" id="criterion_toilet_3">
+    Definitely, it's clean and easily accessible!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-wheelchair"></i>
+    Is it easily accessible with a wheelchair?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[accessible]" id="criterion_accessible">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[accessible]" id="criterion_accessible_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[accessible]" id="criterion_accessible_2">
+    So-so
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[accessible]" id="criterion_accessible_3">
+    Definitely!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-thermometer-half"></i>
+    Is the place air conditioned?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[ac]" id="criterion_ac">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[ac]" id="criterion_ac_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[ac]" id="criterion_ac_2">
+    Only a small area (less than half of the tables)
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[ac]" id="criterion_ac_3">
+    Definitely, most or all areas are air conditioned!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-smoking-ban"></i>
+    Is the space smoke-free?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[smoke_free]" id="criterion_smoke_free">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[smoke_free]" id="criterion_smoke_free_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[smoke_free]" id="criterion_smoke_free_2">
+    There is a non-smoking area
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[smoke_free]" id="criterion_smoke_free_3">
+    Definitely!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-dog"></i>
+    Is it pet friendly?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[pet_friendly]" id="criterion_pet_friendly">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[pet_friendly]" id="criterion_pet_friendly_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[pet_friendly]" id="criterion_pet_friendly_2">
+    Only some areas (e.g. outdoors)
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[pet_friendly]" id="criterion_pet_friendly_3">
+    Definitely!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-car"></i>
+    Is there a parking space?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[parking]" id="criterion_parking">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[parking]" id="criterion_parking_1">
+    No
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[parking]" id="criterion_parking_2">
+    There's street parking nearby
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[parking]" id="criterion_parking_3">
+    There's a dedicated parking!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    </div>
+    </section>
+    <section>
+    <h2>Summary</h2>
+    <div class="row">
+    <div class="col-lg-6">
+    <div class="form-group">
+    <label class="criterion-title">
+    <i class="fa fa-fw fa-star"></i>
+    In general, do you like working from here?
+    </label>
+    <div class="criteria">
+    <input autocomplete="off" type="hidden" name="criterion[i_like_it]" id="criterion_i_like_it">
+    <label class="btn btn-review red" data-color="red"><input type="radio" value="1" name="criterion[i_like_it]" id="criterion_i_like_it_1">
+    No, it's uncomfortable for work
+    </label><label class="btn btn-review yellow" data-color="yellow"><input type="radio" value="2" name="criterion[i_like_it]" id="criterion_i_like_it_2">
+    Yes, I got some work done
+    </label><label class="btn btn-review green" data-color="green"><input type="radio" value="3" name="criterion[i_like_it]" id="criterion_i_like_it_3">
+    Definitely, I feel very productive here!
+    </label></div>
+    
+    </div>
+    
+    </div>
+    </div>
+    </section>
+    <section>
+    <input type="submit" name="commit" value="Submit review" class="btn btn-lg btn-success" data-disable-with="Submit review">
+    </section>
+    </form></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formGroups = document.querySelectorAll('.form-group');
+        
+            formGroups.forEach(formGroup => {
+                const buttons = formGroup.querySelectorAll('.btn-review');
+        
+                buttons.forEach(button => {
+                    // Store the original background color
+                    button.dataset.originalBackgroundColor = window.getComputedStyle(button).backgroundColor;
+        
+                    button.addEventListener('mouseenter', function() {
+                        const color = this.getAttribute('data-color');
+                        this.style.borderColor = color;
+                        this.style.backgroundColor = 'white'; // Set background color to white
+                    });
+        
+                    button.addEventListener('mouseleave', function() {
+                        if (!this.classList.contains('pressed')) {
+                            this.style.borderColor = 'transparent';
+                            // Restore the original background color
+                            this.style.backgroundColor = this.dataset.originalBackgroundColor;
+                        }
+                    });
+        
+                    button.addEventListener('click', function() {
+                        buttons.forEach(btn => {
+                            btn.classList.remove('pressed');
+                            btn.style.borderColor = 'transparent';
+                            // Restore the original background color
+                            btn.style.backgroundColor = btn.dataset.originalBackgroundColor;
+                        });
+                        this.classList.add('pressed');
+                        const color = this.getAttribute('data-color');
+                        this.style.borderColor = color;
+                        this.style.backgroundColor = 'white';
+                    });
+                });
+            });
+        });        
+        
+        
+    </script>
+
+{% include "footer.html" %}
