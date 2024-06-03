@@ -5,6 +5,58 @@ function generateSlug(name) {
                .replace(/[^\w-]+/g, ''); // Remove all non-word characters
 }
 
+// Function to extract the borough from a place object
+function getBoroughFromPlace(place) {
+    for (const component of place.address_components) {
+        if (component.types.includes("sublocality") || component.types.includes("neighborhood")) {
+            return component.long_name;
+        }
+    }
+    return null;
+}
+
+// Function to get the postal town from the place object
+function getPostalTown(place) {
+    if (!place.address_components) {
+        return null;
+    }
+    for (let component of place.address_components) {
+        if (component.types.includes("postal_town")) {
+            return component.long_name;
+        }
+    }
+    return null;
+}
+
+// Get post code
+function getPostcodeFromPlace(place) {
+    if (!place || !place.address_components) {
+      return null;
+    }
+    for (let i = 0; i < place.address_components.length; i++) {
+      const component = place.address_components[i];
+      if (component.types.includes("postal_code")) {
+        return component.long_name;
+      }
+    }
+    return null;
+  }  
+
+// Extract Address 1
+function getTextBeforeLondonPostcode(address) {
+    const londonPostcodePattern = /, London\s+[A-Z]{1,2}[0-9R][0-9A-Z]? ?[0-9][A-Z]{2}/;
+    const match = address.match(londonPostcodePattern);
+    if (match) {
+        // Get the start index of the pattern
+        const patternIndex = address.indexOf(match[0]);
+        // Extract the text before the pattern
+        const textBeforePattern = address.substring(0, patternIndex);
+        return textBeforePattern.trim();  // Remove any trailing spaces
+    } else {
+        return address;
+    }
+}
+
 // Initialize a global variable to store the place name
 var globalPlaceName = '';
 
@@ -40,6 +92,20 @@ function initMap() {
 
         console.log(JSON.stringify(place));
 
+        // Check place is in London
+        const postalTown = getPostalTown(place);
+        if (!postalTown) {
+            // Show an error message
+            alert("Error, please choose a different location in London.");
+        } else if (postalTown !== "London") {
+            // Show an error message
+            alert("Location not found in London.");
+        } else {
+            // Run the rest of your code here
+            console.log("The place is in London. Running the rest of the code...");
+            // Your other code goes here
+        
+
         // Display next section in form (and buttons)
         var step2 = document.getElementById('step2');
         var controls=document.getElementById('controls');
@@ -73,6 +139,17 @@ function initMap() {
             generateImageGrid(photoUrls);
         }
 
+        // Get the img url from selected thumbnail
+        var thumbnailElement = document.querySelector('.thumbnail.selected');
+        var inputElement=document.getElementById('place_img_url')
+
+        if (inputElement && thumbnailElement && thumbnailElement.querySelector('img')) {
+            var imageUrl = thumbnailElement.querySelector('img').src;
+            inputElement.value=imageUrl
+
+        }
+
+
         // Autofill location info for next section
         var inputElement = document.getElementById('place_name');
         if (inputElement) {
@@ -80,17 +157,36 @@ function initMap() {
         }
         var inputElement = document.getElementById('place_location_address');
         if (inputElement) {
-            var addressComponents = place.formatted_address.split(','); // Split the address by comma
-            var streetName = addressComponents[0].trim(); // The first part typically represents the street name
-            inputElement.value = streetName;
+            inputElement.value = getTextBeforeLondonPostcode(place.formatted_address);
+        }
+        var inputElement = document.getElementById('place_location_postal_code');
+        if (inputElement) {
+            inputElement.value = getPostcodeFromPlace(place);
         }
         var inputElement = document.getElementById('place_google_place_gid');
         if (inputElement) {
             inputElement.value = place.place_id;
         }
+        var inputElement = document.getElementById('place_location_lat');
+        if (inputElement) {
+            inputElement.value = place.geometry.location.lat();
+        }
+        var inputElement = document.getElementById('place_location_lng');
+        if (inputElement) {
+            inputElement.value = place.geometry.location.lng();
+        }
+        var inputElement = document.getElementById('place_borough');
+        if (inputElement) {
+            inputElement.value = getBoroughFromPlace(place);
+        }
+        var inputElement = document.getElementById('place_weekday_text');
+        if (inputElement) {
+            inputElement.value = place.opening_hours.weekday_text;
+        }
+
         
         // Store the place name in the global variable
-        globalPlaceName = place.name;
+        globalPlaceName = place.name;}
         
     });
 

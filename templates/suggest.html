@@ -17,7 +17,6 @@
     <input name="location", class="form-control pac-target-input" id="geocomplete" type="text" placeholder="Enter a location" autocomplete="off">
     <input type="hidden" name="place" id="place">
     <!-- Google Autocomplete API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&libraries=places&callback=initAutocomplete" async defer></script>
     <script src="/static/js/scripts.js"></script>
     <input data-geo="place_id" autocomplete="off" type="hidden" name="place[google_place_gid]" id="place_google_place_gid">
     </div>
@@ -44,6 +43,7 @@
     </label>
     <select class="image-picker show-html" name="place[google_photo]" id="place_google_photo" style="display: none;"></select>
     <ul class="thumbnails image_picker_selector"></ul>
+    <input data-geo="img_url" autocomplete="off" type="hidden" name="place[img_url]" id="place_img_url">
     </div>
     </section>
     <!-- Basic venue information -->
@@ -53,10 +53,12 @@
     <div class="form-group">
     <label>Name</label>
     <input required="required" data-geo="name" class="form-control" type="text" name="place[name]" id="place_name">
+    <input required="required" data-geo="weekday_text" type="hidden" name="place[weekday_text]" id="place_weekday_text">
     </div>
     <!-- Location -->
     <div class="form-group">
     <label>Street</label>
+    <input required="required" data-geo="borough" type="hidden" name="place[borough]" id="place_borough">
     <input autocomplete="off" type="hidden" name="place[location][street_number]" id="place_location_street_number">
     <input required="required" class="form-control" type="text" name="place[location][address]" id="place_location_address">
     </div>
