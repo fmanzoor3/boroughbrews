@@ -255,14 +255,14 @@
     <!-- LaptopFriendly Hubs -->
     <!-- All Places -->
     {%for cafe in all_cafes%}
-    <a id={{cafe.slugged_name}} class="place" data-wifi="high" data-sockets="low" data-long-stay="high" data-light="low" data-quiet="high" data-skype="medium" data-lf-vibe="medium" data-ac="low" data-tables="medium" data-chairs="unknown" data-safe="unknown" data-social-table="medium" data-welcoming="unknown" data-owner-approved="unknown" data-food="medium" data-credit-cards="high" data-staff="unknown" data-parking="medium" data-accessible="high" data-smoke-free="unknown" data-outdoor="low" data-pet-friendly="high" data-morning="unknown" data-afternoon="unknown" data-evening="unknown" data-night="unknown" data-capacity="medium" data-affordable="unknown" data-music="unknown" data-coffee="high" data-alcohol="low" data-veggie="medium" data-i-like-it="high" data-independent="unknown" data-toilet="high" data-outdoor-sockets="unknown" data-score="65" href="/{{location_slug}}/{{cafe.slugged_name}}" style="order: 124;"><div class="card-img-top">
+    <a id={{cafe.slugged_name}} class="place" data-wifi="high" data-sockets="low" data-long-stay="high" data-light="low" data-quiet="high" data-skype="medium" data-lf-vibe="medium" data-ac="low" data-tables="medium" data-chairs="unknown" data-safe="unknown" data-social-table="medium" data-welcoming="unknown" data-owner-approved="unknown" data-food="medium" data-credit-cards="high" data-staff="unknown" data-parking="medium" data-accessible="high" data-smoke-free="unknown" data-outdoor="low" data-pet-friendly="high" data-morning="unknown" data-afternoon="unknown" data-evening="unknown" data-night="unknown" data-capacity="medium" data-affordable="unknown" data-music="unknown" data-coffee="high" data-alcohol="low" data-veggie="medium" data-i-like-it="high" data-independent="unknown" data-toilet="high" data-outdoor-sockets="unknown" data-score="65" href="{{ url_for('show_cafe', location_slug=location_slug, cafe_slug=cafe.slugged_name, cafe_name=cafe.cafe.name, place_id=cafe.cafe.place_id) }}" style="order: 124;"><div class="card-img-top">
     <img alt={{cafe.cafe.name}} src={{cafe.cafe.img_url}}>
     </div>
     <div class="card-body">
     <h3 class="card-title">{{cafe.cafe.name}}</h3>
     <p class="card-text">
     <i class="fa fa-location-arrow"></i>
-    Address
+    {{cafe.cafe.address}}
     </p>
     <div class="active-filters"></div>
     </div>
@@ -288,8 +288,8 @@
   <script>
       function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 51.5074, lng: -0.1278}, // London coordinates
-          zoom: 10,
+          center: {lat: {{borough_lat}}, lng: {{borough_lng}}}, // Borough coordinates
+          zoom: 12,
           disableDefaultUI: true, // Disable default UI controls
           zoomControl: true, // Enable zoom control
           scaleControl: true, // Enable scale control
@@ -297,12 +297,11 @@
         });
   
         // Array of locations in London with their coordinates
-        var locations = [
-          {lat: 51.5074, lng: -0.1278, name: 'London Bridge'},
-          {lat: 51.5074, lng: -0.118092, name: 'Tower Bridge'},
-          {lat: 51.5081, lng: -0.0761, name: 'The O2 Arena'}
-          // Add more locations as needed
-        ];
+        var locations=[];
+        {%for cafe in all_cafes%}
+          locations.push({lat: {{cafe.cafe.lat}}, lng: {{cafe.cafe.lng}}, name: "{{cafe.cafe.name}}"});
+        {%endfor%}
+
   
         // Loop through the locations array and add markers
         locations.forEach(function(location) {

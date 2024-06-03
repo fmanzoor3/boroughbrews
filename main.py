@@ -1,4 +1,12 @@
-from flask import Flask, render_template, redirect, url_for, request, jsonify
+from flask import (
+    Flask,
+    render_template,
+    redirect,
+    url_for,
+    request,
+    jsonify,
+    send_from_directory,
+)
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -20,6 +28,8 @@ load_dotenv()
 
 # Obtain London boroughs geo_data
 boroughs_data = get_boroughs_data()
+with open("data/borough_coordinates.json", "r") as json_file:
+    borough_coords = json.load(json_file)
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -122,6 +132,15 @@ def inject_globals():
     return {"google_api_key": google_api_key}
 
 
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(
+        os.path.join(app.root_path, "static"),
+        "favicon.ico",
+        mimetype="image/vnd.microsoft.icon",
+    )
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -145,6 +164,8 @@ def show_all_locations():
 @app.route("/<location_slug>")
 def show_location(location_slug):
     location = make_slug_inverse(location_slug)
+    lat = borough_coords[location]["lat"]
+    lng = borough_coords[location]["lng"]
     cafes_at_location = db.session.query(Cafe).filter_by(borough=location).all()
     cafe_names_slugged = [make_slug(cafe.name) for cafe in cafes_at_location]
     cafes = [
@@ -152,19 +173,18 @@ def show_location(location_slug):
         for i in range(len(cafes_at_location))
     ]
     return render_template(
-        "location.html", all_cafes=cafes, location_slug=location_slug
+        "location.html",
+        all_cafes=cafes,
+        location_slug=location_slug,
+        borough_lat=lat,
+        borough_lng=lng,
     )
 
 
 @app.route("/<location_slug>/<cafe_slug>")
 def show_cafe(location_slug, cafe_slug):
-    location = make_slug_inverse(location_slug)
-    cafe_name = make_slug_inverse(cafe_slug)
-    print(cafe_name)
-    cafe_info = (
-        db.session.query(Cafe).filter_by(name=cafe_name, borough=location).first()
-    )
-    print(cafe_info)
+    place_id = request.args.get("place_id")
+    cafe_info = db.session.query(Cafe).filter_by(place_id=place_id).first()
     return render_template("cafe.html", cafe=cafe_info)
 
 
