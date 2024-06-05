@@ -2,12 +2,16 @@
 
 <div id="suggest">
     <div class="container">
-    <h1>{{cafe_name}} - Review</h1>
+    <h1>{{cafe_name_slugged}} - Review</h1>
     <p>
     <strong>Note:</strong>
     For "Unknown" criteria, leave blank or deselect an already chosen option.
     </p>
-    <form class="new_criterion" id="new_criterion" accept-charset="UTF-8" method="post"><input type="hidden" name="_method" value="put" autocomplete="off"><input type="hidden" name="authenticity_token" value="LoM5l2pZfmV0OFI1KR8FiWOA1rZPnKztVjubD-UasB1Qu5O3aY1oLh58q6KTcwaVOItHkAQJLQsCxvGJSC5DDA" autocomplete="off">
+    <form class="new_criterion" id="new_criterion" action='{{ url_for(
+            "under_review", cafe_name_slugged=cafe_name_slugged, id=id
+        ) }}' method="POST">
+    <input type="hidden" name="id" value={{id}}>
+    <input type="hidden" name="_method" value="put" autocomplete="off"><input type="hidden" name="authenticity_token" value="LoM5l2pZfmV0OFI1KR8FiWOA1rZPnKztVjubD-UasB1Qu5O3aY1oLh58q6KTcwaVOItHkAQJLQsCxvGJSC5DDA" autocomplete="off">
     <section>
     <h2>Productivity</h2>
     <div class="row">
@@ -479,48 +483,74 @@
     </form></div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const formGroups = document.querySelectorAll('.form-group');
-        
-            formGroups.forEach(formGroup => {
-                const buttons = formGroup.querySelectorAll('.btn-review');
-        
+   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const formGroups = document.querySelectorAll('.form-group');
+
+        formGroups.forEach(formGroup => {
+            const buttons = formGroup.querySelectorAll('.btn-review input');
+            const hiddenInput = formGroup.querySelector('input[type="hidden"]');
+            const displaySpan = formGroup.querySelector('#hidden-value-display');
+
+            function updateHiddenInputValue() {
+                let activeButton = null;
                 buttons.forEach(button => {
-                    // Store the original background color
-                    button.dataset.originalBackgroundColor = window.getComputedStyle(button).backgroundColor;
-        
-                    button.addEventListener('mouseenter', function() {
-                        const color = this.getAttribute('data-color');
-                        this.style.borderColor = color;
-                        this.style.backgroundColor = 'white'; // Set background color to white
-                    });
-        
-                    button.addEventListener('mouseleave', function() {
-                        if (!this.classList.contains('pressed')) {
-                            this.style.borderColor = 'transparent';
-                            // Restore the original background color
-                            this.style.backgroundColor = this.dataset.originalBackgroundColor;
-                        }
-                    });
-        
-                    button.addEventListener('click', function() {
-                        buttons.forEach(btn => {
-                            btn.classList.remove('pressed');
-                            btn.style.borderColor = 'transparent';
-                            // Restore the original background color
-                            btn.style.backgroundColor = btn.dataset.originalBackgroundColor;
-                        });
-                        this.classList.add('pressed');
-                        const color = this.getAttribute('data-color');
-                        this.style.borderColor = color;
-                        this.style.backgroundColor = 'white';
-                    });
+                    if (button.classList.contains('active')) {
+                        activeButton = button;
+                    }
+                });
+
+                if (activeButton) {
+                    switch (activeButton.value) {
+                        case '1':
+                            hiddenInput.value = 'low';
+                            break;
+                        case '2':
+                            hiddenInput.value = 'medium';
+                            break;
+                        case '3':
+                            hiddenInput.value = 'high';
+                            break;
+                        default:
+                            hiddenInput.value = 'unknown';
+                    }
+                } else {
+                    hiddenInput.value = 'unknown';
+                }
+
+                // Update the span content to show the hidden input value (if span exists)
+                if (displaySpan) {
+                    displaySpan.textContent = 'Hidden input value: ' + hiddenInput.value;
+                }
+
+                // Log the hidden input value to the console
+                console.log('Hidden input value:', hiddenInput.value);
+            }
+
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Check if the clicked button is already active
+                    const isActive = this.classList.contains('active');
+
+                    // Remove active from all buttons
+                    buttons.forEach(btn => btn.classList.remove('active'));
+
+                    // Toggle active only if it was not active
+                    if (!isActive) {
+                        this.classList.add('active');
+                    }
+
+                    // Update the hidden input value based on the active button
+                    updateHiddenInputValue();
                 });
             });
-        });        
-        
-        
-    </script>
+
+            // Initial setting of hidden input value to 'unknown' if no button is active
+            updateHiddenInputValue();
+        });
+    });
+</script>
+
+
 
 {% include "footer.html" %}

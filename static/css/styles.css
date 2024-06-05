@@ -681,6 +681,19 @@ ul.thumbnails.image_picker_selector li .thumbnail {
   transition: background-color 0.3s, border-color 0.3s;
 }
 
+#suggest .criteria .btn-review.red:hover, #suggest .criteria .btn-review.red:has(.active){
+  border-color: red;
+  background-color: white;
+}
+#suggest .criteria .btn-review.yellow:hover, #suggest .criteria .btn-review.yellow:has(.active){
+  border-color: yellow;
+  background-color: white;
+}
+#suggest .criteria .btn-review.green:hover, #suggest .criteria .btn-review.green:has(.active){
+  border-color: green;
+  background-color: white;
+}
+
 
 /* Input styles */
 .criteria input[type="radio"] {
@@ -886,6 +899,23 @@ ul.thumbnails.image_picker_selector li .thumbnail {
   margin-bottom: 16px;
 }
 
+.progress {
+  --bs-progress-height: 1rem;
+  --bs-progress-font-size: 0.75rem;
+  --bs-progress-bg: #e9ecef;
+  --bs-progress-border-radius: 0.375rem;
+  --bs-progress-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+  --bs-progress-bar-color: #fff;
+  --bs-progress-bar-bg: #0d6efd;
+  --bs-progress-bar-transition: width 0.6s ease;
+  display: flex;
+  height: var(--bs-progress-height);
+  overflow: hidden;
+  font-size: var(--bs-progress-font-size);
+  background-color: var(--bs-progress-bg);
+  border-radius: var(--bs-progress-border-radius);
+}
+
 #place .progress .medium {
   width: 60%;
   background-color: #f6d95e;
@@ -894,6 +924,10 @@ ul.thumbnails.image_picker_selector li .thumbnail {
 #place .progress .low {
   width: 20%;
   background-color: red;
+}
+
+#place .gray-font {
+  color: #ddd;
 }
 
 body {

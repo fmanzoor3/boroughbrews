@@ -188,25 +188,6 @@ def show_cafe(location_slug, cafe_slug):
     return render_template("cafe.html", cafe=cafe_info)
 
 
-# TODO: add_new_post() to create a new blog post
-# @app.route("/new-post", methods=["GET", "POST"])
-# def add_post():
-#     create_post_form = CreatePostForm()
-#     if create_post_form.validate_on_submit():
-#         new_post = BlogPost(
-#             title=create_post_form.title.data,
-#             subtitle=create_post_form.subtitle.data,
-#             date=date.today().strftime("%B %d, %Y"),
-#             body=create_post_form.body.data,
-#             author=create_post_form.author.data,
-#             img_url=create_post_form.img_url.data,
-#         )
-#         db.session.add(new_post)
-#         db.session.commit()
-#         return redirect(url_for("get_all_posts"))
-#     return render_template("make-post.html", form=create_post_form)
-
-
 @app.route("/suggest", methods=["GET", "POST"])
 def suggest(coordinates=[]):
     if request.method == "POST":
@@ -246,13 +227,33 @@ def suggests():
         )
         db.session.add(new_cafe)
         db.session.commit()
-    return redirect(url_for("under_review", cafe_name=place_name))
+        new_cafe_id = new_cafe.id
+    return redirect(
+        url_for("under_review", cafe_name_slugged=make_slug(place_name), id=new_cafe_id)
+    )
 
 
-@app.route("/under-review/<cafe_name>")
-def under_review(cafe_name):
-    cafe = make_slug_inverse(cafe_name)
-    return render_template("under-review.html", cafe_name=cafe)
+@app.route("/under-review/<cafe_name_slugged>/<id>", methods=["GET", "POST"])
+def under_review(cafe_name_slugged, id):
+    cafe_name = make_slug_inverse(cafe_name_slugged)
+    if request.method == "POST":
+        id = request.form.get("id")
+        cafe = db.get_or_404(Cafe, id)
+        cafe.wifi = request.form.get("criterion[wifi]")
+        location_slug = make_slug(cafe.borough)
+        cafe_slug = make_slug(cafe.name)
+        db.session.commit()
+        return redirect(
+            url_for(
+                "show_cafe",
+                location_slug=location_slug,
+                cafe_slug=cafe_slug,
+                place_id=cafe.place_id,
+            )
+        )
+    return render_template(
+        "under-review.html", cafe_name_slugged=cafe_name_slugged, id=id
+    )
 
 
 # TODO: edit_post() to change an existing blog post
