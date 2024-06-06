@@ -25,3 +25,5 @@
 -[] Link the criteria on the cafe page to the db; go through the page and put in the required data-content, progress-bar and span values
 
 -[x] Use datetime to format opening hours and store this as a json in the db
+
+-[] Create a function to catch when a cafe is already in the db
