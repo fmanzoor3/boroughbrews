@@ -16,7 +16,7 @@
     <h1>{{cafe.name}}</h1>
     </div>
     </div>
-    <a id="google-maps-link" title="Open Google Maps" target="_blank" href="https://www.google.com/maps/search/?api=1&amp;query=Arancina 19 Pembridge Road, W11 3HGLondon&amp;query_place_id=ChIJTztnhPwPdkgR1p8WV1NSu3g"><i class="fas fa-map fa-2x"></i>
+    <a id="google-maps-link" title="Open Google Maps" target="_blank" href="{{cafe.map_url}}"><i class="fas fa-map fa-2x"></i>
     </a></div>
     </header>
     <!-- Place details -->
@@ -84,57 +84,57 @@
     </div>
     <div class="col-md-8">
     <div class="row criteria">
-    <div class="col-6 criterion" data-content="Definitely, it's very reliable!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is there Wi-Fi?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.wifi == 'low' else 'Yes, but can be unstable or limited' if cafe.wifi == 'medium' else 'Definitely, it\'s very reliable!' if cafe.wifi == 'high' else 'Unknown' }}"  data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is there Wi-Fi?">
     <i class="fa fa-fw fa-wifi"></i>
     Stable Wi-Fi
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.wifi}}">
+    <span class="sr-only">{{cafe.wifi| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Definitely! (> 50% of seats have power sockets)" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is it easy to find power sockets?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.sockets == 'low' else 'So-so (10-50% of seats have power sockets)' if cafe.sockets == 'medium' else 'Definitely! (&gt; 50% of seats have power sockets)' if cafe.sockets == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is it easy to find power sockets?">
     <i class="fa fa-fw fa-plug"></i>
     Power sockets
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.sockets}}">
+    <span class="sr-only">{{cafe.sockets| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="I can stay as long as I want!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="How long can you comfortably stay and work? ">
+    <div class="col-6 criterion" data-content="{{ 'While eating or drinking only' if cafe.long_stay == 'low' else 'Depends on how busy it gets' if cafe.long_stay == 'medium' else 'I can stay as long as I want!' if cafe.long_stay == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="How long can you comfortably stay and work? ">
     <i class="fa fa-fw fa-user-clock"></i>
     Long stays
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.long_stay}}">
+    <span class="sr-only">{{cafe.long_stay| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="All tables and chairs are work-friendly!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Are tables and chairs comfortable for work?">
+    <div class="col-6 criterion" data-content="{{ 'No (or very small amount)' if cafe.tables == 'low' else 'Somewhat / It\'s mixed' if cafe.tables == 'medium' else 'All tables and chairs are work-friendly!' if cafe.tables == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Are tables and chairs comfortable for work?">
     <i class="fa fa-fw fa-pen-square"></i>
     Work-friendly tables
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.tables}}">
+    <span class="sr-only">{{cafe.tables| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Definitely!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is it quiet?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.quiet == 'low' else 'So-so / Depends' if cafe.quiet == 'medium' else 'Definitely!' if cafe.quiet == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is it quiet?">
     <i class="fa fa-fw fa-volume-down"></i>
     Quiet
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.quiet}}">
+    <span class="sr-only">{{cafe.quiet| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Definitely!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Can you comfortably make audio/video calls?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.calls == 'low' else 'Maybe / Depends' if cafe.calls == 'medium' else 'Definitely!' if cafe.calls == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Can you comfortably make audio/video calls?">
     <i class="fa fa-fw fa-headset"></i>
     Video/audio calls
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.calls}}">
+    <span class="sr-only">{{cafe.calls| title}}</span>
     </div>
     </div>
     </div>
@@ -149,21 +149,21 @@
     </div>
     <div class="col-md-8">
     <div class="row criteria">
-    <div class="col-6 criterion" data-content="Yes, some people are working" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is it common to see other people working?">
+    <div class="col-6 criterion" data-content="{{ 'No, nobody is working' if cafe.vibe == 'low' else 'Yes, some people are working' if cafe.vibe == 'medium' else 'Definitely, almost everyone is working!' if cafe.vibe == 'high' else 'Unknown' }}" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is it common to see other people working?">
     <i class="fa fa-fw fa-laptop"></i>
     People working
     <div class="progress">
-    <div class="progress-bar medium">
-    <span class="sr-only">Medium</span>
+    <div class="progress-bar {{cafe.vibe}}">
+    <span class="sr-only">{{cafe.vibe| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Yes" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Are there group tables (for 6+ people)?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.groups == 'low' else 'Yes' if cafe.groups == 'medium' else 'Definitely! There\'s also a big community table!' if cafe.groups == 'high' else 'Unknown' }}" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Are there group tables (for 6+ people)?">
     <i class="fa fa-fw fa-users"></i>
     Group tables
     <div class="progress">
-    <div class="progress-bar medium">
-    <span class="sr-only">Medium</span>
+    <div class="progress-bar {{cafe.groups}}">
+    <span class="sr-only">{{cafe.groups| title}}</span>
     </div>
     </div>
     </div>
@@ -178,48 +178,48 @@
     </div>
     <div class="col-md-8">
     <div class="row criteria">
-    <div class="col-6 criterion" data-content="Yes, and it's of high quality!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is coffee available?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.coffee == 'low' else 'Yes, but average quality' if cafe.coffee == 'medium' else 'Yes, and it\'s of high quality!' if cafe.coffee == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is coffee available?">
     <i class="fa fa-fw fa-coffee"></i>
     Coffee
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.coffee}}">
+    <span class="sr-only">H{{cafe.coffee| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Definitely, proper meals!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is food offered?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.food == 'low' else 'Only snacks, pastries, or salads' if cafe.food == 'medium' else 'Definitely, proper meals!' if cafe.food == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is food offered?">
     <i class="fa fa-fw fa-utensils"></i>
     Food
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.food}}">
+    <span class="sr-only">{{cafe.food| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Definitely, with great veggie meals!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Are there veggie options?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.veggie == 'low' else 'Yes, but limited' if cafe.veggie == 'medium' else 'Definitely, with great veggie meals!' if cafe.veggie == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Are there veggie options?">
     <i class="fa fa-fw fa-leaf"></i>
     Veggie
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.veggie}}">
+    <span class="sr-only">{{cafe.veggie| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Only a small selection (Beers, wines, ciders)" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is alcohol offered?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.alcohol == 'low' else 'Only a small selection (Beers, wines, ciders)' if cafe.alcohol == 'medium' else 'Definitely, a wide selection (Liquors, cocktails, etc.)' if cafe.alcohol == 'high' else 'Unknown' }}" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is alcohol offered?">
     <i class="fa fa-fw fa-glass-martini"></i>
     Alcohol
     <div class="progress">
-    <div class="progress-bar medium">
-    <span class="sr-only">Medium</span>
+    <div class="progress-bar {{cafe.alcohol}}">
+    <span class="sr-only">{{cafe.alcohol| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Definitely!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Are credit cards accepted?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.credit_cards == 'low' else 'Only some cards or amounts' if cafe.credit_cards == 'medium' else 'Definitely!' if cafe.credit_cards == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Are credit cards accepted?">
     <i class="fa fa-fw fa-credit-card"></i>
     Credit cards
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.credit_cards}}">
+    <span class="sr-only">{{cafe.credit_cards| title}}</span>
     </div>
     </div>
     </div>
@@ -234,75 +234,75 @@
     </div>
     <div class="col-md-8">
     <div class="row criteria">
-    <div class="col-6 criterion" data-content="Definitely!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is the space full of natural light?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.light == 'low' else 'So-so / Only some areas' if cafe.light == 'medium' else 'Definitely!' if cafe.light == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is the space full of natural light?">
     <i class="fa fa-fw fa-sun"></i>
     Natural light
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.light}}">
+    <span class="sr-only">{{cafe.light| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Yes, but without power sockets" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is there an outdoor area? (Assuming nice weather.)">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.outdoor == 'low' else 'Yes, but without power sockets' if cafe.outdoor == 'medium' else 'Yes, with outdoor power sockets available too!' if cafe.outdoor == 'high' else 'Unknown' }}" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is there an outdoor area? (Assuming nice weather.)">
     <i class="fa fa-fw fa-tree"></i>
     Outdoor area
     <div class="progress">
-    <div class="progress-bar medium">
-    <span class="sr-only">Medium</span>
+    <div class="progress-bar {{cafe.outdoor}}">
+    <span class="sr-only">{{cafe.outdoor| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="It's medium (between 10 and 30 tables)" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="How large is the place?">
+    <div class="col-6 criterion" data-content="{{ 'It\'s small (less than 10 tables)' if cafe.spacious == 'low' else 'It\'s medium (between 10 and 30 tables)' if cafe.spacious == 'medium' else 'It\'s large (more than 30 tables)' if cafe.spacious == 'high' else 'Unknown' }}" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="How large is the place?">
     <i class="fa fa-fw fa-arrows-alt"></i>
     Spacious
     <div class="progress">
-    <div class="progress-bar medium">
-    <span class="sr-only">Medium</span>
+    <div class="progress-bar {{cafe.spacious}}">
+    <span class="sr-only">{{cafe.spacious| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Definitely, it's clean and easily accessible!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is there a restroom?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.toilets == 'low' else 'Yes, but far away, dirty, or inconvenient' if cafe.toilets == 'medium' else 'Definitely, it\'s clean and easily accessible!' if cafe.toilets == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is there a restroom?">
     <i class="fa fa-fw fa-toilet-paper"></i>
     Restroom
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.toilets}}">
+    <span class="sr-only">{{cafe.toilets| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="No" data-template="<div class='popover low-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is it easily accessible with a wheelchair?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.access == 'low' else 'So-so' if cafe.access == 'medium' else 'Definitely!' if cafe.access == 'high' else 'Unknown' }}" data-template="<div class='popover low-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is it easily accessible with a wheelchair?">
     <i class="fa fa-fw fa-wheelchair"></i>
-    <s>Accessible</s>
+    Accessible
     <div class="progress">
-    <div class="progress-bar low">
-    <span class="sr-only">Low</span>
+    <div class="progress-bar {{cafe.access}}">
+    <span class="sr-only">{{cafe.access| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Definitely, most or all areas are air conditioned!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is the place air conditioned?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.ac == 'low' else 'Only a small area (less than half of the tables)' if cafe.ac == 'medium' else 'Definitely, most or all areas are air conditioned!' if cafe.ac == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is the place air conditioned?">
     <i class="fa fa-fw fa-thermometer-half"></i>
     Air conditioned
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.ac}}">
+    <span class="sr-only">{{cafe.ac| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="Definitely!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is it pet friendly?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.pets == 'low' else 'Only some areas (e.g. outdoors)' if cafe.pets == 'medium' else 'Definitely!' if cafe.pets == 'high' else 'Unknown' }}" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is it pet friendly?">
     <i class="fa fa-fw fa-dog"></i>
     Pet friendly
     <div class="progress">
-    <div class="progress-bar high">
-    <span class="sr-only">High</span>
+    <div class="progress-bar {{cafe.pets}}">
+    <span class="sr-only">{{cafe.pets| title}}</span>
     </div>
     </div>
     </div>
-    <div class="col-6 criterion" data-content="There's street parking nearby" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is there a parking space?">
+    <div class="col-6 criterion" data-content="{{ 'No' if cafe.parking == 'low' else 'There\'s street parking nearby' if cafe.parking == 'medium' else 'There\'s a dedicated parking!' if cafe.parking == 'high' else 'Unknown' }}" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-original-title="Is there a parking space?">
     <i class="fa fa-fw fa-car"></i>
     Parking
     <div class="progress">
-    <div class="progress-bar medium">
-    <span class="sr-only">Medium</span>
+    <div class="progress-bar {{cafe.parking}}">
+    <span class="sr-only">{{cafe.parking| title}}</span>
     </div>
     </div>
     </div>
@@ -337,7 +337,12 @@
     <i class="far fa-fw fa-clock"></i>
     </div>
     <div class="col-10">
-    <div class="row no-gutters"><div class="col-2">Mon</div><div class="col">12:00 – 22:30</div></div><div class="row no-gutters"><div class="col-2">Tue</div><div class="col">12:00 – 22:30</div></div><div class="row no-gutters strong"><div class="col-2">Wed</div><div class="col">12:00 – 22:30</div></div><div class="row no-gutters"><div class="col-2">Thu</div><div class="col">12:00 – 22:30</div></div><div class="row no-gutters"><div class="col-2">Fri</div><div class="col">11:00 – 23:00</div></div><div class="row no-gutters"><div class="col-2">Sat</div><div class="col">11:00 – 23:00</div></div><div class="row no-gutters"><div class="col-2">Sun</div><div class="col">11:00 – 22:30</div></div>
+    {% for day, time in cafe.opening_hours.items() %}
+        <div class="row no-gutters">
+            <div class="col-2">{{ day }}</div>
+            <div class="col">{{ time }}</div>
+        </div>
+    {% endfor %}
     </div>
     </div>
     <br>
@@ -347,7 +352,7 @@
     <i class="fa fa-fw fa-map-marker-alt"></i>
     </div>
     <div class="col-10">
-    <a class="text-link" target="_blank" href="https://www.google.com/maps/search/?api=1&amp;query=Arancina 19 Pembridge Road, W11 3HGLondon&amp;query_place_id=ChIJTztnhPwPdkgR1p8WV1NSu3g">19 Pembridge Road, W11 3HG, London</a>
+    <a class="text-link" target="_blank" href="{{cafe.map_url}}">{% if cafe.postal_code in cafe.address %}{{ cafe.address }}{% else %}{{ cafe.address }}, {{ cafe.postal_code }}{% endif %}</a>
     </div>
     </div>
     <br>
@@ -361,7 +366,7 @@
     <p>Missing or incorrect information?</p>
     <div class="row justify-content-center">
     <div class="col-5 col-sm-6 col-lg-5">
-    <a class="btn btn-sm btn-default btn-block" href="/london/arancina/edit"><i class="fa fa-fw fa-edit"></i>
+    <a class="btn btn-sm btn-default btn-block" href="{{ url_for('edit', cafe_name_slugged=cafe_slug, location_slug=location_slug, id=id) }}"><i class="fa fa-fw fa-edit"></i>
     Update page
     </a></div>
     <div class="col-5 col-sm-6 col-lg-5">
@@ -374,7 +379,7 @@
     </div>
     <!-- CTA for City page -->
     <hr>
-    <a class="text-link" href="/london"><i class="fa fa-fw fa-caret-left"></i>
+    <a class="text-link" href="{{url_for('show_location',location_slug=location_slug)}}"><i class="fa fa-fw fa-caret-left"></i>
     Explore more work-friendly places in London!
     </a></div>
     </section>
@@ -394,7 +399,24 @@
     
             criterionElements.forEach(function(element) {
                 var icon = element.querySelector('.fa-fw');
-    
+
+                if (element.getAttribute('data-content') === "Unknown") {
+                    // Find the .fa-fw element within this .criterion
+                    var icon = element.querySelector('.fa-fw');
+                    if (icon) {
+                        // Change the class to "fa fa-fw fa-question"
+                        icon.className = 'fa fa-fw fa-question';
+                    }
+                }
+
+                element.addEventListener('click', function() {
+                    var url = "{{ url_for('edit', cafe_name_slugged='__slug__', location_slug='__location_slug__', id=id) }}"
+                    .replace('__slug__', "{{cafe_slug}}")
+                    .replace('__location_slug__',"{{location_slug}}")
+                    console.log(url)
+                    window.location.href = url;
+                });
+            
                 element.addEventListener('mouseover', function() {
                     // Store original class
                     icon.dataset.originalClass = icon.className;

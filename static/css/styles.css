@@ -924,10 +924,16 @@ ul.thumbnails.image_picker_selector li .thumbnail {
 #place .progress .low {
   width: 20%;
   background-color: red;
+  text-decoration: line-through;
 }
 
-#place .gray-font {
+#place .gray-font, #place .criterion:has(.progress-bar.unknown) {
   color: #ddd;
+}
+
+#place .progress .unknown {
+  width: 20%;
+  background-color: #f5f5f5;
 }
 
 body {

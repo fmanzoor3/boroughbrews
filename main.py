@@ -16,12 +16,14 @@ import enum
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, URL
-from datetime import date
-import re
 import json
 from dotenv import load_dotenv
 import os
 from static.utils.geo_utils import get_boroughs_data, find_borough
+import re
+from datetime import datetime
+
+# from static.utils.format_open_hours import format_opening_hours, day_abbreviations
 
 # Load environment variables from .env file
 load_dotenv()
@@ -30,6 +32,7 @@ load_dotenv()
 boroughs_data = get_boroughs_data()
 with open("data/borough_coordinates.json", "r") as json_file:
     borough_coords = json.load(json_file)
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -105,21 +108,121 @@ with app.app_context():
 
 # -------------------------------------------FUNCTIONS---------------------------------------------------------------------------
 # Here we create a function to convert words into url format e.g. convert the string London Bridge to london-bridge
+def create_slug(text):
+    file_path = "data/slugged_names.json"
+
+    try:
+        with open(file_path, "r") as file:
+            content = file.read()
+            if content.strip():
+                data = json.loads(content)
+            else:
+                data = {}
+    except FileNotFoundError:
+        data = {}
+    except json.JSONDecodeError:
+        data = {}
+
+    slug = re.sub(r"[^a-z0-9-]", "", text.lower().replace(" ", "-"))
+
+    if text not in data:
+        data[text] = slug
+
+        with open(file_path, "w") as file:
+            json.dump(data, file, indent=4)
+
+        print(f"Slug for '{text}' added successfully: {slug}")
+    else:
+        print(f"Slug for '{text}' already exists: {data[text]}")
+
+
 def make_slug(text):
-    slug = text.lower()
-    slug = slug.replace(" ", "-")
-    # Remove non-alphanumeric characters except hyphens
-    slug = re.sub(r"[^a-z0-9-]", "", slug)
-    return slug
+    with open("data/slugged_names.json", "r") as file:
+        data = json.load(file)
+    return data[text]
 
 
 def make_slug_inverse(slug):
-    return slug.replace("-", " ").title()
+    with open("data/slugged_names.json", "r") as file:
+        data = json.load(file)
+    for key, val in data.items():
+        if val == slug:
+            return key
 
 
 def check_cafe_in_db(address):
     print(address)
     # location= db.query.filter_by(address=address).first()
+
+
+def format_opening_hours(weekday_text):
+    day_abbreviations = {
+        "Monday": "Mon",
+        "Tuesday": "Tue",
+        "Wednesday": "Wed",
+        "Thursday": "Thu",
+        "Friday": "Fri",
+        "Saturday": "Sat",
+        "Sunday": "Sun",
+    }
+    try:
+        weekday_text = (
+            weekday_text.replace(" ", " ")
+            .replace("–", "-")
+            .replace("\u202f", " ")
+            .replace("\u2009", " ")
+        )
+        first_split = re.split(",(?=\w)", weekday_text)
+        opening_hours_dict = {}
+
+        for i in first_split:
+            weekday, time_range = i.split(":", 1)
+            weekday = weekday.strip()
+            time_range = time_range.strip()
+
+            if time_range.lower() == "closed":
+                opening_hours_dict[day_abbreviations[weekday]] = "Closed"
+                continue
+            elif time_range.lower() == "open 24 hours":
+                opening_hours_dict[day_abbreviations[weekday]] = "Open 24 hours"
+                continue
+            elif "hours might differ" in time_range.lower():
+                opening_hours_dict[day_abbreviations[weekday]] = time_range
+                continue
+
+            time_range = re.sub(r"\s*\(.*?\)", "", time_range.strip())
+            start_time, end_time = time_range.split("-")
+            try:
+                formatted_start_time = datetime.strptime(
+                    start_time.strip(), "%I:%M %p"
+                ).strftime("%H:%M")
+            except ValueError:
+                formatted_start_time = datetime.strptime(
+                    start_time.strip(), "%H:%M"
+                ).strftime("%H:%M")
+            try:
+                formatted_end_time = datetime.strptime(
+                    end_time.strip(), "%I:%M %p"
+                ).strftime("%H:%M")
+            except ValueError:
+                formatted_end_time = datetime.strptime(
+                    end_time.strip(), "%H:%M"
+                ).strftime("%H:%M")
+            opening_hours_dict[day_abbreviations[weekday]] = (
+                f"{formatted_start_time} – {formatted_end_time}"
+            )
+        return opening_hours_dict
+    except Exception as e:
+        print(f"Error processing {i}: {e}")
+        return {
+            "Mon": "N/A",
+            "Tue": "N/A",
+            "Wed": "N/A",
+            "Thu": "N/A",
+            "Fri": "N/A",
+            "Sat": "N/A",
+            "Sun": "N/A",
+        }
 
 
 # ---------------------------------------------------ENV VARIABLES------------------------------------------------------------------------------------
@@ -183,9 +286,15 @@ def show_location(location_slug):
 
 @app.route("/<location_slug>/<cafe_slug>")
 def show_cafe(location_slug, cafe_slug):
-    place_id = request.args.get("place_id")
-    cafe_info = db.session.query(Cafe).filter_by(place_id=place_id).first()
-    return render_template("cafe.html", cafe=cafe_info)
+    id = request.args.get("id")
+    cafe_info = db.get_or_404(Cafe, id)
+    return render_template(
+        "cafe.html",
+        cafe=cafe_info,
+        location_slug=location_slug,
+        cafe_slug=cafe_slug,
+        id=cafe_info.id,
+    )
 
 
 @app.route("/suggest", methods=["GET", "POST"])
@@ -210,24 +319,27 @@ def suggests():
         place_name = request.form.get("place[name]")
         lat = request.form.get("place[location][lat]")
         lng = request.form.get("place[location][lng]")
+        borough = find_borough(lat, lng, boroughs_data)
 
         new_cafe = Cafe(
             place_id=place_id,
             name=place_name,
             address=request.form.get("place[location][address]"),
             postal_code=request.form.get("place[location][postal_code]"),
-            borough=find_borough(lat, lng, boroughs_data),
+            borough=borough,
             img_url=request.form.get("place[img_url]"),
             map_url=f"https://www.google.com/maps/place/?q=place_id:{place_id}",
             lat=lat,
             lng=lng,
-            opening_hours=request.form.get("place[weekday_text]")
-            .replace("\u202f", " ")
-            .replace("\u2009", " "),
+            opening_hours=json.dumps(
+                format_opening_hours(request.form.get("place[weekday_text]"))
+            ),
         )
         db.session.add(new_cafe)
         db.session.commit()
         new_cafe_id = new_cafe.id
+        create_slug(place_name)
+        create_slug(borough)
     return redirect(
         url_for("under_review", cafe_name_slugged=make_slug(place_name), id=new_cafe_id)
     )
@@ -248,7 +360,31 @@ def under_review(cafe_name_slugged, id):
                 "show_cafe",
                 location_slug=location_slug,
                 cafe_slug=cafe_slug,
-                place_id=cafe.place_id,
+                id=id,
+            )
+        )
+    return render_template(
+        "under-review.html", cafe_name_slugged=cafe_name_slugged, id=id
+    )
+
+
+@app.route("/<location_slug>/<cafe_name_slugged>/edit", methods=["GET", "POST"])
+def edit(cafe_name_slugged, location_slug):
+    cafe_name = make_slug_inverse(cafe_name_slugged)
+    id = request.args.get("id")
+    if request.method == "POST":
+        id = request.form.get("id")
+        cafe = db.get_or_404(Cafe, id)
+        cafe.wifi = request.form.get("criterion[wifi]")
+        location_slug = make_slug(cafe.borough)
+        cafe_slug = make_slug(cafe.name)
+        db.session.commit()
+        return redirect(
+            url_for(
+                "show_cafe",
+                location_slug=location_slug,
+                cafe_slug=cafe_slug,
+                id=id,
             )
         )
     return render_template(

@@ -22,4 +22,6 @@
 
 -[] Create a file to store slugged names and their corresponding original names (as slug inverse doesnt seem to always be accurate)
 
--[] Link the criteria on the cafe page to the db
+-[] Link the criteria on the cafe page to the db; go through the page and put in the required data-content, progress-bar and span values
+
+-[] Use datetime to format opening hours and store this as a json in the db
