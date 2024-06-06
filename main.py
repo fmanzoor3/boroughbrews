@@ -10,7 +10,7 @@ from flask import (
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, Float, Boolean, Enum, JSON
+from sqlalchemy import Integer, String, Float, Boolean, Enum, JSON, Column
 from geoalchemy2 import Geometry
 import enum
 from flask_wtf import FlaskForm
@@ -60,7 +60,7 @@ class Cafe(db.Model):
     map_url: Mapped[str] = mapped_column(String(250), nullable=False)
     lat: Mapped[float] = mapped_column(Float, nullable=False)
     lng: Mapped[float] = mapped_column(Float, nullable=False)
-    opening_hours: Mapped[str] = mapped_column(String, nullable=True)
+    opening_hours = Column(JSON)
     wifi: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
     sockets: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
     long_stay: Mapped[str] = mapped_column(
@@ -331,9 +331,7 @@ def suggests():
             map_url=f"https://www.google.com/maps/place/?q=place_id:{place_id}",
             lat=lat,
             lng=lng,
-            opening_hours=json.dumps(
-                format_opening_hours(request.form.get("place[weekday_text]"))
-            ),
+            opening_hours=format_opening_hours(request.form.get("place[weekday_text]")),
         )
         db.session.add(new_cafe)
         db.session.commit()
