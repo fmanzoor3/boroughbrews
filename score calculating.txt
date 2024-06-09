@@ -1,0 +1,20 @@
+all low scores are 0
+wifi, sockets medium +11%
+wifi, sockets high +22%
+long stays, tables medium +5.5%
+long stays high, tables +11%
+quiet, calls medium +3% (x2 for high)
+everything else (15 criteria) medium (under) +1% (still 1% for high)
+
+rating low rounds down to nearest 10, medium rounds nearest number with ending digit 5 and high rounds UP to nearest 10
+
+22+22+11+11+6+6
+
+XX or 0 score (grey)
+1-49% score (red)
+50-79% score (yellow)
+80%+ (green)
+
+The total score from criteria adds up to 100; the heart-rating only rounds the score after the initial calculation
+
+If any criteria is unknown the score stays as XX

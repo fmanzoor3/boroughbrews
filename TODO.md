@@ -1,7 +1,5 @@
 # TODO List
 
-(branch: refactor/cafe-model)
-
 -[x] Edit script.js so that if the location clicked on from google autocomplete is not within london then an error message pops up and the later stuff is not loaded
 
 -[x] Rewrite how the address is formatted in script.js (maybe take formatted address and cut off at 'London')
@@ -22,8 +20,26 @@
 
 -[x] Create a file to store slugged names and their corresponding original names (as slug inverse doesnt seem to always be accurate)
 
--[] Link the criteria on the cafe page to the db; go through the page and put in the required data-content, progress-bar and span values
+-[x] Link the criteria on the cafe page to the db; go through the page and put in the required data-content, progress-bar and span values
 
 -[x] Use datetime to format opening hours and store this as a json in the db
 
 -[] Create a function to catch when a cafe is already in the db
+
+-[x] Turn the criterion in the db into one JSON
+
+-[x] Autofill the cafe-edit page with the current criteria data
+
+-[x] Make the current day bold in the opening hours in the cafe page
+
+-[x] Make the 'i_like_it' functionality work on the cafe page [KEY: when updating a JSON column need to make sure it is a dict]
+
+-[x] Use a formula to calculate the cafe score [See txt file for break down]
+
+-[] Report closed page
+
+-[] Add score to cafes on location page
+
+-[] Make the search filter work on the location page
+
+-[] Make the API restful

@@ -22,6 +22,7 @@ import os
 from static.utils.geo_utils import get_boroughs_data, find_borough
 import re
 from datetime import datetime
+import math
 
 # from static.utils.format_open_hours import format_opening_hours, day_abbreviations
 
@@ -52,7 +53,7 @@ db.init_app(app)
 class Cafe(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     place_id: Mapped[int] = mapped_column(String, unique=True, nullable=False)
-    name: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(250), nullable=False)
     address: Mapped[str] = mapped_column(String(250), nullable=False)
     postal_code: Mapped[str] = mapped_column(String(250), nullable=False)
     borough: Mapped[str] = mapped_column(String(250), nullable=False)
@@ -60,35 +61,8 @@ class Cafe(db.Model):
     map_url: Mapped[str] = mapped_column(String(250), nullable=False)
     lat: Mapped[float] = mapped_column(Float, nullable=False)
     lng: Mapped[float] = mapped_column(Float, nullable=False)
-    opening_hours = Column(JSON)
-    wifi: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    sockets: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    long_stay: Mapped[str] = mapped_column(
-        String(10), nullable=False, default="unknown"
-    )
-    tables: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    quiet: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    calls: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    vibe: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    groups: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    coffee: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    food: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    veggie: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    alcohol: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    credit_cards: Mapped[str] = mapped_column(
-        String(10), nullable=False, default="unknown"
-    )
-    light: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    outdoor: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    spacious: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    toilets: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    access: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    ac: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    smoke_free: Mapped[str] = mapped_column(
-        String(10), nullable=False, default="unknown"
-    )
-    pets: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
-    parking: Mapped[str] = mapped_column(String(10), nullable=False, default="unknown")
+    opening_hours = Column(JSON, default={})
+    criterion = Column(JSON, default={})
     score: Mapped[str] = mapped_column(String(2), nullable=False, default="XX")
 
 
@@ -225,6 +199,44 @@ def format_opening_hours(weekday_text):
         }
 
 
+def calculate_score(criterion):
+    if any(
+        value == "unknown" for key, value in criterion.items() if key != "i_like_it"
+    ):
+        return "XX"
+    score = 0
+
+    base_scores = {
+        "wifi": 11,
+        "sockets": 11,
+        "long_stay": 5.5,
+        "tables": 5.5,
+        "quiet": 3,
+        "calls": 3,
+    }
+    default_base_score = 11 / 15
+
+    for key, value in criterion.items():
+        if key == "i_like_it":
+            continue
+        base_score = base_scores.get(key, default_base_score)
+
+        if value == "medium":
+            score += base_score
+        elif value == "high":
+            score += base_score * 2
+
+    score = round(score)
+
+    if criterion["i_like_it"] == "low":
+        score = ((score - 0.1) // 10) * 10
+    elif criterion["i_like_it"] == "medium":
+        score = ((score - 0.1) // 10) * 10 + 5
+    elif criterion["i_like_it"] == "high":
+        score = math.ceil(score / 10) * 10
+    return str(int(score))
+
+
 # ---------------------------------------------------ENV VARIABLES------------------------------------------------------------------------------------
 google_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
 
@@ -288,12 +300,28 @@ def show_location(location_slug):
 def show_cafe(location_slug, cafe_slug):
     id = request.args.get("id")
     cafe_info = db.get_or_404(Cafe, id)
+    current_day = datetime.now().strftime("%a")
     return render_template(
         "cafe.html",
         cafe=cafe_info,
         location_slug=location_slug,
         cafe_slug=cafe_slug,
         id=cafe_info.id,
+        current_day=current_day,
+    )
+
+
+@app.route("/<location_slug>/<cafe_slug>/<like_score>")
+def i_like_it(location_slug, cafe_slug, like_score):
+    id = request.args.get("id")
+    cafe = db.get_or_404(Cafe, id)
+    criterion = dict(cafe.criterion)
+    criterion["i_like_it"] = like_score
+    cafe.criterion = criterion
+    cafe.score = calculate_score(criterion)
+    db.session.commit()
+    return redirect(
+        url_for("show_cafe", location_slug=location_slug, cafe_slug=cafe_slug, id=id)
     )
 
 
@@ -346,30 +374,33 @@ def suggests():
 @app.route("/under-review/<cafe_name_slugged>/<id>", methods=["GET", "POST"])
 def under_review(cafe_name_slugged, id):
     cafe_name = make_slug_inverse(cafe_name_slugged)
+    cafe = db.get_or_404(Cafe, id)
     if request.method == "POST":
-        id = request.form.get("id")
-        cafe = db.get_or_404(Cafe, id)
-        cafe.wifi = request.form.get("criterion[wifi]")
-        cafe.sockets = request.form.get("criterion[sockets]")
-        cafe.long_stay = request.form.get("criterion[long_stay]")
-        cafe.tables = request.form.get("criterion[tables]")
-        cafe.quiet = request.form.get("criterion[quiet]")
-        cafe.calls = request.form.get("criterion[skype]")
-        cafe.vibe = request.form.get("criterion[lf_vibe]")
-        cafe.groups = request.form.get("criterion[social_table]")
-        cafe.coffee = request.form.get("criterion[coffee]")
-        cafe.food = request.form.get("criterion[food]")
-        cafe.veggie = request.form.get("criterion[veggie]")
-        cafe.alcohol = request.form.get("criterion[alcohol]")
-        cafe.credit_cards = request.form.get("criterion[credit_cards]")
-        cafe.light = request.form.get("criterion[light]")
-        cafe.outdoor = request.form.get("criterion[outdoor]")
-        cafe.spacious = request.form.get("criterion[capacity]")
-        cafe.toilets = request.form.get("criterion[toilet]")
-        cafe.access = request.form.get("criterion[accessible]")
-        cafe.ac = request.form.get("criterion[ac]")
-        cafe.pets = request.form.get("criterion[pet_friendly]")
-        cafe.parking = request.form.get("criterion[parking]")
+        cafe.criterion = {
+            "wifi": request.form.get("criterion[wifi]"),
+            "sockets": request.form.get("criterion[sockets]"),
+            "long_stay": request.form.get("criterion[long_stay]"),
+            "tables": request.form.get("criterion[tables]"),
+            "quiet": request.form.get("criterion[quiet]"),
+            "calls": request.form.get("criterion[calls]"),
+            "vibe": request.form.get("criterion[vibe]"),
+            "groups": request.form.get("criterion[groups]"),
+            "coffee": request.form.get("criterion[coffee]"),
+            "food": request.form.get("criterion[food]"),
+            "veggie": request.form.get("criterion[veggie]"),
+            "alcohol": request.form.get("criterion[alcohol]"),
+            "credit_cards": request.form.get("criterion[credit_cards]"),
+            "light": request.form.get("criterion[light]"),
+            "outdoor": request.form.get("criterion[outdoor]"),
+            "spacious": request.form.get("criterion[spacious]"),
+            "toilets": request.form.get("criterion[toilets]"),
+            "access": request.form.get("criterion[access]"),
+            "ac": request.form.get("criterion[ac]"),
+            "pets": request.form.get("criterion[pets]"),
+            "parking": request.form.get("criterion[parking]"),
+            "i_like_it": request.form.get("criterion[i_like_it]"),
+        }
+        cafe.score = calculate_score(cafe.criterion)
         location_slug = make_slug(cafe.borough)
         cafe_slug = make_slug(cafe.name)
         db.session.commit()
@@ -382,7 +413,7 @@ def under_review(cafe_name_slugged, id):
             )
         )
     return render_template(
-        "under-review.html", cafe_name_slugged=cafe_name_slugged, id=id
+        "under-review.html", cafe_name_slugged=cafe_name_slugged, id=id, cafe=cafe
     )
 
 
@@ -390,30 +421,35 @@ def under_review(cafe_name_slugged, id):
 def edit(cafe_name_slugged, location_slug):
     cafe_name = make_slug_inverse(cafe_name_slugged)
     id = request.args.get("id")
+    cafe = db.get_or_404(Cafe, id)
     if request.method == "POST":
         id = request.form.get("id")
         cafe = db.get_or_404(Cafe, id)
-        cafe.wifi = request.form.get("criterion[wifi]")
-        cafe.sockets = request.form.get("criterion[sockets]")
-        cafe.long_stay = request.form.get("criterion[long_stay]")
-        cafe.tables = request.form.get("criterion[tables]")
-        cafe.quiet = request.form.get("criterion[quiet]")
-        cafe.calls = request.form.get("criterion[skype]")
-        cafe.vibe = request.form.get("criterion[lf_vibe]")
-        cafe.groups = request.form.get("criterion[social_table]")
-        cafe.coffee = request.form.get("criterion[coffee]")
-        cafe.food = request.form.get("criterion[food]")
-        cafe.veggie = request.form.get("criterion[veggie]")
-        cafe.alcohol = request.form.get("criterion[alcohol]")
-        cafe.credit_cards = request.form.get("criterion[credit_cards]")
-        cafe.light = request.form.get("criterion[light]")
-        cafe.outdoor = request.form.get("criterion[outdoor]")
-        cafe.spacious = request.form.get("criterion[capacity]")
-        cafe.toilets = request.form.get("criterion[toilet]")
-        cafe.access = request.form.get("criterion[accessible]")
-        cafe.ac = request.form.get("criterion[ac]")
-        cafe.pets = request.form.get("criterion[pet_friendly]")
-        cafe.parking = request.form.get("criterion[parking]")
+        cafe.criterion = {
+            "wifi": request.form.get("criterion[wifi]"),
+            "sockets": request.form.get("criterion[sockets]"),
+            "long_stay": request.form.get("criterion[long_stay]"),
+            "tables": request.form.get("criterion[tables]"),
+            "quiet": request.form.get("criterion[quiet]"),
+            "calls": request.form.get("criterion[calls]"),
+            "vibe": request.form.get("criterion[vibe]"),
+            "groups": request.form.get("criterion[groups]"),
+            "coffee": request.form.get("criterion[coffee]"),
+            "food": request.form.get("criterion[food]"),
+            "veggie": request.form.get("criterion[veggie]"),
+            "alcohol": request.form.get("criterion[alcohol]"),
+            "credit_cards": request.form.get("criterion[credit_cards]"),
+            "light": request.form.get("criterion[light]"),
+            "outdoor": request.form.get("criterion[outdoor]"),
+            "spacious": request.form.get("criterion[spacious]"),
+            "toilets": request.form.get("criterion[toilets]"),
+            "access": request.form.get("criterion[access]"),
+            "ac": request.form.get("criterion[ac]"),
+            "pets": request.form.get("criterion[pets]"),
+            "parking": request.form.get("criterion[parking]"),
+            "i_like_it": request.form.get("criterion[i_like_it]"),
+        }
+        cafe.score = calculate_score(cafe.criterion)
         location_slug = make_slug(cafe.borough)
         cafe_slug = make_slug(cafe.name)
         db.session.commit()
@@ -426,7 +462,7 @@ def edit(cafe_name_slugged, location_slug):
             )
         )
     return render_template(
-        "under-review.html", cafe_name_slugged=cafe_name_slugged, id=id
+        "under-review.html", cafe_name_slugged=cafe_name_slugged, id=id, cafe=cafe
     )
 
 

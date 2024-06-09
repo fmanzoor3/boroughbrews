@@ -67,6 +67,17 @@
   --bs-highlight-bg: #fff3cd;
 }
 
+/* Navbar */
+.navbar a{
+  font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.9em;
+
+}
+
+.navbar a span, .navbar a svg{
+  font-size: 1.4em !important;
+
+}
 
 /* Remove margin and padding from the body */
 body {
@@ -690,7 +701,7 @@ ul.thumbnails.image_picker_selector li .thumbnail {
   background-color: white;
 }
 #suggest .criteria .btn-review.green:hover, #suggest .criteria .btn-review.green:has(.active){
-  border-color: green;
+  border-color: #4CAF50;
   background-color: white;
 }
 
@@ -728,7 +739,7 @@ ul.thumbnails.image_picker_selector li .thumbnail {
 
 /* Cafe page */
 #place {
-  padding-top: 4.6rem !important;
+  padding-top: 4.55rem !important;
   padding-bottom: 60px;
   min-height: 520px;
 }
@@ -771,6 +782,16 @@ ul.thumbnails.image_picker_selector li .thumbnail {
   color: #4CAF50;
 }
 
+#place #score.yellow {
+  border: 3px solid yellow;
+  color: yellow;
+}
+
+#place #score.red {
+  border: 3px solid red;
+  color: red;
+}
+
 #place #score {
   display: inline-block;
   color: white;
@@ -782,8 +803,21 @@ ul.thumbnails.image_picker_selector li .thumbnail {
   background: rgba(0, 0, 0, 0.5) 100%;
 }
 
-#place #score i.grey {
+#place #score i {
   color: #ddd;
+  font-size: var(--bs-body-font-size);
+}
+
+#place #score .green {
+  color: #4CAF50;
+}
+
+#place #score .yellow {
+  color: yellow;
+}
+
+#place #score .red {
+  color: red;
 }
 
 #place header h1, #place header .h1, #place header h5, #place header .h5, #place header p {
@@ -864,7 +898,7 @@ ul.thumbnails.image_picker_selector li .thumbnail {
 
 #place .progress .high {
   width: 100%;
-  background-color: green;
+  background-color: #4CAF50;
 }
 
 #place .progress .progress-bar {
@@ -984,7 +1018,7 @@ body {
 }
 
 #place #rate-productivity a.green:hover, #place #rate-productivity a.green.selected {
-  color: green;
+  color: #4CAF50;
 }
 
 .btn-default {

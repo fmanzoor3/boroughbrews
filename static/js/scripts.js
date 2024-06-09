@@ -132,7 +132,7 @@ function initMap() {
         if (photos) {
             // Extract photo URLs
             var photoUrls = photos.map(function (photo) {
-                return photo.getUrl({ maxWidth: 1000, maxHeight: 1000 }); // Adjust dimensions as needed
+                return photo.getUrl({ maxWidth: 2500, maxHeight: 2500 }); // Adjust dimensions as needed
             });
 
             // Generate the image grid using the fetched photo URLs
