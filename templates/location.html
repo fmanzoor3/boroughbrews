@@ -26,7 +26,7 @@
     <h3>My Places</h3>
     <div class="row no-gutters">
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-action="liked" data-toggle="button" disabled="">
+    <button class="btn btn-filter" data-criteria="i-like-it" data-action="liked" data-toggle="button">
     <div data-content="Please log in to use this feature." data-original-title="Warning" data-template="<div class='popover low-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-toggle="popover">
     <i class="fa fa-heart"></i>
     <br>
@@ -83,7 +83,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="skype" data-toggle="button">
+    <button class="btn btn-filter" data-criteria="calls" data-toggle="button">
     <i class="fa fa-fw fa-headset"></i>
     <br>
     <span title="Video/audio calls">
@@ -96,7 +96,7 @@
     <h3>Community</h3>
     <div class="row no-gutters">
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="lf-vibe" data-toggle="button">
+    <button class="btn btn-filter" data-criteria="vibe" data-toggle="button">
     <i class="fa fa-fw fa-laptop"></i>
     <br>
     <span title="People working">
@@ -105,7 +105,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="social-table" data-toggle="button">
+    <button class="btn btn-filter" data-criteria="groups" data-toggle="button">
     <i class="fa fa-fw fa-users"></i>
     <br>
     <span title="Group tables">
@@ -185,7 +185,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="capacity" data-toggle="button">
+    <button class="btn btn-filter" data-criteria="spacious" data-toggle="button">
     <i class="fa fa-fw fa-arrows-alt"></i>
     <br>
     <span title="Spacious">
@@ -194,7 +194,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="toilet" data-toggle="button">
+    <button class="btn btn-filter" data-criteria="toilets" data-toggle="button">
     <i class="fa fa-fw fa-toilet-paper"></i>
     <br>
     <span title="Restroom">
@@ -203,7 +203,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="accessible" data-toggle="button">
+    <button class="btn btn-filter" data-criteria="access" data-toggle="button">
     <i class="fa fa-fw fa-wheelchair"></i>
     <br>
     <span title="Accessible">
@@ -221,7 +221,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="pet-friendly" data-toggle="button">
+    <button class="btn btn-filter" data-criteria="pets" data-toggle="button">
     <i class="fa fa-fw fa-dog"></i>
     <br>
     <span title="Pet friendly">
@@ -251,15 +251,24 @@
     
     <!-- List -->
     <h2 data-places="275" id="best_match">{{all_cafes|length}} Work-Friendly Places</h2>
-    <div class="list">
+    <div class="list" id="cafe-list">
     <!-- LaptopFriendly Hubs -->
     <!-- All Places -->
-    {%for cafe in all_cafes%}
-    <a id={{cafe.slugged_name}} class="place" data-wifi="high" data-sockets="low" data-long-stay="high" data-light="low" data-quiet="high" data-skype="medium" data-lf-vibe="medium" data-ac="low" data-tables="medium" data-chairs="unknown" data-safe="unknown" data-social-table="medium" data-welcoming="unknown" data-owner-approved="unknown" data-food="medium" data-credit-cards="high" data-staff="unknown" data-parking="medium" data-accessible="high" data-smoke-free="unknown" data-outdoor="low" data-pet-friendly="high" data-morning="unknown" data-afternoon="unknown" data-evening="unknown" data-night="unknown" data-capacity="medium" data-affordable="unknown" data-music="unknown" data-coffee="high" data-alcohol="low" data-veggie="medium" data-i-like-it="high" data-independent="unknown" data-toilet="high" data-outdoor-sockets="unknown" data-score="65" href="{{ url_for('show_cafe', location_slug=location_slug, cafe_slug=cafe.slugged_name, id=cafe.cafe.id) }}" style="order: 124;"><div class="card-img-top">
+    {%for cafe in all_cafes  | sort(attribute='cafe.score', reverse=True)%}
+    <a id={{cafe.slugged_name}} class="place" data-wifi="{{cafe.cafe.criterion['wifi']}}" data-sockets="{{cafe.cafe.criterion['sockets']}}" data-long-stay="{{cafe.cafe.criterion['long_stay']}}" data-light="{{cafe.cafe.criterion['light']}}" data-quiet="{{cafe.cafe.criterion['quiet']}}" data-calls="{{cafe.cafe.criterion['calls']}}" data-vibe="{{cafe.cafe.criterion['vibe']}}" data-ac="{{cafe.cafe.criterion['ac']}}" data-tables="{{cafe.cafe.criterion['tables']}}" data-groups="{{cafe.cafe.criterion['groups']}}" data-food="{{cafe.cafe.criterion['food']}}" data-credit-cards="{{cafe.cafe.criterion['credit_cards']}}" data-parking="{{cafe.cafe.criterion['parking']}}" data-access="{{cafe.cafe.criterion['access']}}" data-outdoor="{{cafe.cafe.criterion['outdoor']}}" data-pets="{{cafe.cafe.criterion['pets']}}" data-spacious="{{cafe.cafe.criterion['spacious']}}" data-coffee="{{cafe.cafe.criterion['coffee']}}" data-alcohol="{{cafe.cafe.criterion['alcohol']}}" data-veggie="{{cafe.cafe.criterion['veggie']}}" data-i-like-it="{{cafe.cafe.criterion['i_like_it']}}" data-toilets="{{cafe.cafe.criterion['toilets']}}" data-score="{{cafe.cafe.score}}" href="{{ url_for('show_cafe', location_slug=location_slug, cafe_slug=cafe.slugged_name, id=cafe.cafe.id) }}" style="order: 124;"><div class="card-img-top">
     <img alt={{cafe.cafe.name}} src={{cafe.cafe.img_url}}>
     </div>
     <div class="card-body">
+    <div class="score" data-score="{{cafe.cafe.score}}" data-i-like-it="{{cafe.cafe.criterion['i_like_it']}}" data-toggle="popover" data-content="I have not been here yet" data-template="<div class='popover unknown-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-original-title="In general, do you like working from here?"><i class="far fa-heart grey" data-color="grey"></i> | {{cafe.cafe.score}}%</div>
     <h3 class="card-title">{{cafe.cafe.name}}</h3>
+    <p>
+    <i class="far fa-clock"></i>
+    {% for day, time in cafe.cafe.opening_hours.items() %}
+      {% if day == current_day %}
+        {{ time }}
+        {% endif %}
+    {% endfor %}
+    </p>
     <p class="card-text">
     <i class="fa fa-location-arrow"></i>
     {{cafe.cafe.address}}
@@ -286,47 +295,228 @@
     <div id="map"></div>
   </div>
   <script>
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: {{borough_lat}}, lng: {{borough_lng}}}, // Borough coordinates
-          zoom: 12,
-          disableDefaultUI: true, // Disable default UI controls
-          zoomControl: true, // Enable zoom control
-          scaleControl: true, // Enable scale control
-          mapTypeControl: false // Disable map type controls
-        });
-  
-        // Array of locations in London with their coordinates
-        var locations=[];
-        {%for cafe in all_cafes%}
-          locations.push({lat: {{cafe.cafe.lat}}, lng: {{cafe.cafe.lng}}, name: "{{cafe.cafe.name}}"});
-        {%endfor%}
+var currentInfoWindow = null;
+var openedInfoWindow = null;
+var markers = {};
 
-  
-        // Loop through the locations array and add markers
-        locations.forEach(function(location) {
-          var marker = new google.maps.Marker({
+function initMap() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: {{borough_lat}}, lng: {{borough_lng}}}, // Borough coordinates
+        zoom: 12,
+        disableDefaultUI: true, // Disable default UI controls
+        zoomControl: true, // Enable zoom control
+        scaleControl: true, // Enable scale control
+        mapTypeControl: false // Disable map type controls
+    });
+
+    // Array of locations in London with their coordinates
+    var locations = [];
+    {% for cafe in all_cafes %}
+    locations.push({
+        lat: {{ cafe.cafe.lat }},
+        lng: {{ cafe.cafe.lng }},
+        name: "{{ cafe.cafe.name }}",
+        slugged_name: "{{ cafe.slugged_name }}",
+        url: "{{ url_for('show_cafe', location_slug=location_slug, cafe_slug=cafe.slugged_name, id=cafe.cafe.id) }}"
+    });
+    {% endfor %}
+
+    // Loop through the locations array and add markers
+    locations.forEach(function(location) {
+        var marker = new google.maps.Marker({
             position: location,
             map: map,
             title: location.name // Marker title
-          });
-  
-          var infowindow = new google.maps.InfoWindow({
-            content: location.name
-          });
-  
-          // Add event listeners to show and hide the info window for each marker
-          marker.addListener('mouseover', function() {
-            infowindow.open(map, this);
-          });
-  
-          marker.addListener('mouseout', function() {
-            infowindow.close();
-          });
         });
-      }
 
-    window.onload = function() {
-      initMap();
-    };
-  </script>
+        var infowindow = new google.maps.InfoWindow({
+            content: '<a href="' + location.url + '" class="link">' + location.name + '</a>'
+        });
+
+        // Open info window on hover
+        marker.addListener('mouseover', function() {
+            if (currentInfoWindow && currentInfoWindow !== openedInfoWindow) {
+                currentInfoWindow.close();
+            }
+            infowindow.open(map, marker);
+            currentInfoWindow = infowindow;
+        });
+
+        // Toggle info window on click
+        marker.addListener('click', function() {
+            if (openedInfoWindow === infowindow) {
+                infowindow.close();
+                openedInfoWindow = null;
+            } else {
+                if (openedInfoWindow) {
+                    openedInfoWindow.close();
+                }
+                infowindow.open(map, marker);
+                openedInfoWindow = infowindow;
+            }
+        });
+
+        // Close info window on mouseout if it's not the clicked one
+        marker.addListener('mouseout', function() {
+            if (currentInfoWindow !== openedInfoWindow) {
+                currentInfoWindow.close();
+                currentInfoWindow = null;
+            }
+        });
+
+        markers[location.slugged_name] = { marker: marker, infowindow: infowindow };
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Score color
+    const scoreElements = document.querySelectorAll('.score');
+
+    scoreElements.forEach(element => {
+        const scoreValue = parseInt(element.dataset.score);
+
+        if (scoreValue >= 0 && scoreValue < 50) {
+            element.className = 'red score';
+        } else if (scoreValue >= 50 && scoreValue < 80) {
+            element.className = 'yellow score';
+        } else if (scoreValue >= 80) {
+            element.className = 'green score';
+        }
+    });
+
+    // Score heart colors
+    const cafeElements = document.querySelectorAll('.place');
+
+    cafeElements.forEach(element => {
+        const likeValue = element.dataset.iLikeIt;
+        const icon = element.querySelector('.score i');
+        if (likeValue === 'low') {
+            icon.className = 'fa fa-heart-broken red';
+        } else if (likeValue === 'medium') {
+            icon.className = 'fa fa-heart yellow';
+        } else if (likeValue === 'high') {
+            icon.className = 'fa fa-heart green';
+        }
+
+        // Add hover event to show marker info window
+        element.addEventListener('mouseover', function() {
+            const cafeName = element.id;
+            if (markers[cafeName]) {
+                if (currentInfoWindow && currentInfoWindow !== openedInfoWindow) {
+                    currentInfoWindow.close();
+                }
+                markers[cafeName].infowindow.open(map, markers[cafeName].marker);
+                currentInfoWindow = markers[cafeName].infowindow;
+            }
+        });
+
+        element.addEventListener('mouseout', function() {
+            if (currentInfoWindow !== openedInfoWindow) {
+                currentInfoWindow.close();
+                currentInfoWindow = null;
+            }
+        });
+    });
+
+    const criteriaButtons = document.querySelectorAll('.btn-filter');
+    const criteriaPriority = { 'high': 1, 'medium': 2, 'unknown': 3, 'low': 4 };
+    let activeCriteria = [];
+    const cafeList = document.getElementById('cafe-list');
+    const cafes = Array.from(cafeList.getElementsByClassName('place'));
+    const originalOrder = cafes.slice(); // Store the original order
+
+    function camelCase(str) {
+        return str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
+    }
+
+    function getCriteriaPriority(cafe, criterion) {
+        return criteriaPriority[cafe.dataset[camelCase(criterion)]] || 5; // Default to 5 if not found
+    }
+
+    function sortCafes(criteria) {
+        if (criteria.length === 0) {
+            // No criteria selected, restore original order
+            cafeList.innerHTML = ''; // Clear the cafe list
+            originalOrder.forEach(cafe => {
+                cafeList.appendChild(cafe);
+            });
+            return;
+        }
+
+        const filteredCafes = cafes.filter(cafe => {
+            for (let criterion of criteria) {
+                if (cafe.dataset[camelCase(criterion)] === 'low') {
+                    return false; // Exclude cafes with 'low' value for any active criterion
+                }
+            }
+            return true;
+        });
+
+        filteredCafes.sort((a, b) => {
+            for (let criterion of criteria) {
+                let priorityA = getCriteriaPriority(a, criterion);
+                let priorityB = getCriteriaPriority(b, criterion);
+                if (priorityA !== priorityB) {
+                    return priorityA - priorityB;
+                }
+            }
+            return 0; // If all criteria are equal, maintain original order
+        });
+
+        // Clear the cafe list and reinsert filtered and sorted elements
+        cafeList.innerHTML = '';
+        filteredCafes.forEach(cafe => {
+            cafeList.appendChild(cafe);
+        });
+    }
+
+    function updateActiveFilters() {
+        cafes.forEach(cafe => {
+            const activeFiltersDiv = cafe.querySelector('.active-filters');
+            activeFiltersDiv.innerHTML = ''; // Clear existing active filters
+
+            criteriaButtons.forEach(button => {
+                const criterion = button.dataset.criteria;
+                if (activeCriteria.includes(criterion)) {
+                    const score = cafe.dataset[camelCase(criterion)];
+                    const span = document.createElement('span');
+                    span.classList.add('active-filter', `${score}`);
+                    
+                    // Only add the icon if the criterion is not "i-like-it"
+                    if (criterion !== 'i-like-it') {
+                        const icon = button.querySelector('i').outerHTML;
+                        span.innerHTML = icon;
+                    }
+
+                    activeFiltersDiv.appendChild(span);
+                }
+            });
+        });
+    }
+
+    criteriaButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const isSet = button.classList.contains('set');
+            const criterion = button.dataset.criteria;
+
+            if (!isSet) {
+                button.classList.add('set');
+                activeCriteria.push(criterion);
+            } else {
+                button.classList.remove('set');
+                activeCriteria = activeCriteria.filter(c => c !== criterion);
+            }
+
+            sortCafes(activeCriteria);
+            updateActiveFilters();
+        });
+    });
+});
+
+
+
+window.onload = function() {
+    initMap();
+};
+</script>
+

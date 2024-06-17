@@ -38,8 +38,18 @@
 
 -[] Report closed page
 
--[] Add score to cafes on location page
+-[x] Add score and today's opening/closing time to cafes on location page
 
--[] Make the search filter work on the location page
+-[x] Make the corresponding cafe location popup in the map in the locations page when hovering over the cafe in the list
+
+-[x] Make the search filter work on the location page
+
+-[x] Order the list in the location page by score
+
+-[] Fix bug in cafe page when hovering over hearts
+
+-[] Store the images as image files so you dont have to rely on image urls that may change (i think the urls change after some time)
 
 -[] Make the API restful
+
+-[] Add a delete feature (later make it only accessible by admin)
