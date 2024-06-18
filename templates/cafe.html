@@ -46,8 +46,10 @@
     </div>
     </div>
     <script type="text/javascript">
-    var lightbox = new SimpleLightbox('.vibesbox a', { overlayColor: 0.9, captionsData: 'titleLightbox' })
-    </script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var lightbox = new SimpleLightbox('.vibesbox a', { overlayColor: 0.9, captionsData: 'titleLightbox' });
+    });
+</script>
     
     
     <div class="row" id="been-here">

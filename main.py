@@ -23,6 +23,7 @@ from static.utils.geo_utils import get_boroughs_data, find_borough
 import re
 from datetime import datetime
 import math
+import requests
 
 # from static.utils.format_open_hours import format_opening_hours, day_abbreviations
 
@@ -124,9 +125,17 @@ def make_slug_inverse(slug):
             return key
 
 
-def check_cafe_in_db(address):
-    print(address)
-    # location= db.query.filter_by(address=address).first()
+def check_cafe_in_db(place_id):
+    cafe = db.session.query(Cafe).filter_by(place_id=place_id).first()
+    if cafe:
+        print(cafe.id)
+        return {
+            "exists": True,
+            "id": cafe.id,
+            "location_slug": make_slug(cafe.borough),
+            "cafe_slug": make_slug(cafe.name),
+        }
+    return {"exists": False}
 
 
 def format_opening_hours(weekday_text):
@@ -237,6 +246,16 @@ def calculate_score(criterion):
     return str(int(score))
 
 
+def download_image(url, save_path="image.jpg"):
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(save_path, "wb") as file:
+            file.write(response.content)
+        return "Image successfully downloaded: " + save_path
+    else:
+        return "Failed to retrieve the image"
+
+
 # ---------------------------------------------------ENV VARIABLES------------------------------------------------------------------------------------
 google_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
 
@@ -328,19 +347,9 @@ def i_like_it(location_slug, cafe_slug, like_score):
     )
 
 
-@app.route("/suggest", methods=["GET", "POST"])
-def suggest(coordinates=[]):
-    if request.method == "POST":
-        place_json = request.form.get("place")
-        print(place_json)
-        # json_data = json.loads(place_json)
-        # print(json_data["name"])
-        # print(f"{selected_location},{latitude},{longitude}")
-        # if longitude and latitude:
-        #     coordinates = [latitude, longitude]
-        #     print(coordinates)
-        # check_cafe_in_db(location_address)
-    return render_template("suggest.html", coordinates=coordinates)
+@app.route("/suggest")
+def suggest():
+    return render_template("suggest.html")
 
 
 @app.route("/suggests", methods=["GET", "POST"])
@@ -467,6 +476,23 @@ def edit(cafe_name_slugged, location_slug):
     return render_template(
         "under-review.html", cafe_name_slugged=cafe_name_slugged, id=id, cafe=cafe
     )
+
+
+# Downloading cafe thumbnails
+@app.route("/download_image", methods=["POST"])
+def download_image_endpoint():
+    data = request.json
+    url = data.get("url")
+    save_path = f'static/assets/images/thumbnails/{data.get("id")}-{re.sub(r"[^a-z0-9-]", "", data.get("name").lower().replace(" ", "-"))}.jpg'
+    result = download_image(url, save_path)
+    return jsonify({"message": result, "path": save_path})
+
+
+@app.route("/api/check_cafe")
+def check_cafe():
+    place_id = request.args.get("place_id")
+    result = check_cafe_in_db(place_id)
+    return jsonify(result)
 
 
 # TODO: delete_post() to remove a blog post from the database

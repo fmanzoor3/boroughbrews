@@ -24,7 +24,7 @@
 
 -[x] Use datetime to format opening hours and store this as a json in the db
 
--[] Create a function to catch when a cafe is already in the db
+-[x] Create a function to catch when a cafe is already in the db
 
 -[x] Turn the criterion in the db into one JSON
 
@@ -48,7 +48,11 @@
 
 -[] Fix bug in cafe page when hovering over hearts
 
--[] Store the images as image files so you dont have to rely on image urls that may change (i think the urls change after some time)
+-[x] Store the images as image files so you dont have to rely on image urls that may change (i think the urls change after some time)
+
+-[x] Make sure cafes with the same slugged name have distinct thumbnails
+
+-[] Edit code so we download thumbnails only when the submit button is pressed (suggest page)
 
 -[] Make the API restful
 

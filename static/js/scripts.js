@@ -57,6 +57,34 @@ function getTextBeforeLondonPostcode(address) {
     }
 }
 
+var savePath;
+
+function downloadImage(url, name, id) {
+    fetch('http://127.0.0.1:5003/download_image', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url: url, name: name, id: id })
+    })
+    .then(response => response.json())
+    .then(data => {
+        savePath = '/'+data.path;
+        console.log(data.message);
+        console.log("Save Path:", savePath);
+
+        // Update the input element with the new save path
+        var inputElement = document.getElementById('place_img_url');
+        if (inputElement) {
+            inputElement.value = savePath;
+            console.log('Changed thumbnail input value');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
 // Initialize a global variable to store the place name
 var globalPlaceName = '';
 
@@ -67,13 +95,11 @@ function initMap() {
         zoom: 10,
     });
 
-    // Initialize the marker (initially hidden)
     var marker = new google.maps.Marker({
         map: map,
         visible: false // Initially hide the marker
     });
 
-    // Define the bounds for London (restricts autocomplete to only show locations in London)
     var londonBounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(51.28676, -0.510375), // South West coordinates of London
         new google.maps.LatLng(51.691874, 0.334015)  // North East coordinates of London
@@ -87,166 +113,157 @@ function initMap() {
     autocomplete.addListener('place_changed', function () {
         var place = autocomplete.getPlace();
 
-        // Set the value of our place input in 'suggest.html' as the place object
-        document.getElementById('place').value = place;
+        fetch(`/api/check_cafe?place_id=${place.place_id}`)
+            .then(response => response.json())
+            .then(data => {
+                var stepExists = document.getElementById('step_exists');
+                var nextButton = document.getElementById('nextButton');
+                var retryButton = document.getElementById('retryButton');
+                var cafeLink = document.getElementById('cafeLink');
 
-        console.log(JSON.stringify(place));
+                if (data.exists) {
+                    stepExists.style.display = 'block';
+                    nextButton.style.display = 'none';
+                    retryButton.style.display = 'block';
 
-        // Check place is in London
-        const postalTown = getPostalTown(place);
-        if (!postalTown) {
-            // Show an error message
-            alert("Error, please choose a different location in London.");
-        } else if (postalTown !== "London") {
-            // Show an error message
-            alert("Location not found in London.");
-        } else {
-            // Run the rest of your code here
-            console.log("The place is in London. Running the rest of the code...");
-            // Your other code goes here
-        
+                    // Construct the URL for the cafe
+                    var url = showCafeUrlBase
+                        .replace('LOCATION_PLACEHOLDER', `${data.location_slug}`)
+                        .replace('CAFE_PLACEHOLDER', `${data.cafe_slug}`)
+                        .replace('ID_PLACEHOLDER', `${data.id}`);
 
-        // Display next section in form (and buttons)
-        var step2 = document.getElementById('step2');
-        var controls=document.getElementById('controls');
+                    console.log(url)
 
-        // Remove the 'display: none;' style
-        step2.style.display = '';
-        controls.style.display = '';
+                    cafeLink.href = url;
+                    return;
+                } else {
+                    stepExists.style.display = 'none';
+                    nextButton.style.display = 'block';
+                    retryButton.style.display = 'block';
+                }
 
-        if (!place.geometry || !place.geometry.location) {
-            // Invalid place or no location information available
-            return;
-        }
+                const postalTown = getPostalTown(place);
+                if (!postalTown) {
+                    alert("Error, please choose a different location in London.");
+                    return;
+                } else if (postalTown !== "London") {
+                    alert("Location not found in London.");
+                    return;
+                }
 
-        // Set the map center to the selected place's location
-        map.setCenter(place.geometry.location);
-        map.setZoom(17); // Optionally, adjust the zoom level
+                var step2 = document.getElementById('step2');
+                var controls = document.getElementById('controls');
 
-        // Update the marker position and show it
-        marker.setPosition(place.geometry.location);
-        marker.setVisible(true);
+                step2.style.display = '';
+                controls.style.display = '';
+                nextButton.style.display = 'block';
+                retryButton.style.display = 'block';
 
-        // Fetch photos associated with the selected place
-        var photos = place.photos;
-        if (photos) {
-            // Extract photo URLs
-            var photoUrls = photos.map(function (photo) {
-                return photo.getUrl({ maxWidth: 2500, maxHeight: 2500 }); // Adjust dimensions as needed
-            });
+                if (!place.geometry || !place.geometry.location) {
+                    return;
+                }
 
-            // Generate the image grid using the fetched photo URLs
-            generateImageGrid(photoUrls);
-        }
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);
 
-        // Get the img url from selected thumbnail
-        var thumbnailElement = document.querySelector('.thumbnail.selected');
-        var inputElement=document.getElementById('place_img_url')
+                marker.setPosition(place.geometry.location);
+                marker.setVisible(true);
 
-        if (inputElement && thumbnailElement && thumbnailElement.querySelector('img')) {
-            var imageUrl = thumbnailElement.querySelector('img').src;
-            inputElement.value=imageUrl
+                var photos = place.photos;
+                if (photos) {
+                    var photoUrls = photos.map(function (photo) {
+                        return photo.getUrl({ maxWidth: 2500, maxHeight: 2500 });
+                    });
 
-        }
+                    generateImageGrid(photoUrls, place.name, place.place_id);
+                }
 
+                autofillLocationInfo(place);
 
-        // Autofill location info for next section
-        var inputElement = document.getElementById('place_name');
+                globalPlaceName = place.name;
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    function autofillLocationInfo(place) {
+        var inputElement;
+
+        inputElement = document.getElementById('place_name');
         if (inputElement) {
             inputElement.value = place.name;
         }
-        var inputElement = document.getElementById('place_location_address');
+        inputElement = document.getElementById('place_location_address');
         if (inputElement) {
             inputElement.value = getTextBeforeLondonPostcode(place.formatted_address);
         }
-        var inputElement = document.getElementById('place_location_postal_code');
+        inputElement = document.getElementById('place_location_postal_code');
         if (inputElement) {
             inputElement.value = getPostcodeFromPlace(place);
         }
-        var inputElement = document.getElementById('place_google_place_gid');
+        inputElement = document.getElementById('place_google_place_gid');
         if (inputElement) {
             inputElement.value = place.place_id;
         }
-        var inputElement = document.getElementById('place_location_lat');
+        inputElement = document.getElementById('place_location_lat');
         if (inputElement) {
             inputElement.value = place.geometry.location.lat();
         }
-        var inputElement = document.getElementById('place_location_lng');
+        inputElement = document.getElementById('place_location_lng');
         if (inputElement) {
             inputElement.value = place.geometry.location.lng();
         }
-        var inputElement = document.getElementById('place_borough');
+        inputElement = document.getElementById('place_borough');
         if (inputElement) {
             inputElement.value = getBoroughFromPlace(place);
         }
-        var inputElement = document.getElementById('place_weekday_text');
+        inputElement = document.getElementById('place_weekday_text');
         if (inputElement) {
             inputElement.value = place.opening_hours.weekday_text;
         }
+    }
 
-        
-        // Store the place name in the global variable
-        globalPlaceName = place.name;}
-        
-    });
-
-    // Function to handle thumbnail selection
-    function selectThumbnail(thumbnailDiv, photoUrl) {
-        // Remove 'selected' class from previously selected thumbnail (if any)
+    function selectThumbnail(thumbnailDiv, photoUrl, name, id) {
         var prevSelectedThumbnail = document.querySelector('.thumbnails.image_picker_selector .thumbnail.selected');
         if (prevSelectedThumbnail) {
             prevSelectedThumbnail.classList.remove('selected');
         }
-        // Add 'selected' class to currently selected thumbnail
         thumbnailDiv.classList.add('selected');
-        // Do something with the selected photo URL (e.g., display it, save it, etc.)
         console.log("Selected photo:", photoUrl);
+        downloadImage(photoUrl, name, id);
     }
 
-    function generateImageGrid(photoUrls) {
+    function generateImageGrid(photoUrls, name, id) {
         var imageGrid = document.querySelector('.thumbnails.image_picker_selector');
-        imageGrid.innerHTML = ''; // Clear existing content
-    
-        // Ensure we only display up to 6 images
+        imageGrid.innerHTML = '';
+
         var maxImages = Math.min(photoUrls.length, 6);
-    
+
         for (var i = 0; i < maxImages; i++) {
-            // Create list item
             var listItem = document.createElement('li');
-    
-            // Create thumbnail div
+
             var thumbnailDiv = document.createElement('div');
             thumbnailDiv.className = 'thumbnail';
-    
-            // Create img element
+
             var img = document.createElement('img');
             img.className = 'image_picker_image';
             img.src = photoUrls[i];
-    
-            // Attach click event listener to select the thumbnail
-            thumbnailDiv.addEventListener('click', (function(index) {
-                return function() {
-                    selectThumbnail(this, photoUrls[index]);
+
+            thumbnailDiv.addEventListener('click', (function (index) {
+                return function () {
+                    selectThumbnail(this, photoUrls[index], name, id);
                 };
             })(i));
-    
-            // Append img to thumbnail div
+
             thumbnailDiv.appendChild(img);
-    
-            // Append thumbnail div to list item
             listItem.appendChild(thumbnailDiv);
-    
-            // Append list item to image grid
             imageGrid.appendChild(listItem);
         }
 
-        // Automatically select the first thumbnail
         var firstThumbnail = imageGrid.querySelector('.thumbnail');
         if (firstThumbnail) {
-            selectThumbnail(firstThumbnail, photoUrls[0]);
+            selectThumbnail(firstThumbnail, photoUrls[0], name, id);
         }
-    
-        // Show the image grid
+
         imageGrid.style.display = 'block';
     }
 }
@@ -254,6 +271,8 @@ function initMap() {
 window.onload = function () {
     initMap();
 };
+
+
 
 
 

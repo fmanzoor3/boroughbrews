@@ -21,14 +21,16 @@
     <input data-geo="place_id" autocomplete="off" type="hidden" name="place[google_place_gid]" id="place_google_place_gid">
     </div>
     </section>
-    {%if False%}
-    <section class="pt-0" id="step_exists">
+    <section class="pt-0" id="step_exists" style="display: none;">
     <h3>
     This place is already listed! Check it out
-    <a class="text-primary" href="false">here</a>
+    <a class="text-primary" id="cafeLink" href="#">here</a>
     </h3>
     </section>
-    {%endif%}
+    <script>
+        // Pass base URL from Flask to JavaScript
+        const showCafeUrlBase = "{{ url_for('show_cafe', location_slug='LOCATION_PLACEHOLDER', cafe_slug='CAFE_PLACEHOLDER', id='ID_PLACEHOLDER') }}";
+    </script>
     <section class="pt-0" id="step2" style="display: none;">
     <div class="form-group">
     <label>
@@ -67,15 +69,18 @@
     <input value="0" data-geo="lng" autocomplete="off" type="hidden" name="place[location][lng]" id="place_location_lng">
     <div class="hidden" id="gmaps_info"></div>
     </section>
-    <section id="controls" style="display: none;">
+    <section id="controls">
     <div class="row">
-    <div class="col-6"><a name="button" type="button" class="col btn btn-lg btn-large btn-default" rel="retry" href="{{ url_for('suggest') }}">Retry</a></div>
-    <div class="col-6"><a name="button" type="submit" class="col btn btn-lg btn-large btn-warning" rel="next" id="nextButton">Next</a></div>
+    <div class="col-6"><a name="button" type="button" class="col btn btn-lg btn-large btn-default" rel="retry" href="{{ url_for('suggest') }}" id="retryButton" style="display: none;">Retry</a></div>
+    <div class="col-6"><a name="button" type="submit" class="col btn btn-lg btn-large btn-warning" rel="next" id="nextButton" style="display: none;">Next</a></div>
     <script>
       let currentStep = 1;
       const form = document.getElementById("search_location");
+      const stepExists=document.querySelector('#step_exists');
       document.getElementById("nextButton").addEventListener("click", function(event) {
-        if (currentStep === 1) {
+        if (stepExists.style.display == 'block'){
+          document.getElementById('#nextButton').style.display = 'none';
+        } else if (currentStep === 1) {
             event.preventDefault();
             // Code to show the next part of the form
             document.getElementById('step1').style.display = 'none';
