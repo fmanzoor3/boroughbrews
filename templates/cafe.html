@@ -462,6 +462,7 @@
                 ) {
                     element.classList.add('selected');
                     scoreIcon.className = `${icon.className} ${heartColor}`;
+                    scoreIcon.dataset.originalClass=scoreIcon.className;
                     element.checked = true;
                 } else {
                     element.classList.remove('selected');
@@ -479,7 +480,7 @@
                 });
 
                 icon.addEventListener('mouseleave', function () {
-                    scoreIcon.className = 'grey far fa-heart';
+                    scoreIcon.className = scoreIcon.dataset.originalClass;
                 });
             });
 

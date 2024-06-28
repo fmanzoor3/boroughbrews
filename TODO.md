@@ -46,7 +46,7 @@
 
 -[x] Order the list in the location page by score
 
--[] Fix bug in cafe page when hovering over hearts
+-[x] Fix bug in cafe page when hovering over hearts
 
 -[x] Store the images as image files so you dont have to rely on image urls that may change (i think the urls change after some time)
 
@@ -57,3 +57,5 @@
 -[] Make the API restful
 
 -[] Add a delete feature (later make it only accessible by admin)
+
+-[x] Fix bugs associated with 'i-like-it' criteria button on location page

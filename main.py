@@ -71,16 +71,6 @@ with app.app_context():
     db.create_all()
 
 
-# # CREATE FORM
-# class CreatePostForm(FlaskForm):
-#     title = StringField("Blog Post Title", validators=[DataRequired()])
-#     subtitle = StringField("Subtitle", validators=[DataRequired()])
-#     author = StringField("Your name", validators=[DataRequired()])
-#     img_url = StringField("Blog Image URL", validators=[DataRequired(), URL()])
-#     body = CKEditorField("Blog Content", validators=[DataRequired()])
-#     submit = SubmitField("Done")
-
-
 # -------------------------------------------FUNCTIONS---------------------------------------------------------------------------
 # Here we create a function to convert words into url format e.g. convert the string London Bridge to london-bridge
 def create_slug(text):

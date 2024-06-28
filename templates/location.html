@@ -448,6 +448,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (cafe.dataset[camelCase(criterion)] === 'low') {
                     return false; // Exclude cafes with 'low' value for any active criterion
                 }
+                if (cafe.dataset[camelCase(criterion)] === 'unknown' && criterion=='i-like-it'){
+                    return false;
+                }
             }
             return true;
         });
@@ -480,10 +483,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (activeCriteria.includes(criterion)) {
                     const score = cafe.dataset[camelCase(criterion)];
                     const span = document.createElement('span');
-                    span.classList.add('active-filter', `${score}`);
                     
-                    // Only add the icon if the criterion is not "i-like-it"
-                    if (criterion !== 'i-like-it') {
+                    if (criterion == 'i-like-it') {
+                        span.classList.add('active-filter', `likes`);
+                        span.classList.add('active-filter', `${score}`);
+                    } else {
+                        span.classList.add('active-filter', `${score}`);
                         const icon = button.querySelector('i').outerHTML;
                         span.innerHTML = icon;
                     }
