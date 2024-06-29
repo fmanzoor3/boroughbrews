@@ -59,3 +59,9 @@
 -[] Add a delete feature (later make it only accessible by admin)
 
 -[x] Fix bugs associated with 'i-like-it' criteria button on location page
+
+-[] Change placeholder images
+
+-[] Change colour scheme
+
+-[x] create front end of log-in, register and users pages

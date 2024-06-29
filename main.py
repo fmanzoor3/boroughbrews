@@ -468,6 +468,23 @@ def edit(cafe_name_slugged, location_slug):
     )
 
 
+## Authentication pages
+@app.route("/users")
+def users():
+    return render_template("users.html")
+
+
+@app.route("/users/login")
+def log_in():
+    return render_template("log-in.html")
+
+
+@app.route("/users/register")
+def register():
+    return render_template("register.html")
+
+
+## Other routes
 # Downloading cafe thumbnails
 @app.route("/download_image", methods=["POST"])
 def download_image_endpoint():

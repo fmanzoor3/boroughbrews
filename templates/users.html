@@ -1,0 +1,104 @@
+{% include "header.html" %}
+<div class="text-center" id="users">
+<!-- User Header -->
+<header class="container">
+<p><img class="img-circle" src="/images/profiles/5359-gary.jpg"></p>
+<p>
+</p><h1>Gary Barlow</h1>
+gbarlow948@gmail.com
+<p></p>
+<!-- Flash notification -->
+
+
+<!-- Settings -->
+<div class="row">
+<h2 class="w-100 p-3">Profile Settings</h2>
+<div class="col-md-8 offset-md-2">
+<table class="table text-left">
+<form class="edit_user" id="edit_user_5359" enctype="multipart/form-data" action="/users/5359" accept-charset="UTF-8" method="post"></form><input type="hidden" name="_method" value="put" autocomplete="off"><input type="hidden" name="authenticity_token" value="J4oRp6iVGxfkzYiiheHKNsjA2xxIe0PhDn6ZFC8RNedNAHZzTU4gGLGQVigPIq2YB9GvDoNmYmS0iKb_-4yhrA" autocomplete="off"><tbody><tr>
+<td>Photo</td>
+<td><input class="form-control" type="file" name="user[avatar]" id="user_avatar"></td>
+</tr>
+<tr>
+<td>Name</td>
+<td><input class="form-control" type="text" value="Gary" name="user[name]" id="user_name"></td>
+</tr>
+<tr>
+<td>Surname</td>
+<td><input class="form-control" type="text" value="Barlow" name="user[surname]" id="user_surname"></td>
+</tr>
+<!-- /%tr -->
+<!-- /  %td Current city -->
+<!-- /  %td= f.select :city_id, City.all.collect {|c| [ c.name, c.id ] }.sort, {}, { class: 'form-control' } -->
+<tr>
+<td>Occupation</td>
+<td><input class="form-control" type="text" value="Friendly Co-Worker" name="user[occupation]" id="user_occupation"></td>
+</tr>
+<tr>
+<td><span class="translation_missing" title="translation missing: en.user.settings.privacy">Privacy</span></td>
+<td>
+<div class="checkbox">
+<label>
+<input name="user[anonymous]" type="hidden" value="0" autocomplete="off"><input type="checkbox" value="1" name="user[anonymous]" id="user_anonymous">
+Anonymize my profile information on all reviews
+</label>
+</div>
+</td>
+</tr>
+<tr>
+<td>Mailing list</td>
+<td>
+<div class="checkbox">
+<label>
+<input name="user[receive_announcements]" type="hidden" value="0" autocomplete="off"><input type="checkbox" value="1" checked="checked" name="user[receive_announcements]" id="user_receive_announcements">
+Get updates about the new venues in your city
+</label>
+</div>
+</td>
+</tr>
+<tr>
+<td colspan="2" style="text-align: center;">
+<input type="submit" name="commit" value="Update" class="btn btn-success btn-lg" data-disable-with="Update">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</header>
+<!-- Hubs Section -->
+<!-- CTA -->
+<section class="container">
+<div class="row">
+<div class="col-md-8 offset-md-2">
+<h2>Suggest Venues</h2>
+<p>Suggest venues from your neighborhood to help other remote workers!</p>
+<a class="btn btn-default" href="/suggest">Suggest a venue</a>
+</div>
+</div>
+</section>
+<!-- Visited venues -->
+<section class="container">
+<h2>Visited Venues</h2>
+<div class="row">
+<div class="col-md-8 offset-md-2">
+<!-- Visited places exist -->
+<table class="table text-left">
+<tbody><tr>
+<th>City</th>
+<th>Venue</th>
+</tr>
+<tr>
+<td><a href="/london">London</a></td>
+<td><a href="/london/leon-borough">LEON Borough</a></td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</section>
+<section>
+<h2>Sign out</h2>
+<a data-confirm="Are you sure you want to sign out?" class="btn btn-default" rel="nofollow" data-method="delete" href="/users/sign_out">Sign Out</a>
+</section>
+</div>
+
+{% include "footer.html" %}

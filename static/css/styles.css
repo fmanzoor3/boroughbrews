@@ -1128,3 +1128,78 @@ transition: background-color 0.3s, color 0.3s; /* Smooth transition */
 body {
   overflow-x: hidden;
 }
+
+/* Log in page */
+#login-register {
+  padding: 5rem 0;
+}
+
+#login-register p {
+  margin-bottom: 15px;
+}
+
+#login-register a, #login-register p, #login-register .btn {
+  margin-bottom: 15px;
+}
+
+#login-register .form-group {
+  margin: 0.5rem 0;
+}
+
+#login-register .form-control,#users .form-control {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #212529;
+  background-color: #f5f5f5;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#login-register label {
+  font-weight: normal;
+}
+
+#login-register a, #login-register p, #login-register .btn {
+  margin-bottom: 15px;
+}
+
+#login-register a,#users .table a {
+  color: #343434;
+}
+
+#login-register a:hover,#users .table a:hover{
+  color:#0d6efd !important;
+  text-decoration: none;
+}
+
+#login-register .actions {
+  clear: both;
+  padding: 15px 0;
+}
+
+/* user page */
+#users {
+  margin-bottom: 100px;
+  margin-top: 100px;
+}
+
+#users header {
+  padding: 4rem;
+}
+
+#users h2, #users .h2 {
+  margin-bottom: 1em;
+}
+
+#users section {
+  margin-top: 5rem;
+}
