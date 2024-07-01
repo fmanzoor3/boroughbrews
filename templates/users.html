@@ -2,7 +2,7 @@
 <div class="text-center" id="users">
 <!-- User Header -->
 <header class="container">
-<p><img class="img-circle" src="/images/profiles/5359-gary.jpg"></p>
+<p><img class="img-circle" src="static/assets/images/profile-pics/anonymous.png"></p>
 <p>
 </p><h1>{{current_user.name | upper}} {{current_user.surname | upper}}</h1>
 {{current_user.email}}
@@ -39,19 +39,8 @@
 <td>
 <div class="checkbox">
 <label>
-<input name="user[anonymous]" type="hidden" value="0" autocomplete="off"><input type="checkbox" value="1" name="user[anonymous]" id="user_anonymous">
+<input type="checkbox" value="1" name="user[anonymous]" id="user_anonymous" {% if current_user.privacy == '1' %} checked {% endif %}>
 Anonymize my profile information on all reviews
-</label>
-</div>
-</td>
-</tr>
-<tr>
-<td>Mailing list</td>
-<td>
-<div class="checkbox">
-<label>
-<input name="user[receive_announcements]" type="hidden" value="0" autocomplete="off"><input type="checkbox" value="1" checked="checked" name="user[receive_announcements]" id="user_receive_announcements">
-Get updates about the new venues in your city
 </label>
 </div>
 </td>
@@ -85,7 +74,7 @@ Get updates about the new venues in your city
 <!-- Visited places exist -->
 <table class="table text-left">
 <tbody><tr>
-<th>City</th>
+<th>Borough</th>
 <th>Venue</th>
 </tr>
 <tr>

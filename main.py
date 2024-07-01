@@ -101,6 +101,7 @@ class User(UserMixin, db.Model):
     name: Mapped[str] = mapped_column(String(250), nullable=False)
     surname: Mapped[str] = mapped_column(String(250), nullable=False)
     occupation: Mapped[str] = mapped_column(String(250), default="Friendly Co-Worker")
+    privacy: Mapped[str] = mapped_column(String(250), default="0")
 
     visited_cafes: Mapped[List["Cafe"]] = relationship(
         "Cafe", secondary=user_cafe_association, back_populates="visitors"
@@ -558,11 +559,17 @@ def edit(cafe_name_slugged, location_slug):
 @app.route("/users", methods=["GET", "POST"])
 def users():
     if request.method == "POST":
+        print("Form data received:", request.form)
         id = current_user.id
         user = db.get_or_404(User, id)
         user.name = request.form.get("user[name]")
         user.surname = request.form.get("user[surname]")
         user.occupation = request.form.get("user[occupation]")
+        if request.form.get("user[anonymous]"):
+            user.privacy = request.form.get("user[anonymous]")
+        else:
+            user.privacy = "0"
+        print(request.form.get("user[anonymous]"))
         # add user.privacy and user.mail?
         db.session.commit()
         return redirect(url_for("users"))
