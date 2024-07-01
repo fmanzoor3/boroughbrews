@@ -102,6 +102,7 @@ class User(UserMixin, db.Model):
     surname: Mapped[str] = mapped_column(String(250), nullable=False)
     occupation: Mapped[str] = mapped_column(String(250), default="Friendly Co-Worker")
     privacy: Mapped[str] = mapped_column(String(250), default="0")
+    photo_name: Mapped[str] = mapped_column(String(250), default="anonymous.png")
 
     visited_cafes: Mapped[List["Cafe"]] = relationship(
         "Cafe", secondary=user_cafe_association, back_populates="visitors"
@@ -559,7 +560,6 @@ def edit(cafe_name_slugged, location_slug):
 @app.route("/users", methods=["GET", "POST"])
 def users():
     if request.method == "POST":
-        print("Form data received:", request.form)
         id = current_user.id
         user = db.get_or_404(User, id)
         user.name = request.form.get("user[name]")
@@ -569,8 +569,12 @@ def users():
             user.privacy = request.form.get("user[anonymous]")
         else:
             user.privacy = "0"
-        print(request.form.get("user[anonymous]"))
-        # add user.privacy and user.mail?
+        profile_pic = request.files["user[avatar]"]
+        if profile_pic:
+            filename = profile_pic.filename
+            file_path = os.path.join("static/assets/images/profile-pics", filename)
+            profile_pic.save(file_path)
+            user.photo_name = filename
         db.session.commit()
         return redirect(url_for("users"))
     return render_template("users.html")

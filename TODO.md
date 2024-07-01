@@ -71,3 +71,5 @@
 -[x] Set up relation database between users, cafes and reviews
 
 -[x] Set up the log in system
+
+-[] Add photo path to User db
