@@ -16,6 +16,13 @@ Log in
 <br>
 <p>or use your email</p>
 </div>
+{% with messages = get_flashed_messages() %}
+      {% if messages %}
+      {% for message in messages %}
+      <p class="flash">{{ message }}</p>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
 <form class="new_user" id="new_user" action="/users/login" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="B1mA_Zfqe-BbpoOiuD7teEgDU5mAxrLa8aye9-e72qAY9wj29hoiWEDB7Gvb_3E17O8Ro6MBWPzoW01vNLGClA" autocomplete="off"><div class="form-group">
 <input autofocus="autofocus" placeholder="Email" class="form-control" type="email" value="" name="user[email]" id="user_email">
 </div>

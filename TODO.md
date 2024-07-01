@@ -66,7 +66,7 @@
 
 -[x] create front end of log-in, register and users pages
 
--[] Complete back end of register page to put data in db
+-[x] Complete back end of register page to put data in db
 
 -[x] Set up relation database between users, cafes and reviews
 

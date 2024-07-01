@@ -555,13 +555,24 @@ def edit(cafe_name_slugged, location_slug):
 
 
 ## Authentication pages
-@app.route("/users")
+@app.route("/users", methods=["GET", "POST"])
 def users():
+    if request.method == "POST":
+        id = current_user.id
+        user = db.get_or_404(User, id)
+        user.name = request.form.get("user[name]")
+        user.surname = request.form.get("user[surname]")
+        user.occupation = request.form.get("user[occupation]")
+        # add user.privacy and user.mail?
+        db.session.commit()
+        return redirect(url_for("users"))
     return render_template("users.html")
 
 
 @app.route("/users/login", methods=["GET", "POST"])
 def log_in():
+    if current_user.is_authenticated:
+        return redirect(url_for("users"))
     if request.method == "POST":
         user = db.session.execute(
             db.select(User).where(User.email == request.form.get("user[email]"))
@@ -583,6 +594,8 @@ def log_in():
 
 @app.route("/users/register", methods=["GET", "POST"])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for("users"))
     if request.method == "POST":
         user = db.session.execute(
             db.select(User).where(User.email == request.form.get("user[email]"))
@@ -590,6 +603,14 @@ def register():
         if user:
             flash("You've already signed up with this email, log in instead!")
             return redirect(url_for("log_in"))
+        elif len(request.form.get("user[password]")) < 8:
+            flash("Password is too short (minimum is 8 characters).")
+            return redirect(url_for("register"))
+        elif request.form.get("user[password]") != request.form.get(
+            "user[password_confirmation]"
+        ):
+            flash("Password confirmation doesn't match Password, please try again.")
+            return redirect(url_for("register"))
         else:
             new_user = User(
                 email=request.form.get("user[email]"),
@@ -613,7 +634,7 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("get_all_posts"))
+    return redirect(url_for("home"))
 
 
 ## Other routes

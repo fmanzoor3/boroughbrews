@@ -13,6 +13,13 @@ Register
 <br>
 <p>or fill in the form</p>
 </div>
+{% with messages = get_flashed_messages() %}
+      {% if messages %}
+      {% for message in messages %}
+      <p class="flash">{{ message }}</p>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
 <form class="new_user" id="new_user" action="{{ url_for('register') }}" accept-charset="UTF-8" method="POST"><input type="hidden" name="authenticity_token" value="QLvIBFP9NxlAkzsK18mH5FCGsOONfsYY7awUtwi4QAVfFUAPMg1uoVv0VMO0CBup9Gry2a65LD70W8cv27IYMQ" autocomplete="off"><!-- = devise_error_messages! -->
 <!-- # = devise_resource.errors[:email].first if devise_resource.errors[:email].present? -->
 <div class="form-group row">

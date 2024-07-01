@@ -4,8 +4,8 @@
 <header class="container">
 <p><img class="img-circle" src="/images/profiles/5359-gary.jpg"></p>
 <p>
-</p><h1>Gary Barlow</h1>
-gbarlow948@gmail.com
+</p><h1>{{current_user.name | upper}} {{current_user.surname | upper}}</h1>
+{{current_user.email}}
 <p></p>
 <!-- Flash notification -->
 
@@ -15,24 +15,24 @@ gbarlow948@gmail.com
 <h2 class="w-100 p-3">Profile Settings</h2>
 <div class="col-md-8 offset-md-2">
 <table class="table text-left">
-<form class="edit_user" id="edit_user_5359" enctype="multipart/form-data" action="/users/5359" accept-charset="UTF-8" method="post"></form><input type="hidden" name="_method" value="put" autocomplete="off"><input type="hidden" name="authenticity_token" value="J4oRp6iVGxfkzYiiheHKNsjA2xxIe0PhDn6ZFC8RNedNAHZzTU4gGLGQVigPIq2YB9GvDoNmYmS0iKb_-4yhrA" autocomplete="off"><tbody><tr>
+<form class="edit_user" id="edit_user_5359" enctype="multipart/form-data" action="{{ url_for('users') }}" accept-charset="UTF-8" method="POST"><input type="hidden" name="authenticity_token" value="J4oRp6iVGxfkzYiiheHKNsjA2xxIe0PhDn6ZFC8RNedNAHZzTU4gGLGQVigPIq2YB9GvDoNmYmS0iKb_-4yhrA" autocomplete="off"><tbody><tr>
 <td>Photo</td>
 <td><input class="form-control" type="file" name="user[avatar]" id="user_avatar"></td>
 </tr>
 <tr>
 <td>Name</td>
-<td><input class="form-control" type="text" value="Gary" name="user[name]" id="user_name"></td>
+<td><input class="form-control" type="text" value="{{current_user.name}}" name="user[name]" id="user_name"></td>
 </tr>
 <tr>
 <td>Surname</td>
-<td><input class="form-control" type="text" value="Barlow" name="user[surname]" id="user_surname"></td>
+<td><input class="form-control" type="text" value="{{current_user.surname}}" name="user[surname]" id="user_surname"></td>
 </tr>
 <!-- /%tr -->
 <!-- /  %td Current city -->
 <!-- /  %td= f.select :city_id, City.all.collect {|c| [ c.name, c.id ] }.sort, {}, { class: 'form-control' } -->
 <tr>
 <td>Occupation</td>
-<td><input class="form-control" type="text" value="Friendly Co-Worker" name="user[occupation]" id="user_occupation"></td>
+<td><input class="form-control" type="text" value="{{current_user.occupation}}" name="user[occupation]" id="user_occupation"></td>
 </tr>
 <tr>
 <td><span class="translation_missing" title="translation missing: en.user.settings.privacy">Privacy</span></td>
@@ -59,6 +59,7 @@ Get updates about the new venues in your city
 <tr>
 <td colspan="2" style="text-align: center;">
 <input type="submit" name="commit" value="Update" class="btn btn-success btn-lg" data-disable-with="Update">
+</form>
 </td>
 </tr>
 </tbody></table>
@@ -72,7 +73,7 @@ Get updates about the new venues in your city
 <div class="col-md-8 offset-md-2">
 <h2>Suggest Venues</h2>
 <p>Suggest venues from your neighborhood to help other remote workers!</p>
-<a class="btn btn-default" href="/suggest">Suggest a venue</a>
+<a class="btn btn-default" href="{{ url_for('suggest') }}">Suggest a venue</a>
 </div>
 </div>
 </section>
@@ -97,7 +98,7 @@ Get updates about the new venues in your city
 </section>
 <section>
 <h2>Sign out</h2>
-<a data-confirm="Are you sure you want to sign out?" class="btn btn-default" rel="nofollow" data-method="delete" href="/users/sign_out">Sign Out</a>
+<a data-confirm="Are you sure you want to sign out?" class="btn btn-default" rel="nofollow" data-method="delete" href="{{ url_for('logout') }}">Sign Out</a>
 </section>
 </div>
 

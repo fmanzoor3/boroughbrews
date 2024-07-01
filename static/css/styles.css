@@ -1203,3 +1203,9 @@ body {
 #users section {
   margin-top: 5rem;
 }
+
+/* Flash Message Styling */
+.flash {
+  color: #ee6f57;
+  text-align: center;
+}

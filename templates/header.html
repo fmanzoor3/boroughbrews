@@ -64,7 +64,7 @@
         margin-right: 3px; /* Add margin to the right of the icon */
         margin-top: -3px; /* Adjust the vertical alignment of the icon */
       }
-      .nav-link .icon2 {
+      .nav-link .icon2  {
         vertical-align: middle; /* Align the icon vertically */
         margin-right: 5px; /* Add margin to the right of the icon */
         margin-top: -2px; /* Adjust the vertical alignment of the icon */
@@ -72,6 +72,14 @@
         height: auto; /* Let the height adjust according to the aspect ratio */
         filter: invert(100%); /* Invert the color of the icon */
       }
+      .nav-link .icon3  {
+        vertical-align: middle; /* Align the icon vertically */
+        margin-right: 5px; /* Add margin to the right of the icon */
+        margin-top: -2px; /* Adjust the vertical alignment of the icon */
+        width: 24px; /* Set the width of the icon */
+        height: auto; /* Let the height adjust according to the aspect ratio */
+      }
+
   </style>
   </head>
   <body>
@@ -94,7 +102,11 @@
               <li class="nav-item"><a href="{{ url_for('suggest') }}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill icon" viewBox="0 0 16 16">
                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
               </svg> SUGGEST PLACES</a></li>
+              {%if not current_user.is_authenticated%}
               <li class="nav-item"><a href="{{ url_for('log_in') }}" class="nav-link"><img src="{{ url_for('static', filename='assets/multiple-users-silhouette.svg') }}" alt="Join Community" class="icon2"> JOIN COMMUNITY</a></li>
+              {%else%}
+              <li class="nav-item"><a href="{{ url_for('users') }}" class="nav-link"><i class="fa fa-fw fa-user icon3"></i> {{current_user.name| upper}}</a></li>
+              {%endif%}
           </ul>
       </header>
   </div>
