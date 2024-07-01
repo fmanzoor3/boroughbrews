@@ -13,7 +13,7 @@ Register
 <br>
 <p>or fill in the form</p>
 </div>
-<form class="new_user" id="new_user" action="/users" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="QLvIBFP9NxlAkzsK18mH5FCGsOONfsYY7awUtwi4QAVfFUAPMg1uoVv0VMO0CBup9Gry2a65LD70W8cv27IYMQ" autocomplete="off"><!-- = devise_error_messages! -->
+<form class="new_user" id="new_user" action="{{ url_for('register') }}" accept-charset="UTF-8" method="POST"><input type="hidden" name="authenticity_token" value="QLvIBFP9NxlAkzsK18mH5FCGsOONfsYY7awUtwi4QAVfFUAPMg1uoVv0VMO0CBup9Gry2a65LD70W8cv27IYMQ" autocomplete="off"><!-- = devise_error_messages! -->
 <!-- # = devise_resource.errors[:email].first if devise_resource.errors[:email].present? -->
 <div class="form-group row">
 <div class="col-6">

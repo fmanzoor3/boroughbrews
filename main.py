@@ -6,11 +6,23 @@ from flask import (
     request,
     jsonify,
     send_from_directory,
+    flash,
 )
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, Float, Boolean, Enum, JSON, Column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import (
+    Integer,
+    String,
+    Float,
+    Boolean,
+    Enum,
+    JSON,
+    Column,
+    Text,
+    ForeignKey,
+    Table,
+)
 from geoalchemy2 import Geometry
 import enum
 from flask_wtf import FlaskForm
@@ -24,6 +36,18 @@ import re
 from datetime import datetime
 import math
 import requests
+from typing import List
+from flask_login import (
+    UserMixin,
+    login_user,
+    LoginManager,
+    current_user,
+    logout_user,
+    login_required,
+)
+
+# from flask_gravatar import Gravatar
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # from static.utils.format_open_hours import format_opening_hours, day_abbreviations
 
@@ -40,6 +64,15 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 Bootstrap5(app)
 
+# Configure Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.get_or_404(User, user_id)
+
 
 # CREATE DATABASE
 class Base(DeclarativeBase):
@@ -51,9 +84,34 @@ db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
 
-class Cafe(db.Model):
+# Association table for the many-to-many relationship between users and cafes
+user_cafe_association = Table(
+    "user_cafe",
+    db.Model.metadata,
+    Column("user_id", Integer, ForeignKey("users.id"), primary_key=True),
+    Column("cafe_id", Integer, ForeignKey("cafes.id"), primary_key=True),
+)
+
+
+class User(UserMixin, db.Model):
+    __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    place_id: Mapped[int] = mapped_column(String, unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    password: Mapped[str] = mapped_column(String(250), nullable=False)
+    name: Mapped[str] = mapped_column(String(250), nullable=False)
+    surname: Mapped[str] = mapped_column(String(250), nullable=False)
+    occupation: Mapped[str] = mapped_column(String(250), default="Friendly Co-Worker")
+
+    visited_cafes: Mapped[List["Cafe"]] = relationship(
+        "Cafe", secondary=user_cafe_association, back_populates="visitors"
+    )
+    reviews: Mapped[List["Review"]] = relationship(back_populates="author")
+
+
+class Cafe(db.Model):
+    __tablename__ = "cafes"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    place_id: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     name: Mapped[str] = mapped_column(String(250), nullable=False)
     address: Mapped[str] = mapped_column(String(250), nullable=False)
     postal_code: Mapped[str] = mapped_column(String(250), nullable=False)
@@ -66,9 +124,37 @@ class Cafe(db.Model):
     criterion = Column(JSON, default={})
     score: Mapped[str] = mapped_column(String(2), nullable=False, default="XX")
 
+    visitors: Mapped[List["User"]] = relationship(
+        "User", secondary=user_cafe_association, back_populates="visited_cafes"
+    )
+    reviews: Mapped[List["Review"]] = relationship(back_populates="parent_cafe")
+
+
+class Review(db.Model):
+    __tablename__ = "comments"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+    date: Mapped[str] = mapped_column(String(250), nullable=False)
+    author: Mapped["User"] = relationship(back_populates="reviews")
+    author_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    parent_cafe: Mapped["Cafe"] = relationship(back_populates="reviews")
+    cafe_id: Mapped[int] = mapped_column(Integer, ForeignKey("cafes.id"))
+
 
 with app.app_context():
     db.create_all()
+
+# Initialising gravatar
+# gravatar = Gravatar(
+#     app,
+#     size=100,
+#     rating="g",
+#     default="retro",
+#     force_default=False,
+#     force_lower=False,
+#     use_ssl=False,
+#     base_url=None,
+# )
 
 
 # -------------------------------------------FUNCTIONS---------------------------------------------------------------------------
@@ -474,14 +560,60 @@ def users():
     return render_template("users.html")
 
 
-@app.route("/users/login")
+@app.route("/users/login", methods=["GET", "POST"])
 def log_in():
+    if request.method == "POST":
+        user = db.session.execute(
+            db.select(User).where(User.email == request.form.get("user[email]"))
+        ).scalar()
+        if not user:
+            flash("That email does not exist, please try again.")
+            return redirect(url_for("log_in"))
+        elif (
+            check_password_hash(user.password, request.form.get("user[password]"))
+            == False
+        ):
+            flash("Password incorrect, please try again.")
+            return redirect(url_for("log_in"))
+        else:
+            login_user(user)
+            return redirect(url_for("users"))
     return render_template("log-in.html")
 
 
-@app.route("/users/register")
+@app.route("/users/register", methods=["GET", "POST"])
 def register():
+    if request.method == "POST":
+        user = db.session.execute(
+            db.select(User).where(User.email == request.form.get("user[email]"))
+        ).scalar()
+        if user:
+            flash("You've already signed up with this email, log in instead!")
+            return redirect(url_for("log_in"))
+        else:
+            new_user = User(
+                email=request.form.get("user[email]"),
+                password=generate_password_hash(
+                    request.form.get("user[password]"),
+                    method="pbkdf2:sha256",
+                    salt_length=8,
+                ),
+                name=request.form.get("user[name]"),
+                surname=request.form.get("user[surname]"),
+            )
+
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+            return redirect(url_for("users"))
     return render_template("register.html")
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("get_all_posts"))
 
 
 ## Other routes
