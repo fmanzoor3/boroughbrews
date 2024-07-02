@@ -588,7 +588,7 @@ def users():
             user.photo_name = filename
         db.session.commit()
         return redirect(url_for("users"))
-    return render_template("users.html")
+    return render_template("users.html", make_slug=make_slug)
 
 
 @app.route("/users/login", methods=["GET", "POST"])

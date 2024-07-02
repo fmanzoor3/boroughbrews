@@ -80,4 +80,14 @@
 
 -[x] Make popovers for the reviewers on cafe page
 
+-[x] Add visited cafes to users page
+
+-[] Take 'i_like_it' column of Cafe db and make it a User column instead
+
+-[] Add 'Reported closed' column to Cafe
+
+-[] Redirect to log in page for places that require a logged in user (e.g. liking feature, leaving a review, rating criteria)
+
 -[] Allow users to log in using Google
+
+-[] Improve code by passing 'make_slug' function into templates when slug names are needed, instead of 'location_slug' and 'cafe_slugged'

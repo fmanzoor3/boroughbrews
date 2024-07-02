@@ -77,10 +77,12 @@ Anonymize my profile information on all reviews
 <th>Borough</th>
 <th>Venue</th>
 </tr>
+{%for cafe in current_user.visited_cafes%}
 <tr>
-<td><a href="/london">London</a></td>
-<td><a href="/london/leon-borough">LEON Borough</a></td>
+<td><a href="{{url_for('show_location',location_slug=make_slug(cafe.borough))}}">{{cafe.borough}}</a></td>
+<td><a href="{{ url_for('show_cafe', location_slug=make_slug(cafe.borough), cafe_slug=make_slug(cafe.name), id=cafe.id) }}">{{cafe.name}}</a></td>
 </tr>
+{%endfor%}
 </tbody></table>
 </div>
 </div>
