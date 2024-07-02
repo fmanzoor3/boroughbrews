@@ -103,7 +103,6 @@ class User(UserMixin, db.Model):
     occupation: Mapped[str] = mapped_column(String(250), default="Friendly Co-Worker")
     privacy: Mapped[str] = mapped_column(String(250), default="0")
     photo_name: Mapped[str] = mapped_column(String(250), default="anonymous.png")
-
     visited_cafes: Mapped[List["Cafe"]] = relationship(
         "Cafe", secondary=user_cafe_association, back_populates="visitors"
     )
@@ -125,7 +124,6 @@ class Cafe(db.Model):
     opening_hours = Column(JSON, default={})
     criterion = Column(JSON, default={})
     score: Mapped[str] = mapped_column(String(2), nullable=False, default="XX")
-
     visitors: Mapped[List["User"]] = relationship(
         "User", secondary=user_cafe_association, back_populates="visited_cafes"
     )
@@ -133,7 +131,7 @@ class Cafe(db.Model):
 
 
 class Review(db.Model):
-    __tablename__ = "comments"
+    __tablename__ = "reviews"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     text: Mapped[str] = mapped_column(Text, nullable=False)
     date: Mapped[str] = mapped_column(String(250), nullable=False)
@@ -408,6 +406,33 @@ def show_cafe(location_slug, cafe_slug):
         cafe_slug=cafe_slug,
         id=cafe_info.id,
         current_day=current_day,
+    )
+
+
+@app.route("/<location_slug>/<cafe_slug>/submitting-review", methods=["POST"])
+def submit_review(location_slug, cafe_slug):
+    id = request.args.get("id")
+    cafe_info = db.get_or_404(Cafe, id)
+    current_date = datetime.now().strftime("%B %d, %Y")
+    new_review = Review(
+        text=request.form.get("review[desc]"),
+        author=current_user,
+        date=str(current_date),
+        parent_cafe=cafe_info,
+    )
+    db.session.add(new_review)
+
+    # Add the association to the user_cafe_association table
+    if (
+        not db.session.query(user_cafe_association)
+        .filter_by(user_id=current_user.id, cafe_id=cafe_info.id)
+        .first()
+    ):
+        current_user.visited_cafes.append(cafe_info)
+
+    db.session.commit()
+    return redirect(
+        url_for("show_cafe", location_slug=location_slug, cafe_slug=cafe_slug, id=id)
     )
 
 

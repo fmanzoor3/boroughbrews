@@ -26,49 +26,62 @@
     <div class="col-md-7">
     <!-- Description -->
     <div id="description">
-    <h2 class="pb-2">Today</h2>
-    <div class="row">
-    <div class="col-4">
-    <p class="mt-1">
-    <i class="fas fa-users"></i>
-    Visits:
-    2
-    <br>
-    <i class="fas fa-camera"></i>
-    Vibes:
-    0
-    </p>
-    </div>
-    <div class="col-8">
-    <div class="latest-vibes vibesbox text-end">
-    <a class="btn btn-success" style="margin: 0.5rem" href="/vibes/new?city=london&amp;place=arancina">📸</a>
-    </div>
-    </div>
-    </div>
-    <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        var lightbox = new SimpleLightbox('.vibesbox a', { overlayColor: 0.9, captionsData: 'titleLightbox' });
-    });
-</script>
     
     
-    <div class="row" id="been-here">
-    <div class="col-md-4 col-lg-3">
-    <h2>Been here</h2>
-    </div>
-    <div class="col-md-8 col-lg-9">
-    <div class="criteria">
-    <span data-content="Friendly Co-Worker" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" aria-label="Michele Mortari" data-bs-original-title="Michele Mortari">
-    <img class="img-circle" src="/static/assets/3346-michele.jpg">
+    <h2>Reviews</h2>
+    {%if not current_user.is_authenticated%}
+    <a class="btn btn-success leave_review" href="/users/login">Join and leave a review!</a>
+    {%else%}
+    <div class="review row">
+    <small class="text-gray col-12">{{cafe.reviews[0].date}}</small>
+    <p class="col-sm-10">{{cafe.reviews[0].text}}</p>
+    <div class="col-sm-2" style="text-align: right;">
+    <span data-content="Anonymous user" data-toggle="popover" aria-label="Anonymous" data-bs-original-title="Anonymous">
+    <img class="img-circle" src="/static/assets/images/profile-pics/{{cafe.reviews[0].author.photo_name}}">
     </span>
     </div>
     </div>
+    <a class="black-link see_all_reviews" href="#" style="display: none;"><i class="fa fa-fw fa-caret-down"></i>
+    See all reviews
+    </a>
+    <div class="all_reviews" style="display: block;">
+    <hr>
+    {%for review in cafe.reviews[1:]%}
+    <div class="review row">
+    <small class="text-gray col-12">{{review.date}}</small>
+    <p class="col-sm-10">{{review.text}}</p>
+    <div class="col-sm-2" style="text-align: right;">
+    <span data-content="Anonymous user" data-toggle="popover" aria-label="Anonymous" data-bs-original-title="Anonymous">
+    <img class="img-circle" src="/static/assets/images/profile-pics/{{review.author.photo_name}}">
+    </span>
+    </div>
     </div>
     <hr>
-    
-    <h2>Reviews</h2>
-    <a class="btn btn-success leave_review" href="/users/login">Join and leave a review!</a>
-    
+    {%endfor%}
+    <div class="new_review_place">
+    <div class="row">
+    <div class="col-md-10">
+    <form class="simple_form new_review" id="new_review" action="{{url_for(
+                'submit_review',
+                location_slug=location_slug,
+                cafe_slug=cafe_slug,
+                id=id,
+            )}}" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="AdRghKsgd8MNvPqhevnI_a2s4KTYw_GAfJ594gswrCtUo_-MgSdopnC8e_NycgTBI172AkGpo3vXynMzm1jv1w" autocomplete="off"><div class="input text optional review_desc"><textarea class="text optional form-control" placeholder="What is it like working from {{cafe.name}} @ {{cafe.borough}}?" name="review[desc]" id="review_desc"></textarea></div>
+    <div class="input hidden review_place_id"><input value="2229" class="hidden" autocomplete="off" type="hidden" name="review[place_id]" id="review_place_id"></div>
+    <div class="input hidden review_user_id"><input value="5359" class="hidden" autocomplete="off" type="hidden" name="review[user_id]" id="review_user_id"></div>
+    <input type="submit" name="commit" value="Submit" class="btn btn btn-default float-right mb-2 review_button" data-disable-with="Create Review">
+    </form></div>
+    <div class="col-md-2">
+    <img class="img-circle" src="/static/assets/images/profile-pics/anonymous.png">
+    </div>
+    </div>
+
+    </div>
+    </div>
+    <a class="black-link see_less_reviews" href="#" style="display: inline;"><i class="fa fa-fw fa-caret-up"></i>
+    See less reviews
+    </a>
+    {%endif%}
     <div class="all_reviews">
     <hr>
     <div class="new_review_place">
@@ -446,6 +459,7 @@
 
             // Rating buttons
             const scoreIcon = document.querySelector('#score i');
+            scoreIcon.dataset.originalClass=scoreIcon.className;
             const rateElements = document.querySelectorAll('#rate-productivity a');
             const value = "{{cafe.criterion.i_like_it}}";
             console.log(value);

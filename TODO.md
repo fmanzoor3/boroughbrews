@@ -72,4 +72,12 @@
 
 -[x] Set up the log in system
 
--[] Add photo path to User db
+-[x] Add photo path to User db
+
+-[x] Implement reviews feature on cafe page
+
+-[] Add 'See more/less reviews' feature on cafe page
+
+-[] Make popovers for the reviewers on cafe page
+
+-[] Allow users to log in using Google
