@@ -78,6 +78,6 @@
 
 -[] Add 'See more/less reviews' feature on cafe page
 
--[] Make popovers for the reviewers on cafe page
+-[x] Make popovers for the reviewers on cafe page
 
 -[] Allow users to log in using Google

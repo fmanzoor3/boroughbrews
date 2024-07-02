@@ -36,8 +36,13 @@
     <small class="text-gray col-12">{{cafe.reviews[0].date}}</small>
     <p class="col-sm-10">{{cafe.reviews[0].text}}</p>
     <div class="col-sm-2" style="text-align: right;">
-    <span data-content="Anonymous user" data-toggle="popover" aria-label="Anonymous" data-bs-original-title="Anonymous">
+    {%if cafe.reviews[0].author.privacy=='0'%}
+    <span data-content="user" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-template="<div class='popover high-border' role='tooltip'><div class='popover-arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-original-title="{{cafe.reviews[0].author.name}} {{cafe.reviews[0].author.surname}}">
     <img class="img-circle" src="/static/assets/images/profile-pics/{{cafe.reviews[0].author.photo_name}}">
+    {%else%}
+    <span data-content="user" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-template="<div class='popover high-border' role='tooltip'><div class='popover-arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-original-title="Anonymous">
+    <img class="img-circle" src="/static/assets/images/profile-pics/anonymous.png">
+    {%endif%}
     </span>
     </div>
     </div>
@@ -51,8 +56,13 @@
     <small class="text-gray col-12">{{review.date}}</small>
     <p class="col-sm-10">{{review.text}}</p>
     <div class="col-sm-2" style="text-align: right;">
-    <span data-content="Anonymous user" data-toggle="popover" aria-label="Anonymous" data-bs-original-title="Anonymous">
+    {%if review.author.privacy=='0'%}
+    <span data-content="user" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-template="<div class='popover high-border' role='tooltip'><div class='popover-arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-original-title="{{review.author.name}} {{review.author.surname}}">
     <img class="img-circle" src="/static/assets/images/profile-pics/{{review.author.photo_name}}">
+    {%else%}
+    <span data-content="user" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-template="<div class='popover high-border' role='tooltip'><div class='popover-arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-original-title="Anonymous">
+    <img class="img-circle" src="/static/assets/images/profile-pics/anonymous.png">
+    {%endif%}
     </span>
     </div>
     </div>
@@ -72,7 +82,7 @@
     <input type="submit" name="commit" value="Submit" class="btn btn btn-default float-right mb-2 review_button" data-disable-with="Create Review">
     </form></div>
     <div class="col-md-2">
-    <img class="img-circle" src="/static/assets/images/profile-pics/anonymous.png">
+    <img class="img-circle" src="/static/assets/images/profile-pics/{{current_user.photo_name}}">
     </div>
     </div>
 

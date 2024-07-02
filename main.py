@@ -45,8 +45,6 @@ from flask_login import (
     logout_user,
     login_required,
 )
-
-# from flask_gravatar import Gravatar
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # from static.utils.format_open_hours import format_opening_hours, day_abbreviations
@@ -143,18 +141,6 @@ class Review(db.Model):
 
 with app.app_context():
     db.create_all()
-
-# Initialising gravatar
-# gravatar = Gravatar(
-#     app,
-#     size=100,
-#     rating="g",
-#     default="retro",
-#     force_default=False,
-#     force_lower=False,
-#     use_ssl=False,
-#     base_url=None,
-# )
 
 
 # -------------------------------------------FUNCTIONS---------------------------------------------------------------------------
