@@ -76,7 +76,7 @@
 
 -[x] Implement reviews feature on cafe page
 
--[] Add 'See more/less reviews' feature on cafe page
+-[x] Add 'See more/less reviews' feature on cafe page and display correctly depending on if the user is logged in or not
 
 -[x] Make popovers for the reviewers on cafe page
 
