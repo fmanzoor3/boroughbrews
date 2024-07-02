@@ -80,13 +80,15 @@
 
 -[x] Make popovers for the reviewers on cafe page
 
--[x] Add visited cafes to users page
+-[x] Add a user's visited cafes to users page
 
--[] Take 'i_like_it' column of Cafe db and make it a User column instead
+-[x] Take 'i_like_it' column of Cafe db and instead make a 'like_level' column in the user_cafe association table
+
+-[x] Add a 'score' column in the user_cafe association table to have a different score for each user depending on their like_level of the cafe
 
 -[] Add 'Reported closed' column to Cafe
 
--[] Redirect to log in page for places that require a logged in user (e.g. liking feature, leaving a review, rating criteria)
+-[x] Redirect to log in page for places that require a logged in user (e.g. liking feature, leaving a review, rating criteria)
 
 -[] Allow users to log in using Google
 

@@ -255,11 +255,18 @@
     <!-- LaptopFriendly Hubs -->
     <!-- All Places -->
     {%for cafe in all_cafes  | sort(attribute='cafe.score', reverse=True)%}
-    <a id={{cafe.slugged_name}} class="place" data-wifi="{{cafe.cafe.criterion['wifi']}}" data-sockets="{{cafe.cafe.criterion['sockets']}}" data-long-stay="{{cafe.cafe.criterion['long_stay']}}" data-light="{{cafe.cafe.criterion['light']}}" data-quiet="{{cafe.cafe.criterion['quiet']}}" data-calls="{{cafe.cafe.criterion['calls']}}" data-vibe="{{cafe.cafe.criterion['vibe']}}" data-ac="{{cafe.cafe.criterion['ac']}}" data-tables="{{cafe.cafe.criterion['tables']}}" data-groups="{{cafe.cafe.criterion['groups']}}" data-food="{{cafe.cafe.criterion['food']}}" data-credit-cards="{{cafe.cafe.criterion['credit_cards']}}" data-parking="{{cafe.cafe.criterion['parking']}}" data-access="{{cafe.cafe.criterion['access']}}" data-outdoor="{{cafe.cafe.criterion['outdoor']}}" data-pets="{{cafe.cafe.criterion['pets']}}" data-spacious="{{cafe.cafe.criterion['spacious']}}" data-coffee="{{cafe.cafe.criterion['coffee']}}" data-alcohol="{{cafe.cafe.criterion['alcohol']}}" data-veggie="{{cafe.cafe.criterion['veggie']}}" data-i-like-it="{{cafe.cafe.criterion['i_like_it']}}" data-toilets="{{cafe.cafe.criterion['toilets']}}" data-score="{{cafe.cafe.score}}" href="{{ url_for('show_cafe', location_slug=location_slug, cafe_slug=cafe.slugged_name, id=cafe.cafe.id) }}" style="order: 124;"><div class="card-img-top">
+        {% if current_user.is_authenticated %}
+        {% set like_level = current_user.get_like_level(cafe.cafe.id) %}
+        {% set cafe_score = current_user.get_score(cafe.cafe.id) %}
+    {% else %}
+        {% set like_level = "unknown" %}
+        {% set cafe_score = cafe.cafe.score %}
+    {% endif %}
+    <a id={{cafe.slugged_name}} class="place" data-wifi="{{cafe.cafe.criterion['wifi']}}" data-sockets="{{cafe.cafe.criterion['sockets']}}" data-long-stay="{{cafe.cafe.criterion['long_stay']}}" data-light="{{cafe.cafe.criterion['light']}}" data-quiet="{{cafe.cafe.criterion['quiet']}}" data-calls="{{cafe.cafe.criterion['calls']}}" data-vibe="{{cafe.cafe.criterion['vibe']}}" data-ac="{{cafe.cafe.criterion['ac']}}" data-tables="{{cafe.cafe.criterion['tables']}}" data-groups="{{cafe.cafe.criterion['groups']}}" data-food="{{cafe.cafe.criterion['food']}}" data-credit-cards="{{cafe.cafe.criterion['credit_cards']}}" data-parking="{{cafe.cafe.criterion['parking']}}" data-access="{{cafe.cafe.criterion['access']}}" data-outdoor="{{cafe.cafe.criterion['outdoor']}}" data-pets="{{cafe.cafe.criterion['pets']}}" data-spacious="{{cafe.cafe.criterion['spacious']}}" data-coffee="{{cafe.cafe.criterion['coffee']}}" data-alcohol="{{cafe.cafe.criterion['alcohol']}}" data-veggie="{{cafe.cafe.criterion['veggie']}}" data-i-like-it="{{like_level}}" data-toilets="{{cafe.cafe.criterion['toilets']}}" data-score="{{cafe_score}}" href="{{ url_for('show_cafe', location_slug=location_slug, cafe_slug=cafe.slugged_name, id=cafe.cafe.id) }}" style="order: 124;"><div class="card-img-top">
     <img alt={{cafe.cafe.name}} src={{cafe.cafe.img_url}}>
     </div>
     <div class="card-body">
-    <div class="score" data-score="{{cafe.cafe.score}}" data-i-like-it="{{cafe.cafe.criterion['i_like_it']}}" data-toggle="popover" data-content="I have not been here yet" data-template="<div class='popover unknown-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-original-title="In general, do you like working from here?"><i class="far fa-heart grey" data-color="grey"></i> | {{cafe.cafe.score}}%</div>
+    <div class="score" data-score="{{cafe_score}}" data-i-like-it="{{like_level}}" data-toggle="popover" data-content="I have not been here yet" data-template="<div class='popover unknown-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-original-title="In general, do you like working from here?"><i class="far fa-heart grey" data-color="grey"></i> | {{cafe_score}}%</div>
     <h3 class="card-title">{{cafe.cafe.name}}</h3>
     <p>
     <i class="far fa-clock"></i>

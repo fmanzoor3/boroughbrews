@@ -88,6 +88,8 @@ user_cafe_association = Table(
     db.Model.metadata,
     Column("user_id", Integer, ForeignKey("users.id"), primary_key=True),
     Column("cafe_id", Integer, ForeignKey("cafes.id"), primary_key=True),
+    Column("like_level", String, default="unknown"),
+    Column("score", String, default="XX"),
 )
 
 
@@ -105,6 +107,23 @@ class User(UserMixin, db.Model):
         "Cafe", secondary=user_cafe_association, back_populates="visitors"
     )
     reviews: Mapped[List["Review"]] = relationship(back_populates="author")
+
+    def get_like_level(self, cafe_id):
+        association = (
+            db.session.query(user_cafe_association)
+            .filter_by(user_id=self.id, cafe_id=cafe_id)
+            .first()
+        )
+        return association.like_level if association else "unknown"
+
+    def get_score(self, cafe_id):
+        association = (
+            db.session.query(user_cafe_association)
+            .filter_by(user_id=self.id, cafe_id=cafe_id)
+            .first()
+        )
+        cafe = db.get_or_404(Cafe, cafe_id)
+        return association.score if association else cafe.score
 
 
 class Cafe(db.Model):
@@ -270,10 +289,8 @@ def format_opening_hours(weekday_text):
         }
 
 
-def calculate_score(criterion):
-    if any(
-        value == "unknown" for key, value in criterion.items() if key != "i_like_it"
-    ):
+def calculate_score(criterion, like_level):
+    if any(value == "unknown" for key, value in criterion.items()):
         return "XX"
     score = 0
 
@@ -288,8 +305,6 @@ def calculate_score(criterion):
     default_base_score = 11 / 15
 
     for key, value in criterion.items():
-        if key == "i_like_it":
-            continue
         base_score = base_scores.get(key, default_base_score)
 
         if value == "medium":
@@ -299,11 +314,11 @@ def calculate_score(criterion):
 
     score = round(score)
 
-    if criterion["i_like_it"] == "low":
+    if like_level == "low":
         score = ((score - 0.1) // 10) * 10
-    elif criterion["i_like_it"] == "medium":
+    elif like_level == "medium":
         score = ((score - 0.1) // 10) * 10 + 5
-    elif criterion["i_like_it"] == "high":
+    elif like_level == "high":
         score = math.ceil(score / 10) * 10
     return str(int(score))
 
@@ -316,6 +331,15 @@ def download_image(url, save_path="image.jpg"):
         return "Image successfully downloaded: " + save_path
     else:
         return "Failed to retrieve the image"
+
+
+def get_like_level(self, cafe_id):
+    association = (
+        db.session.query(user_cafe_association)
+        .filter_by(user_id=self.id, cafe_id=cafe_id)
+        .first()
+    )
+    return association.like_level
 
 
 # ---------------------------------------------------ENV VARIABLES------------------------------------------------------------------------------------
@@ -408,13 +432,20 @@ def submit_review(location_slug, cafe_slug):
     )
     db.session.add(new_review)
 
-    # Add the association to the user_cafe_association table
-    if (
-        not db.session.query(user_cafe_association)
+    association = (
+        db.session.query(user_cafe_association)
         .filter_by(user_id=current_user.id, cafe_id=cafe_info.id)
         .first()
-    ):
-        current_user.visited_cafes.append(cafe_info)
+    )
+
+    if not association:
+        stmt = user_cafe_association.insert().values(
+            user_id=current_user.id,
+            cafe_id=cafe_info.id,
+            like_level="unknown",
+            score=cafe_info.score,
+        )
+        db.session.execute(stmt)
 
     db.session.commit()
     return redirect(
@@ -427,9 +458,27 @@ def i_like_it(location_slug, cafe_slug, like_score):
     id = request.args.get("id")
     cafe = db.get_or_404(Cafe, id)
     criterion = dict(cafe.criterion)
-    criterion["i_like_it"] = like_score
-    cafe.criterion = criterion
-    cafe.score = calculate_score(criterion)
+    score = calculate_score(criterion, like_score)
+
+    # Check if the association exists
+    association = (
+        db.session.query(user_cafe_association)
+        .filter_by(user_id=current_user.id, cafe_id=cafe.id)
+        .first()
+    )
+
+    if association:
+        # Update the like_level if the association exists
+        db.session.query(user_cafe_association).filter_by(
+            user_id=current_user.id, cafe_id=cafe.id
+        ).update({"like_level": like_score, "score": score})
+    else:
+        # Add the cafe to the user's visited cafes with the like_level if the association does not exist
+        stmt = user_cafe_association.insert().values(
+            user_id=current_user.id, cafe_id=cafe.id, like_level=like_score, score=score
+        )
+        db.session.execute(stmt)
+
     db.session.commit()
     return redirect(
         url_for("show_cafe", location_slug=location_slug, cafe_slug=cafe_slug, id=id)
@@ -477,6 +526,7 @@ def under_review(cafe_name_slugged, id):
     cafe_name = make_slug_inverse(cafe_name_slugged)
     cafe = db.get_or_404(Cafe, id)
     if request.method == "POST":
+        like_level = request.form.get("criterion[i_like_it]")
         cafe.criterion = {
             "wifi": request.form.get("criterion[wifi]"),
             "sockets": request.form.get("criterion[sockets]"),
@@ -499,9 +549,8 @@ def under_review(cafe_name_slugged, id):
             "ac": request.form.get("criterion[ac]"),
             "pets": request.form.get("criterion[pets]"),
             "parking": request.form.get("criterion[parking]"),
-            "i_like_it": request.form.get("criterion[i_like_it]"),
         }
-        cafe.score = calculate_score(cafe.criterion)
+        cafe.score = calculate_score(cafe.criterion, "unknown")
         location_slug = make_slug(cafe.borough)
         cafe_slug = make_slug(cafe.name)
         db.session.commit()
@@ -525,6 +574,7 @@ def edit(cafe_name_slugged, location_slug):
     cafe = db.get_or_404(Cafe, id)
     if request.method == "POST":
         id = request.form.get("id")
+        like_level = request.form.get("criterion[i_like_it]")
         cafe = db.get_or_404(Cafe, id)
         cafe.criterion = {
             "wifi": request.form.get("criterion[wifi]"),
@@ -548,9 +598,8 @@ def edit(cafe_name_slugged, location_slug):
             "ac": request.form.get("criterion[ac]"),
             "pets": request.form.get("criterion[pets]"),
             "parking": request.form.get("criterion[parking]"),
-            "i_like_it": request.form.get("criterion[i_like_it]"),
         }
-        cafe.score = calculate_score(cafe.criterion)
+        cafe.score = calculate_score(cafe.criterion, "unknown")
         location_slug = make_slug(cafe.borough)
         cafe_slug = make_slug(cafe.name)
         db.session.commit()
