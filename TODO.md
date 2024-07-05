@@ -86,10 +86,18 @@
 
 -[x] Add a 'score' column in the user_cafe association table to have a different score for each user depending on their like_level of the cafe
 
--[] Add 'Reported closed' column to Cafe
+-[x] Add 'Reported closed' column to Cafe
 
 -[x] Redirect to log in page for places that require a logged in user (e.g. liking feature, leaving a review, rating criteria)
 
 -[] Allow users to log in using Google
 
 -[] Improve code by passing 'make_slug' function into templates when slug names are needed, instead of 'location_slug' and 'cafe_slugged'
+
+-[] Add delete review feature for user's own comments
+
+-[] Create 'Remember me' and 'Forgot password' features on log in page
+
+-[] Order reviews in order of most recent
+
+-[x] Add 'edit' review feature

@@ -43,6 +43,26 @@
     
     
     <h2>Reviews</h2>
+    {%if edit_review=="True"%}
+            <form class="simple_form new_review" id="new_review" action="{{url_for(
+                    'submit_review',
+                    location_slug=location_slug,
+                    cafe_slug=cafe_slug,
+                    id=id,
+                    edit_review=False
+                )}}" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="CAxXEXXL05fgEEn_Ws-nYLbUkMmFJaVWCj-CqRQk9GwTFMXvv8GkDBGm5lOuFTyaH5rexc80Nll5zHHO6487JA" autocomplete="off"><div class="input text optional review_desc"><textarea class="text optional form-control" data-desc="" name="review[desc]" id="review_desc">{{current_user.get_review_for_cafe(cafe.id).text}}</textarea></div>
+            <div class="input hidden review_review_id"><input value="1612" class="hidden" autocomplete="off" type="hidden" name="review[review_id]" id="review_review_id"></div>
+            <div class="input hidden review_place_id"><input value="6648" class="hidden" autocomplete="off" type="hidden" name="review[place_id]" id="review_place_id"></div>
+            <input type="submit" name="commit" value="Send" class="btn btn-sm pull-right" data-disable-with="Send">
+            <button name="button" href="{{url_for(
+                    'submit_review',
+                    location_slug=location_slug,
+                    cafe_slug=cafe_slug,
+                    id=id,
+                    edit_review=False
+                )}}" class="btn btn-sm">Cancel</button>
+            </form>
+    {%else%}
     {%if not cafe.reviews%}
         {%if current_user.is_authenticated%}
         <div class="new_review_place">
@@ -73,6 +93,15 @@
     <small class="text-gray col-12">{{cafe.reviews[0].date}}</small>
     <p class="col-sm-10">{{cafe.reviews[0].text}}</p>
     <div class="col-sm-2" style="text-align: right;">
+        {%if current_user==cafe.reviews[0].author%}
+            <a class="btn btn-sm edit_review" href='{{url_for(
+            "show_cafe",
+            location_slug=location_slug,
+            cafe_slug=cafe_slug,
+            id=id,
+            edit_review=True,
+        )}}'>Edit</a>
+        {%endif%}
         {%if cafe.reviews[0].author.privacy=='0'%}
         <span data-content="user" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-template="<div class='popover high-border' role='tooltip'><div class='popover-arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-original-title="{{cafe.reviews[0].author.name}} {{cafe.reviews[0].author.surname}}">
         <img class="img-circle" src="/static/assets/images/profile-pics/{{cafe.reviews[0].author.photo_name}}">
@@ -120,6 +149,15 @@
         <small class="text-gray col-12">{{review.date}}</small>
         <p class="col-sm-10">{{review.text}}</p>
         <div class="col-sm-2" style="text-align: right;">
+            {%if current_user==review.author%}
+            <a class="btn btn-sm edit_review" href='{{url_for(
+            "show_cafe",
+            location_slug=location_slug,
+            cafe_slug=cafe_slug,
+            id=id,
+            edit_review=True,
+        )}}'>Edit</a>
+            {%endif%}
             {%if review.author.privacy=='0'%}
             <span data-content="user" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-template="<div class='popover high-border' role='tooltip'><div class='popover-arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-original-title="{{review.author.name}} {{review.author.surname}}">
             <img class="img-circle" src="/static/assets/images/profile-pics/{{review.author.photo_name}}">
@@ -133,24 +171,26 @@
         <hr>
         {%endfor%}
         {%if current_user.is_authenticated%}
-        <div class="new_review_place">
-        <div class="row">
-        <div class="col-md-10">
-        <form class="simple_form new_review" id="new_review" action="{{url_for(
-                    'submit_review',
-                    location_slug=location_slug,
-                    cafe_slug=cafe_slug,
-                    id=id,
-                )}}" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="AdRghKsgd8MNvPqhevnI_a2s4KTYw_GAfJ594gswrCtUo_-MgSdopnC8e_NycgTBI172AkGpo3vXynMzm1jv1w" autocomplete="off"><div class="input text optional review_desc"><textarea class="text optional form-control" placeholder="What is it like working from {{cafe.name}} @ {{cafe.borough}}?" name="review[desc]" id="review_desc"></textarea></div>
-        <div class="input hidden review_place_id"><input value="2229" class="hidden" autocomplete="off" type="hidden" name="review[place_id]" id="review_place_id"></div>
-        <div class="input hidden review_user_id"><input value="5359" class="hidden" autocomplete="off" type="hidden" name="review[user_id]" id="review_user_id"></div>
-        <input type="submit" name="commit" value="Submit" class="btn btn btn-default float-right mb-2 review_button" data-disable-with="Create Review">
-        </form></div>
-        <div class="col-md-2">
-        <img class="img-circle" src="/static/assets/images/profile-pics/{{current_user.photo_name}}">
-        </div>
-        </div>
-        </div>
+            {%if not user_has_review_filter(cafe.reviews,current_user.id)%}
+            <div class="new_review_place">
+            <div class="row">
+            <div class="col-md-10">
+            <form class="simple_form new_review" id="new_review" action="{{url_for(
+                        'submit_review',
+                        location_slug=location_slug,
+                        cafe_slug=cafe_slug,
+                        id=id,
+                    )}}" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="AdRghKsgd8MNvPqhevnI_a2s4KTYw_GAfJ594gswrCtUo_-MgSdopnC8e_NycgTBI172AkGpo3vXynMzm1jv1w" autocomplete="off"><div class="input text optional review_desc"><textarea class="text optional form-control" placeholder="What is it like working from {{cafe.name}} @ {{cafe.borough}}?" name="review[desc]" id="review_desc"></textarea></div>
+            <div class="input hidden review_place_id"><input value="2229" class="hidden" autocomplete="off" type="hidden" name="review[place_id]" id="review_place_id"></div>
+            <div class="input hidden review_user_id"><input value="5359" class="hidden" autocomplete="off" type="hidden" name="review[user_id]" id="review_user_id"></div>
+            <input type="submit" name="commit" value="Submit" class="btn btn btn-default float-right mb-2 review_button" data-disable-with="Create Review">
+            </form></div>
+            <div class="col-md-2">
+            <img class="img-circle" src="/static/assets/images/profile-pics/{{current_user.photo_name}}">
+            </div>
+            </div>
+            </div>
+            {%endif%}
         {%else%}
         <div class="new_review_place">
         <a class="btn btn-success leave_review" href="{{url_for('log_in')}}">Join and leave a review!</a>
@@ -161,7 +201,9 @@
     </a>
     </div>
     {%endif%}
+        {%endif%}
     </div>
+
 
 
     <hr>
@@ -481,7 +523,12 @@
     Update page
     </a></div>
     <div class="col-5 col-sm-6 col-lg-5">
-    <a class="btn btn-sm btn-default btn-block" href="/london/arancina/toggle_closed"><i class="far fa-fw fa-flag"></i>
+    <a class="btn btn-sm btn-default btn-block" href='{{url_for(
+            "report_closed",
+            location_slug=location_slug,
+            cafe_slug=cafe_slug,
+            id=id
+        )}}'><i class="far fa-fw fa-flag"></i>
     Report closed
     </a></div>
     </div>

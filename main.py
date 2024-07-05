@@ -125,6 +125,14 @@ class User(UserMixin, db.Model):
         cafe = db.get_or_404(Cafe, cafe_id)
         return association.score if association else cafe.score
 
+    def get_review_for_cafe(self, cafe_id):
+        review = (
+            db.session.query(Review)
+            .filter_by(author_id=self.id, cafe_id=cafe_id)
+            .first()
+        )
+        return review
+
 
 class Cafe(db.Model):
     __tablename__ = "cafes"
@@ -145,6 +153,9 @@ class Cafe(db.Model):
         "User", secondary=user_cafe_association, back_populates="visited_cafes"
     )
     reviews: Mapped[List["Review"]] = relationship(back_populates="parent_cafe")
+    reported_closed: Mapped[str] = mapped_column(
+        String(250), nullable=False, default="False"
+    )
 
 
 class Review(db.Model):
@@ -342,6 +353,10 @@ def get_like_level(self, cafe_id):
     return association.like_level
 
 
+def user_has_review_filter(reviews, user_id):
+    return any(review.author.id == user_id for review in reviews)
+
+
 # ---------------------------------------------------ENV VARIABLES------------------------------------------------------------------------------------
 google_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
 
@@ -386,7 +401,11 @@ def show_location(location_slug):
     location = make_slug_inverse(location_slug)
     lat = borough_coords[location]["lat"]
     lng = borough_coords[location]["lng"]
-    cafes_at_location = db.session.query(Cafe).filter_by(borough=location).all()
+    cafes_at_location = (
+        db.session.query(Cafe)
+        .filter_by(borough=location, reported_closed="False")
+        .all()
+    )
     cafe_names_slugged = [make_slug(cafe.name) for cafe in cafes_at_location]
     cafes = [
         {"cafe": cafes_at_location[i], "slugged_name": cafe_names_slugged[i]}
@@ -404,9 +423,10 @@ def show_location(location_slug):
     )
 
 
-@app.route("/<location_slug>/<cafe_slug>")
+@app.route("/<location_slug>/<cafe_slug>", methods=["GET", "POST"])
 def show_cafe(location_slug, cafe_slug):
     id = request.args.get("id")
+    edit_review = request.args.get("edit_review", "false")
     cafe_info = db.get_or_404(Cafe, id)
     current_day = datetime.now().strftime("%a")
     return render_template(
@@ -416,6 +436,8 @@ def show_cafe(location_slug, cafe_slug):
         cafe_slug=cafe_slug,
         id=cafe_info.id,
         current_day=current_day,
+        edit_review=edit_review,
+        user_has_review_filter=user_has_review_filter,
     )
 
 
@@ -424,13 +446,24 @@ def submit_review(location_slug, cafe_slug):
     id = request.args.get("id")
     cafe_info = db.get_or_404(Cafe, id)
     current_date = datetime.now().strftime("%B %d, %Y")
-    new_review = Review(
-        text=request.form.get("review[desc]"),
-        author=current_user,
-        date=str(current_date),
-        parent_cafe=cafe_info,
+
+    existing_review = (
+        db.session.query(Review)
+        .filter_by(author_id=current_user.id, cafe_id=cafe_info.id)
+        .first()
     )
-    db.session.add(new_review)
+
+    if existing_review:
+        existing_review.text = request.form.get("review[desc]")
+        existing_review.date = str(current_date)
+    else:
+        new_review = Review(
+            text=request.form.get("review[desc]"),
+            author=current_user,
+            date=str(current_date),
+            parent_cafe=cafe_info,
+        )
+        db.session.add(new_review)
 
     association = (
         db.session.query(user_cafe_association)
@@ -451,6 +484,15 @@ def submit_review(location_slug, cafe_slug):
     return redirect(
         url_for("show_cafe", location_slug=location_slug, cafe_slug=cafe_slug, id=id)
     )
+
+
+@app.route("/<location_slug>/<cafe_slug>/report-closed")
+def report_closed(location_slug, cafe_slug):
+    id = request.args.get("id")
+    cafe = db.get_or_404(Cafe, id)
+    cafe.reported_closed = "True"
+    db.session.commit()
+    return redirect(url_for("show_location", location_slug=location_slug))
 
 
 @app.route("/<location_slug>/<cafe_slug>/<like_score>")
