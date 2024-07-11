@@ -1,19 +1,5 @@
 {% include "header.html" %}
 
-{# <header class="intro text-center">
-    <div class="container">
-    <h1>
-    Discover and Share the Best Cafes in London!
-    </h1>
-    <div class="row justify-content-center">
-    <div class="col-md-6 col-sm-8">
-    <a class="btn btn-lg btn-warning book-now" href="{{ url_for('show_all_locations') }}">Suggest a Cafe</a><br><br>
-    
-    </div>
-    </div>
-    </div>
-    </header> #}
-
     <section class="hero">
             <h1>Discover and Share the Best Cafes in London!</h1>
             <a href="{{ url_for('suggest') }}"><button>Suggest Cafe</button></a>
@@ -30,7 +16,7 @@
             <h2>Top Rated Cafes</h2>
             <div class="cafe-list">
 {% for cafe in top_cafes %}
-<a class="cafe-item" href="{{ url_for('show_cafe', location_slug=make_slug(cafe.borough), cafe_slug=make_slug(cafe.name), id=cafe.id) }}">
+<a class="cafe-item" href="{{ url_for('show_cafe', cafe_id=cafe.id) }}">
     <img alt="{{ cafe.name }}" src="{{ cafe.img_url }}" class="img-fluid">
     <h3>{{ cafe.name }}</h3>
     <div class="score" data-score="{{cafe.score}}">{{cafe.score}}% Rating</div>

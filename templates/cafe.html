@@ -46,20 +46,14 @@
     {%if edit_review=="True"%}
             <form class="simple_form new_review" id="new_review" action="{{url_for(
                     'submit_review',
-                    location_slug=location_slug,
-                    cafe_slug=cafe_slug,
-                    id=id,
-                    edit_review=False
+                    cafe_id=cafe.id,
                 )}}" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="CAxXEXXL05fgEEn_Ws-nYLbUkMmFJaVWCj-CqRQk9GwTFMXvv8GkDBGm5lOuFTyaH5rexc80Nll5zHHO6487JA" autocomplete="off"><div class="input text optional review_desc"><textarea class="text optional form-control" data-desc="" name="review[desc]" id="review_desc">{{current_user.get_review_for_cafe(cafe.id).text}}</textarea></div>
             <div class="input hidden review_review_id"><input value="1612" class="hidden" autocomplete="off" type="hidden" name="review[review_id]" id="review_review_id"></div>
             <div class="input hidden review_place_id"><input value="6648" class="hidden" autocomplete="off" type="hidden" name="review[place_id]" id="review_place_id"></div>
             <input type="submit" name="commit" value="Send" class="btn btn-sm pull-right" data-disable-with="Send">
             <button name="button" href="{{url_for(
                     'submit_review',
-                    location_slug=location_slug,
-                    cafe_slug=cafe_slug,
-                    id=id,
-                    edit_review=False
+                    cafe_id=cafe.id,
                 )}}" class="btn btn-sm">Cancel</button>
             </form>
     {%else%}
@@ -70,9 +64,7 @@
         <div class="col-md-10">
         <form class="simple_form new_review" id="new_review" action="{{url_for(
                     'submit_review',
-                    location_slug=location_slug,
-                    cafe_slug=cafe_slug,
-                    id=id,
+                    cafe_id=cafe.id,
                 )}}" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="AdRghKsgd8MNvPqhevnI_a2s4KTYw_GAfJ594gswrCtUo_-MgSdopnC8e_NycgTBI172AkGpo3vXynMzm1jv1w" autocomplete="off"><div class="input text optional review_desc"><textarea class="text optional form-control" placeholder="What is it like working from {{cafe.name}} @ {{cafe.borough}}?" name="review[desc]" id="review_desc"></textarea></div>
         <div class="input hidden review_place_id"><input value="2229" class="hidden" autocomplete="off" type="hidden" name="review[place_id]" id="review_place_id"></div>
         <div class="input hidden review_user_id"><input value="5359" class="hidden" autocomplete="off" type="hidden" name="review[user_id]" id="review_user_id"></div>
@@ -96,15 +88,10 @@
         {%if current_user==cafe.reviews[0].author%}
             <a class="btn btn-sm edit_review" href='{{url_for(
             "show_cafe",
-            location_slug=location_slug,
-            cafe_slug=cafe_slug,
-            id=id,
+            cafe_id=cafe.id,
             edit_review=True,
         )}}'>Edit</a>
-        <form method="POST" action="{{ url_for('delete_review', location_slug=location_slug, cafe_slug=cafe_slug) }}">
-        <input type="hidden" name="id" value="{{ id }}">
-        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-        </form>
+<a href="{{ url_for('delete_review', cafe_id=cafe.id) }}"><button class="btn btn-sm btn-danger">Delete</button></a>
         {%endif%}
         {%if cafe.reviews[0].author.privacy=='0'%}
         <span data-content="user" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-template="<div class='popover high-border' role='tooltip'><div class='popover-arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-original-title="{{cafe.reviews[0].author.name}} {{cafe.reviews[0].author.surname}}">
@@ -128,9 +115,7 @@
         <div class="col-md-10">
         <form class="simple_form new_review" id="new_review" action="{{url_for(
                     'submit_review',
-                    location_slug=location_slug,
-                    cafe_slug=cafe_slug,
-                    id=id,
+                    cafe_id=cafe.id,
                 )}}" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="AdRghKsgd8MNvPqhevnI_a2s4KTYw_GAfJ594gswrCtUo_-MgSdopnC8e_NycgTBI172AkGpo3vXynMzm1jv1w" autocomplete="off"><div class="input text optional review_desc"><textarea class="text optional form-control" placeholder="What is it like working from {{cafe.name}} @ {{cafe.borough}}?" name="review[desc]" id="review_desc"></textarea></div>
         <div class="input hidden review_place_id"><input value="2229" class="hidden" autocomplete="off" type="hidden" name="review[place_id]" id="review_place_id"></div>
         <div class="input hidden review_user_id"><input value="5359" class="hidden" autocomplete="off" type="hidden" name="review[user_id]" id="review_user_id"></div>
@@ -158,15 +143,10 @@
             {%if current_user==review.author%}
             <a class="btn btn-sm edit_review" href='{{url_for(
             "show_cafe",
-            location_slug=location_slug,
-            cafe_slug=cafe_slug,
-            id=id,
+            cafe_id=cafe.id,
             edit_review=True,
         )}}'>Edit</a>
-        <form method="POST" action="{{ url_for('delete_review', location_slug=location_slug, cafe_slug=cafe_slug) }}">
-        <input type="hidden" name="id" value="{{ id }}">
-        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-        </form>
+            <a href="{{ url_for('delete_review', cafe_id=cafe.id) }}"><button class="btn btn-sm btn-danger">Delete</button></a>
             {%endif%}
             {%if review.author.privacy=='0'%}
             <span data-content="user" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-bs-template="<div class='popover high-border' role='tooltip'><div class='popover-arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-original-title="{{review.author.name}} {{review.author.surname}}">
@@ -187,9 +167,7 @@
             <div class="col-md-10">
             <form class="simple_form new_review" id="new_review" action="{{url_for(
                         'submit_review',
-                        location_slug=location_slug,
-                        cafe_slug=cafe_slug,
-                        id=id,
+                        cafe_id=cafe.id,
                     )}}" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="AdRghKsgd8MNvPqhevnI_a2s4KTYw_GAfJ594gswrCtUo_-MgSdopnC8e_NycgTBI172AkGpo3vXynMzm1jv1w" autocomplete="off"><div class="input text optional review_desc"><textarea class="text optional form-control" placeholder="What is it like working from {{cafe.name}} @ {{cafe.borough}}?" name="review[desc]" id="review_desc"></textarea></div>
             <div class="input hidden review_place_id"><input value="2229" class="hidden" autocomplete="off" type="hidden" name="review[place_id]" id="review_place_id"></div>
             <div class="input hidden review_user_id"><input value="5359" class="hidden" autocomplete="off" type="hidden" name="review[user_id]" id="review_user_id"></div>
@@ -459,13 +437,13 @@
     <div class="row justify-content-center text-center">
     {%if current_user.is_authenticated%}
     <div class="col-3" data-content="It's uncomfortable for work" data-template="<div class='popover low-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" aria-label="No" data-bs-original-title="No">
-    <a class="red" href="{{ url_for('i_like_it', location_slug=location_slug,cafe_slug=cafe_slug,like_score='low',id=id) }}"><i class="fa fa-heart-broken fa-3x"></i>
+    <a class="red" href="{{ url_for('i_like_it', like_score='low',cafe_id=cafe.id) }}"><i class="fa fa-heart-broken fa-3x"></i>
     </a></div>
     <div class="col-3" data-content="I got some work done" data-template="<div class='popover medium-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" aria-label="Yes" data-bs-original-title="Yes">
-    <a class="yellow" href="{{ url_for('i_like_it', location_slug=location_slug,cafe_slug=cafe_slug,like_score='medium',id=id) }}"><i class="fa fa-heart fa-3x"></i>
+    <a class="yellow" href="{{ url_for('i_like_it', like_score='medium',cafe_id=cafe.id) }}"><i class="fa fa-heart fa-3x"></i>
     </a></div>
     <div class="col-3" data-content="I feel very productive here!" data-template="<div class='popover high-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" aria-label="Definitely!" data-bs-original-title="Definitely!">
-    <a class="green" href="{{ url_for('i_like_it', location_slug=location_slug,cafe_slug=cafe_slug,like_score='high',id=id) }}"><i class="fa fa-heart fa-3x"></i>
+    <a class="green" href="{{ url_for('i_like_it', like_score='high',cafe_id=cafe.id) }}"><i class="fa fa-heart fa-3x"></i>
     </a></div>
     {%else%}
         <div class="col-3" data-content="It's uncomfortable for work" data-template="<div class='popover low-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" aria-label="No" data-bs-original-title="No">
@@ -529,15 +507,13 @@
     <p>Missing or incorrect information?</p>
     <div class="row justify-content-center">
     <div class="col-5 col-sm-6 col-lg-5">
-    <a class="btn btn-sm btn-default btn-block" href="{{ url_for('edit', cafe_name_slugged=cafe_slug, location_slug=location_slug, id=id) }}"><i class="fa fa-fw fa-edit"></i>
+    <a class="btn btn-sm btn-default btn-block" href="{{ url_for('edit', cafe_id=cafe.id) }}"><i class="fa fa-fw fa-edit"></i>
     Update Page
     </a></div>
     <div class="col-5 col-sm-6 col-lg-5">
     <a class="btn btn-sm btn-default btn-block" href='{{url_for(
             "report_closed",
-            location_slug=location_slug,
-            cafe_slug=cafe_slug,
-            id=id
+            cafe_id=cafe.id
         )}}'><i class="far fa-fw fa-flag"></i>
     Report Closed
     </a></div>
@@ -547,7 +523,7 @@
     </div>
     <!-- CTA for City page -->
     <hr>
-    <a class="text-link" href="{{url_for('show_location',location_slug=location_slug)}}"><i class="fa fa-fw fa-caret-left"></i>
+    <a class="text-link" href="{{url_for('show_location',location_slug=make_slug(cafe.borough))}}"><i class="fa fa-fw fa-caret-left"></i>
     Explore more work-friendly places in {{cafe.borough}}!
     </a></div>
     </section>
@@ -578,9 +554,7 @@
                 }
 
                 element.addEventListener('click', function() {
-                    var url = "{{ url_for('edit', cafe_name_slugged='__slug__', location_slug='__location_slug__', id=id) }}"
-                    .replace('__slug__', "{{cafe_slug}}")
-                    .replace('__location_slug__',"{{location_slug}}")
+                    var url = "{{ url_for('edit', cafe_id=cafe.id) }}"
                     console.log(url)
                     window.location.href = url;
                 });
@@ -629,7 +603,7 @@
                 // Allow button to be unselected
                 if (element.classList.contains('selected')) {
                     if (isAuthenticated) {
-                        element.href = "{{ url_for('i_like_it', location_slug=location_slug, cafe_slug=cafe_slug, like_score='unknown', id=id) }}";
+                        element.href = "{{ url_for('i_like_it', like_score='unknown', cafe_id=cafe.id) }}";
                     } else {
                         element.href = "{{ url_for('log_in') }}";
                     }
@@ -659,9 +633,7 @@
         }
 
         scoreElement.addEventListener('click', function(){
-            var url = "{{ url_for('edit', cafe_name_slugged='__slug__', location_slug='__location_slug__', id=id) }}"
-            .replace('__slug__', "{{cafe_slug}}")
-            .replace('__location_slug__',"{{location_slug}}")
+            var url = "{{ url_for('edit', cafe_id=cafe.id) }}"
             console.log(url)
             window.location.href = url;
         });

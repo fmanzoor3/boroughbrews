@@ -110,7 +110,9 @@
 
 -[x] Complete Top Rated Cafes section on home page
 
--[] Make the API restful
+-[] Format navbar to look nicer
+
+-[x] Make the API restful/make endpoints sleeker
 
 -[] Check footer links
 

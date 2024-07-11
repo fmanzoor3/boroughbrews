@@ -8,7 +8,7 @@
     For "Unknown" criteria, leave blank or deselect an already chosen option.
     </p>
     <form class="new_criterion" id="new_criterion" action='{{ url_for(
-            "under_review", cafe_name_slugged=cafe_name_slugged, id=id
+            "under_review", cafe_id=cafe.id
         ) }}' method="POST">
     <input type="hidden" name="id" value={{id}}>
     <input type="hidden" name="_method" value="put" autocomplete="off"><input type="hidden" name="authenticity_token" value="LoM5l2pZfmV0OFI1KR8FiWOA1rZPnKztVjubD-UasB1Qu5O3aY1oLh58q6KTcwaVOItHkAQJLQsCxvGJSC5DDA" autocomplete="off">
@@ -454,7 +454,7 @@
     </div>
     </section>
     {%if current_user.is_authenticated%}
-    <section>
+    {# <section>
     <h2>Summary</h2>
     <div class="row">
     <div class="col-lg-6">
@@ -477,7 +477,7 @@
     
     </div>
     </div>
-    </section>
+    </section> #}
     {%endif%}
     <section>
     <input type="submit" name="commit" value="Submit review" class="btn btn-lg btn-success" data-disable-with="Submit ratings">

@@ -390,22 +390,20 @@ def home():
     return render_template("index.html", top_cafes=top_cafes, make_slug=make_slug)
 
 
-@app.route("/all-locations")
+# Borough pages
+@app.route("/boroughs")
 def show_all_locations():
     result = db.session.execute(db.select(Cafe))
     cafes = result.scalars().all()
     locations = [cafe.borough for cafe in cafes]
     all_unique_locations = list(set(locations))  # set removes duplicates from our list
     all_unique_locations.sort()  # sort alphabetically
-    location_names_slugged = [make_slug(location) for location in all_unique_locations]
-    locations = [
-        {"name": all_unique_locations[i], "slugged-name": location_names_slugged[i]}
-        for i in range(len(all_unique_locations))
-    ]
-    return render_template("all-locations.html", all_locations=locations)
+    return render_template(
+        "all-locations.html", borough_names=all_unique_locations, make_slug=make_slug
+    )
 
 
-@app.route("/<location_slug>")
+@app.route("/boroughs/<location_slug>")
 def show_location(location_slug):
     location = make_slug_inverse(location_slug)
     lat = borough_coords[location]["lat"]
@@ -415,45 +413,37 @@ def show_location(location_slug):
         .filter_by(borough=location, reported_closed="False")
         .all()
     )
-    cafe_names_slugged = [make_slug(cafe.name) for cafe in cafes_at_location]
-    cafes = [
-        {"cafe": cafes_at_location[i], "slugged_name": cafe_names_slugged[i]}
-        for i in range(len(cafes_at_location))
-    ]
 
     current_day = datetime.now().strftime("%a")
     return render_template(
         "location.html",
-        all_cafes=cafes,
-        location_slug=location_slug,
+        all_cafes=cafes_at_location,
         borough_lat=lat,
         borough_lng=lng,
         current_day=current_day,
+        make_slug=make_slug,
     )
 
 
-@app.route("/<location_slug>/<cafe_slug>", methods=["GET", "POST"])
-def show_cafe(location_slug, cafe_slug):
-    id = request.args.get("id")
+# Cafe pages
+@app.route("/cafes/<cafe_id>", methods=["GET", "POST"])
+def show_cafe(cafe_id):
     edit_review = request.args.get("edit_review", "false")
-    cafe_info = db.get_or_404(Cafe, id)
+    cafe_info = db.get_or_404(Cafe, cafe_id)
     current_day = datetime.now().strftime("%a")
     return render_template(
         "cafe.html",
         cafe=cafe_info,
-        location_slug=location_slug,
-        cafe_slug=cafe_slug,
-        id=cafe_info.id,
         current_day=current_day,
         edit_review=edit_review,
         user_has_review_filter=user_has_review_filter,
+        make_slug=make_slug,
     )
 
 
-@app.route("/<location_slug>/<cafe_slug>/submitting-review", methods=["POST"])
-def submit_review(location_slug, cafe_slug):
-    id = request.args.get("id")
-    cafe_info = db.get_or_404(Cafe, id)
+@app.route("/cafes/<cafe_id>/submitting-review", methods=["POST"])
+def submit_review(cafe_id):
+    cafe_info = db.get_or_404(Cafe, cafe_id)
     current_date = datetime.now().strftime("%B %d, %Y")
 
     existing_review = (
@@ -490,15 +480,12 @@ def submit_review(location_slug, cafe_slug):
         db.session.execute(stmt)
 
     db.session.commit()
-    return redirect(
-        url_for("show_cafe", location_slug=location_slug, cafe_slug=cafe_slug, id=id)
-    )
+    return redirect(url_for("show_cafe", cafe_id=cafe_info.id))
 
 
-@app.route("/<location_slug>/<cafe_slug>/deleting-review", methods=["POST"])
-def delete_review(location_slug, cafe_slug):
-    id = request.form.get("id")
-    cafe_info = db.get_or_404(Cafe, id)
+@app.route("/cafes/<cafe_id>/deleting-review")
+def delete_review(cafe_id):
+    cafe_info = db.get_or_404(Cafe, cafe_id)
 
     # Retrieve the existing review
     existing_review = (
@@ -527,24 +514,20 @@ def delete_review(location_slug, cafe_slug):
 
         db.session.commit()
 
-    return redirect(
-        url_for("show_cafe", location_slug=location_slug, cafe_slug=cafe_slug, id=id)
-    )
+    return redirect(url_for("show_cafe", cafe_id=cafe_id))
 
 
-@app.route("/<location_slug>/<cafe_slug>/report-closed")
-def report_closed(location_slug, cafe_slug):
-    id = request.args.get("id")
-    cafe = db.get_or_404(Cafe, id)
+@app.route("/cafes/<cafe_id>/report-closed")
+def report_closed(cafe_id):
+    cafe = db.get_or_404(Cafe, cafe_id)
     cafe.reported_closed = "True"
     db.session.commit()
-    return redirect(url_for("show_location", location_slug=location_slug))
+    return redirect(url_for("show_location", location_slug=make_slug(cafe.borough)))
 
 
-@app.route("/<location_slug>/<cafe_slug>/<like_score>")
-def i_like_it(location_slug, cafe_slug, like_score):
-    id = request.args.get("id")
-    cafe = db.get_or_404(Cafe, id)
+@app.route("/cafes/<cafe_id>/<like_score>")
+def i_like_it(cafe_id, like_score):
+    cafe = db.get_or_404(Cafe, cafe_id)
     criterion = dict(cafe.criterion)
     score = calculate_score(criterion, like_score)
 
@@ -568,11 +551,50 @@ def i_like_it(location_slug, cafe_slug, like_score):
         db.session.execute(stmt)
 
     db.session.commit()
-    return redirect(
-        url_for("show_cafe", location_slug=location_slug, cafe_slug=cafe_slug, id=id)
-    )
+    return redirect(url_for("show_cafe", cafe_id=cafe_id))
 
 
+@app.route("/cafes/<cafe_id>/edit", methods=["GET", "POST"])
+def edit(cafe_id):
+    cafe = db.get_or_404(Cafe, cafe_id)
+    cafe_name = make_slug(cafe.name)
+    if request.method == "POST":
+        like_level = request.form.get("criterion[i_like_it]")
+        cafe.criterion = {
+            "wifi": request.form.get("criterion[wifi]"),
+            "sockets": request.form.get("criterion[sockets]"),
+            "long_stay": request.form.get("criterion[long_stay]"),
+            "tables": request.form.get("criterion[tables]"),
+            "quiet": request.form.get("criterion[quiet]"),
+            "calls": request.form.get("criterion[calls]"),
+            "vibe": request.form.get("criterion[vibe]"),
+            "groups": request.form.get("criterion[groups]"),
+            "coffee": request.form.get("criterion[coffee]"),
+            "food": request.form.get("criterion[food]"),
+            "veggie": request.form.get("criterion[veggie]"),
+            "alcohol": request.form.get("criterion[alcohol]"),
+            "credit_cards": request.form.get("criterion[credit_cards]"),
+            "light": request.form.get("criterion[light]"),
+            "outdoor": request.form.get("criterion[outdoor]"),
+            "spacious": request.form.get("criterion[spacious]"),
+            "toilets": request.form.get("criterion[toilets]"),
+            "access": request.form.get("criterion[access]"),
+            "ac": request.form.get("criterion[ac]"),
+            "pets": request.form.get("criterion[pets]"),
+            "parking": request.form.get("criterion[parking]"),
+        }
+        cafe.score = calculate_score(cafe.criterion, "unknown")
+        db.session.commit()
+        return redirect(
+            url_for(
+                "show_cafe",
+                cafe_id=cafe.id,
+            )
+        )
+    return render_template("under-review.html", cafe=cafe)
+
+
+# Suggest and under-review pages
 @app.route("/suggest")
 def suggest():
     return render_template("suggest.html")
@@ -609,10 +631,10 @@ def suggests():
     )
 
 
-@app.route("/under-review/<cafe_name_slugged>/<id>", methods=["GET", "POST"])
-def under_review(cafe_name_slugged, id):
-    cafe_name = make_slug_inverse(cafe_name_slugged)
-    cafe = db.get_or_404(Cafe, id)
+@app.route("/under-review//cafes/<cafe_id>", methods=["GET", "POST"])
+def under_review(cafe_id):
+    cafe = db.get_or_404(Cafe, cafe_id)
+    cafe_name = make_slug_inverse(cafe.name)
     if request.method == "POST":
         like_level = request.form.get("criterion[i_like_it]")
         cafe.criterion = {
@@ -639,69 +661,14 @@ def under_review(cafe_name_slugged, id):
             "parking": request.form.get("criterion[parking]"),
         }
         cafe.score = calculate_score(cafe.criterion, "unknown")
-        location_slug = make_slug(cafe.borough)
-        cafe_slug = make_slug(cafe.name)
         db.session.commit()
         return redirect(
             url_for(
                 "show_cafe",
-                location_slug=location_slug,
-                cafe_slug=cafe_slug,
-                id=id,
+                cafe_id=cafe.id,
             )
         )
-    return render_template(
-        "under-review.html", cafe_name_slugged=cafe_name_slugged, id=id, cafe=cafe
-    )
-
-
-@app.route("/<location_slug>/<cafe_name_slugged>/edit", methods=["GET", "POST"])
-def edit(cafe_name_slugged, location_slug):
-    cafe_name = make_slug_inverse(cafe_name_slugged)
-    id = request.args.get("id")
-    cafe = db.get_or_404(Cafe, id)
-    if request.method == "POST":
-        id = request.form.get("id")
-        like_level = request.form.get("criterion[i_like_it]")
-        cafe = db.get_or_404(Cafe, id)
-        cafe.criterion = {
-            "wifi": request.form.get("criterion[wifi]"),
-            "sockets": request.form.get("criterion[sockets]"),
-            "long_stay": request.form.get("criterion[long_stay]"),
-            "tables": request.form.get("criterion[tables]"),
-            "quiet": request.form.get("criterion[quiet]"),
-            "calls": request.form.get("criterion[calls]"),
-            "vibe": request.form.get("criterion[vibe]"),
-            "groups": request.form.get("criterion[groups]"),
-            "coffee": request.form.get("criterion[coffee]"),
-            "food": request.form.get("criterion[food]"),
-            "veggie": request.form.get("criterion[veggie]"),
-            "alcohol": request.form.get("criterion[alcohol]"),
-            "credit_cards": request.form.get("criterion[credit_cards]"),
-            "light": request.form.get("criterion[light]"),
-            "outdoor": request.form.get("criterion[outdoor]"),
-            "spacious": request.form.get("criterion[spacious]"),
-            "toilets": request.form.get("criterion[toilets]"),
-            "access": request.form.get("criterion[access]"),
-            "ac": request.form.get("criterion[ac]"),
-            "pets": request.form.get("criterion[pets]"),
-            "parking": request.form.get("criterion[parking]"),
-        }
-        cafe.score = calculate_score(cafe.criterion, "unknown")
-        location_slug = make_slug(cafe.borough)
-        cafe_slug = make_slug(cafe.name)
-        db.session.commit()
-        return redirect(
-            url_for(
-                "show_cafe",
-                location_slug=location_slug,
-                cafe_slug=cafe_slug,
-                id=id,
-            )
-        )
-    return render_template(
-        "under-review.html", cafe_name_slugged=cafe_name_slugged, id=id, cafe=cafe
-    )
+    return render_template("under-review.html", cafe=cafe)
 
 
 ## Authentication pages

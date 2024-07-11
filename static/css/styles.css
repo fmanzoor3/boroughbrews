@@ -242,7 +242,7 @@ height: 40px;
 .cafe-item {
   background-color: #F4EAE0;
   border: 1px solid #ddd;
-  padding: 1rem;
+  padding: 2rem 1rem;
   width: 300px;
   border-radius: 5px;
   transition: all 0.3s ease;
