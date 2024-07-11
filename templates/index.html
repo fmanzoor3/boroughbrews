@@ -29,23 +29,35 @@
         <section class="featured-cafes">
             <h2>Top Rated Cafes</h2>
             <div class="cafe-list">
-                <div class="cafe-item">
-                    <img src="{{ url_for('static', filename='images/cafe1.jpg') }}" alt="Cafe Latte">
-                    <h3>Cafe Latte</h3>
-                    <p>Cozy spot with great coffee and free wifi.</p>
-                    <div class="ratings">
-                        <span>Wifi Quality: 5/5</span>
-                        <span>Atmosphere: 4/5</span>
-                    </div>
-                </div>
-                <div class="cafe-item">
-                    <img src="{{ url_for('static', filename='images/cafe2.jpg') }}" alt="Brew & Beans">
-                    <h3>Brew & Beans</h3>
-                    <p>Perfect place for remote work with plenty of power sockets.</p>
-                    <div class="ratings">
-                        <span>Wifi Quality: 4/5</span>
-                        <span>Atmosphere: 5/5</span>
-                    </div>
+{% for cafe in top_cafes %}
+<a class="cafe-item" href="{{ url_for('show_cafe', location_slug=make_slug(cafe.borough), cafe_slug=make_slug(cafe.name), id=cafe.id) }}">
+    <img alt="{{ cafe.name }}" src="{{ cafe.img_url }}" class="img-fluid">
+    <h3>{{ cafe.name }}</h3>
+    <div class="score" data-score="{{cafe.score}}">{{cafe.score}}% Rating</div>
+    <div class="ratings">
+    {% if cafe.criterion.wifi != 'unknown' %}
+        <div class="rating-item">
+            <span class="rating-label"><i class="fa fa-fw fa-wifi"></i> Wifi:</span>
+            <span class="rating-bar {% if cafe.criterion.wifi == 'high' %}rating-high{% elif cafe.criterion.wifi == 'medium' %}rating-medium{% elif cafe.criterion.wifi == 'low' %}rating-low{% endif %}"></span>
+        </div>
+        {%endif%}
+        {% if cafe.criterion.sockets != 'unknown' %}
+        <div class="rating-item">
+            <span class="rating-label"><i class="fa fa-fw fa-plug"></i> Sockets:</span>
+            <span class="rating-bar {% if cafe.criterion.sockets == 'high' %}rating-high{% elif cafe.criterion.sockets == 'medium' %}rating-medium{% elif cafe.criterion.sockets == 'low' %}rating-low{% endif %}"></span>
+        </div>
+        {%endif%}
+        {% if cafe.criterion.coffee != 'unknown' %}
+        <div class="rating-item">
+            <span class="rating-label"><i class="fa fa-fw fa-coffee"></i> Coffee:</span>
+            <span class="rating-bar {% if cafe.criterion.coffee == 'high' %}rating-high{% elif cafe.criterion.coffee == 'medium' %}rating-medium{% elif cafe.criterion.coffee == 'low' %}rating-low{% endif %}"></span>
+        </div>
+        {%endif%}
+    </div>
+    </a>
+
+{% endfor %}
+
                 </div>
                 <!-- Add more cafe items here -->
             </div>
@@ -71,5 +83,22 @@
             <p>Sign up, suggest cafes, and leave reviews!</p>
             <a href="{{ url_for('users') }}"><button>Sign Up</button></a>
         </section>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Score color
+    const scoreElements = document.querySelectorAll('.score');
 
+    scoreElements.forEach(element => {
+        const scoreValue = parseInt(element.dataset.score);
+
+        if (scoreValue >= 0 && scoreValue < 50) {
+            element.className = 'red score';
+        } else if (scoreValue >= 50 && scoreValue < 80) {
+            element.className = 'yellow score';
+        } else if (scoreValue >= 80) {
+            element.className = 'green score';
+        }
+    });
+});
+</script>
 {% include "footer.html" %}

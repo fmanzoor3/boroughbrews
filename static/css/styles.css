@@ -229,7 +229,7 @@ height: 40px;
 
 .featured-cafes h2 {
   font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .cafe-list {
@@ -253,9 +253,13 @@ height: 40px;
 }
 
 .cafe-item img {
+  -o-object-fit: cover;
+  object-fit: cover;
+  font-family: 'object-fit: cover;';
+  height: 10rem;
   width: 100%;
-  border-radius: 5px;
-  margin-bottom: 1rem;
+  box-sizing: border-box;
+  padding: 1rem;
 }
 
 .cafe-item h3 {
@@ -267,9 +271,71 @@ height: 40px;
   margin-bottom: 0.5rem;
 }
 
-.ratings {
-  font-size: 0.9rem;
-  color: #666;
+.cafe-item {
+  margin-bottom: 40px;
+}
+
+.cafe-item .ratings {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cafe-item .rating-item {
+  display: flex;
+  align-items: center;
+}
+
+.cafe-item .rating-label {
+  display: inline-block;
+  width: 100px; /* Adjust width as needed */
+  text-align: right;
+  margin-right: 10px; /* Space between label and bar */
+}
+
+.cafe-item .rating-bar {
+  height: 10px;
+}
+.cafe-item .rating-bar {
+  display: inline-block;
+  height: 4px; /* Thinner bar */
+  vertical-align: middle;
+}
+
+.cafe-item .rating-item {
+  display: flex;
+  align-items: center;
+}
+.cafe-item .rating-high {
+  background-color: #4CAF50;
+  width: 140px;
+}
+.cafe-item .rating-medium {
+  background-color: #f6d95e;
+  width: 78px;
+}
+.cafe-item .rating-low {
+  background-color: red;
+  width: 40px;
+}
+.cafe-item .rating-item span.label {
+  text-align: right; /* Align text to the right */
+  margin-right: 10px;
+}
+
+.cafe-item .score{
+    display: inline-block;
+    font-weight: 700;
+    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border-radius: 5px;
+    padding: 0 9px;
+    margin: 1.5rem 0;
+    border: 2px solid gray;
+}
+
+.cafe-list a{
+  color: #000;
+  text-decoration: none;
 }
 
 /* Community Reviews Section Styles */
@@ -497,17 +563,17 @@ section hr {
   right: 1rem;
 }
 
-#location .place .score.green, #location .place .score.high, #location .suggest .score.green, #location .suggest .score.high {
+#location .place .score.green, #location .place .score.high, #location .suggest .score.green, #location .suggest .score.high, .cafe-item .score.green {
   border: 2px solid #4CAF50;
   color: #4CAF50;
 }
 
-#location .place .score.yellow, #location .place .score.medium, #location .suggest .score.yellow, #location .suggest .score.medium {
+#location .place .score.yellow, #location .place .score.medium, #location .suggest .score.yellow, #location .suggest .score.medium,.cafe-item .score.yellow {
   border: 2px solid #f6d95e;
   color: #f6d95e;
 }
 
-#location .place .score.red, #location .place .score.low, #location .suggest .score.red, #location .suggest .score.low {
+#location .place .score.red, #location .place .score.low, #location .suggest .score.red, #location .suggest .score.low,.cafe-item .score.red {
   border: 2px solid red;
   color: red;
 }

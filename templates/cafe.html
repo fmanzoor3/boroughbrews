@@ -20,11 +20,11 @@
     <div id="title">
         {%if current_user.is_authenticated and current_user.get_like_level(cafe.id)!="unknown"%}
         <div data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-content="I have not been here yet" data-bs-template="<div class='popover high-border' role='tooltip'><div class='popover-arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" id="score" data-bs-original-title="In general, do you like working from here?">
-            <i class="grey far fa-heart" data-color="grey"></i> | {{current_user.get_score(cafe.id)}}% Laptop Friendly
+            <i class="grey far fa-heart" data-color="grey"></i> | {{current_user.get_score(cafe.id)}}% Rating
           </div>       
         {%else%}
         <div data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top" data-content="I have not been here yet" data-bs-template="<div class='popover high-border' role='tooltip'><div class='popover-arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" id="score" data-bs-original-title="In general, do you like working from here?">
-            <i class="grey far fa-heart" data-color="grey"></i> | {{cafe_score}}% Laptop Friendly
+            <i class="grey far fa-heart" data-color="grey"></i> | {{cafe_score}}% Rating
           </div>         
         {%endif%}
     <h1>{{cafe.name}}</h1>

@@ -22,6 +22,7 @@ from sqlalchemy import (
     Text,
     ForeignKey,
     Table,
+    cast,
 )
 from geoalchemy2 import Geometry
 import enum
@@ -357,6 +358,13 @@ def user_has_review_filter(reviews, user_id):
     return any(review.author.id == user_id for review in reviews)
 
 
+def obtain_top_cafes():
+    top_cafes = (
+        db.session.query(Cafe).order_by(cast(Cafe.score, Integer).desc()).limit(3).all()
+    )
+    return top_cafes
+
+
 # ---------------------------------------------------ENV VARIABLES------------------------------------------------------------------------------------
 google_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
 
@@ -378,7 +386,8 @@ def favicon():
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    top_cafes = obtain_top_cafes()
+    return render_template("index.html", top_cafes=top_cafes, make_slug=make_slug)
 
 
 @app.route("/all-locations")
@@ -803,15 +812,6 @@ def check_cafe():
     place_id = request.args.get("place_id")
     result = check_cafe_in_db(place_id)
     return jsonify(result)
-
-
-# TODO: delete_post() to remove a blog post from the database
-# @app.route("/delete/<post_id>")
-# def delete_post(post_id):
-#     post = db.get_or_404(BlogPost, post_id)
-#     db.session.delete(post)
-#     db.session.commit()
-#     return redirect(url_for("get_all_posts"))
 
 
 if __name__ == "__main__":

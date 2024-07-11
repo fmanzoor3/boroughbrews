@@ -108,8 +108,10 @@
 
 -[x] Format Edit/Delete buttons in cafe page
 
--[] Complete Top Rated Cafes section on home page
+-[x] Complete Top Rated Cafes section on home page
 
 -[] Make the API restful
 
 -[] Check footer links
+
+-[] Check calculate score for bugs
