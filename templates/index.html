@@ -1,88 +1,75 @@
 {% include "header.html" %}
 
-<header class="intro text-center">
+{# <header class="intro text-center">
     <div class="container">
     <h1>
-    LOCAL CO-WORKING SPACES
+    Discover and Share the Best Cafes in London!
     </h1>
     <div class="row justify-content-center">
     <div class="col-md-6 col-sm-8">
-    <p>
-    From coffee shops to hotel lobbies, discover everyday places to work and connect around London.
-    </p>
-    <a class="btn btn-lg btn-warning book-now" href="{{ url_for('show_all_locations') }}">Explore Locations</a><br><br>
+    <a class="btn btn-lg btn-warning book-now" href="{{ url_for('show_all_locations') }}">Suggest a Cafe</a><br><br>
     
     </div>
     </div>
     </div>
-    </header>
+    </header> #}
 
-    <div class="container text-center" id="landing">
-        <!-- What is LF? -->
-        <section class="row" style="padding: 5rem 0; margin-bottom: -1.5em;">
-        <div class="col-sm-4 xs-padding-top">
-        <i class="fa fa-fw fa-laptop fa-2x"></i>
-        <h3>Be Productive</h3>
-        <p>Find venues with reliable <strong>Wi-Fi</strong>, ample <strong>power sockets</strong>, and comfy <strong>seating areas</strong>.</p>
-        </div>
-        <div class="col-sm-4 xs-padding-top">
-        <i class="far fa-fw fa-smile fa-2x"></i>
-        <h3>Feel Welcome</h3>
-        <p>Discover the <strong>best times to work</strong>, based on community data.</p>
-        </div>
-        <div class="col-sm-4 xs-padding-top">
-        <i class="fa fa-fw fa-lightbulb fa-2x"></i>
-        <h3>Stay Inspired</h3>
-        <p>Uncover new places with <strong>laid-back ambiance</strong>, and <strong>friendly vibes</strong>.</p>
-        </div>
+    <section class="hero">
+            <h1>Discover and Share the Best Cafes in London!</h1>
+            <a href="{{ url_for('suggest') }}"><button>Suggest Cafe</button></a>
         </section>
-        <!-- Community -->
-        <section>
-        <hr>
-        <div class="section-content" id="how-it-works">
-        <h2>How It Works</h2>
-        <div class="row">
-        <div class="col-sm-12 padding-top-40">
-        <a href="/all-locations"><img class="benefit" alt="Map of Work-Friendly Locations" src="static/assets/map-e3b473419971ff37dcca82995d1d5e88704786ea9c9fe707ab26db1fd0d05bcb.png" style="width: 600px; height: auto;">
-        </a><h3>Find Local Work Hubs</h3>
-        <p>Quiet? Air conditioned? Well lit? Get stuff done in a fresh, new <strong>environment that’s optimized for you</strong>!</p>
-        </div>
-        </div>
-        </div>
-        <hr>
+
+        <!-- Search Cafes by Boroughs? -->
+        <section class="explore-boroughs" style="padding: 5rem 0; margin-bottom: -1.5em;">
+            <h2>Explore Cafes by Borough</h2>
+            <p>Click on a borough to find the best cafes in the area.</p>
+            <a href="{{ url_for('show_all_locations') }}"><button>Explore Boroughs</button></a>
         </section>
-        <!-- Member Testimonials -->
-        <section>
-        <div class="section-content" id="hear-it-from-others">
-        <h2>Hear It From Others</h2>
-        <div class="row">
-        <div class="col-sm-4 padding-top-40">
-        <img class="reviewer" src="static/assets/vuk-nikolic-069e55947349021af2d479c15570516ff0841d81a22ee9013225a9fbfb17053d.jpg">
-        <h4>@VukNikolic</h4>
-        <small>CEO &amp; Founder – TruckTrack</small>
-        <p>
-        <em>"LaptopFriendly is an awesome service for finding places to get your work done. The crew helped me discover some hidden gems all over the city!"</em>
-        </p>
-        </div>
-        <div class="col-sm-4 padding-top-40">
-        <img class="reviewer" src="static/assets/dunja-lazic-7e3f7dbf9bae496705a2cb1d0ad4506ae95adf44ba71bc6bf96fce6bb2209530.jpg">
-        <h4>@DunjaLazic</h4>
-        <small>Media Manager – Toggl</small>
-        <p>
-        <em>"It enabled me to find great places to work from and meet new like-minded people. I love the flexibility and the offers at each spot, thanks for making this!"</em>
-        </p>
-        </div>
-        <div class="col-sm-4 padding-top-40">
-        <img class="reviewer" src="static/assets/mike-oghia-399ba081a07d163c9c5512fe0acc6cb95335c0f04cd2fe9eaa138443c185c3a9.jpg">
-        <h4>@MikeOghia</h4>
-        <small>Internet Governance Consultant &amp; Editor</small>
-        <p>
-        <em>"Exactly the professional network I’ve been searching for. I can work and socialize with other freelancers while discovering interesting spaces around the city."</em>
-        </p>
-        </div>
-        </div>
-        </div>
+        <!-- Featured Cafes -->
+        <section class="featured-cafes">
+            <h2>Top Rated Cafes</h2>
+            <div class="cafe-list">
+                <div class="cafe-item">
+                    <img src="{{ url_for('static', filename='images/cafe1.jpg') }}" alt="Cafe Latte">
+                    <h3>Cafe Latte</h3>
+                    <p>Cozy spot with great coffee and free wifi.</p>
+                    <div class="ratings">
+                        <span>Wifi Quality: 5/5</span>
+                        <span>Atmosphere: 4/5</span>
+                    </div>
+                </div>
+                <div class="cafe-item">
+                    <img src="{{ url_for('static', filename='images/cafe2.jpg') }}" alt="Brew & Beans">
+                    <h3>Brew & Beans</h3>
+                    <p>Perfect place for remote work with plenty of power sockets.</p>
+                    <div class="ratings">
+                        <span>Wifi Quality: 4/5</span>
+                        <span>Atmosphere: 5/5</span>
+                    </div>
+                </div>
+                <!-- Add more cafe items here -->
+            </div>
         </section>
-        </div>
+        {# <!-- Community Reviews -->
+       <section class="community-reviews">
+            <h2>Community Reviews</h2>
+            <div class="carousel">
+                <div class="review-item">
+                    <p>"Cafe Latte has the best coffee and the wifi is super fast!"</p>
+                    <span>- Alice, Camden</span>
+                </div>
+                <div class="review-item">
+                    <p>"Brew & Beans is my go-to place for working remotely. Love it!"</p>
+                    <span>- John, Kensington</span>
+                </div>
+                <!-- Add more review items here -->
+            </div>
+        </section> #}
+        <!-- Sign up-->
+        <section class="cta">
+            <h2>Join Our Community</h2>
+            <p>Sign up, suggest cafes, and leave reviews!</p>
+            <a href="{{ url_for('users') }}"><button>Sign Up</button></a>
+        </section>
 
 {% include "footer.html" %}

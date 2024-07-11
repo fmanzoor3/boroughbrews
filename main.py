@@ -486,6 +486,43 @@ def submit_review(location_slug, cafe_slug):
     )
 
 
+@app.route("/<location_slug>/<cafe_slug>/deleting-review", methods=["POST"])
+def delete_review(location_slug, cafe_slug):
+    id = request.form.get("id")
+    cafe_info = db.get_or_404(Cafe, id)
+
+    # Retrieve the existing review
+    existing_review = (
+        db.session.query(Review)
+        .filter_by(author_id=current_user.id, cafe_id=cafe_info.id)
+        .first()
+    )
+
+    if existing_review:
+        db.session.delete(existing_review)
+
+        # Optionally, you can remove the association if needed
+        association = (
+            db.session.query(user_cafe_association)
+            .filter_by(user_id=current_user.id, cafe_id=cafe_info.id)
+            .first()
+        )
+
+        if association:
+            db.session.execute(
+                user_cafe_association.delete().where(
+                    (user_cafe_association.c.user_id == current_user.id)
+                    & (user_cafe_association.c.cafe_id == cafe_info.id)
+                )
+            )
+
+        db.session.commit()
+
+    return redirect(
+        url_for("show_cafe", location_slug=location_slug, cafe_slug=cafe_slug, id=id)
+    )
+
+
 @app.route("/<location_slug>/<cafe_slug>/report-closed")
 def report_closed(location_slug, cafe_slug):
     id = request.args.get("id")
@@ -775,16 +812,6 @@ def check_cafe():
 #     db.session.delete(post)
 #     db.session.commit()
 #     return redirect(url_for("get_all_posts"))
-
-
-# @app.route("/about")
-# def about():
-#     return render_template("about.html")
-
-
-# @app.route("/contact")
-# def contact():
-#     return render_template("contact.html")
 
 
 if __name__ == "__main__":

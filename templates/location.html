@@ -23,10 +23,18 @@
     <span id="filters-count"></span>
     </h2>
     <div class="filters">
+{% set disable_like_button = True %}
+{% if current_user.is_authenticated %}
+    {% set disable_like_button = False %}
+{% endif %}
     <h3>My Places</h3>
     <div class="row no-gutters">
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="i-like-it" data-action="liked" data-toggle="button">
+<button class="btn btn-filter" 
+        data-criteria="i-like-it" 
+        data-action="liked" 
+        data-toggle="button" 
+        {% if disable_like_button %}disabled{% endif %}>
     <div data-content="Please log in to use this feature." data-original-title="Warning" data-template="<div class='popover low-border' role='tooltip'><div class='arrow'></div><div class='popover-header'></div><div class='popover-body'></div></div>" data-toggle="popover">
     <i class="fa fa-heart"></i>
     <br>
@@ -245,7 +253,7 @@
     </div>
     <!-- Places List -->
     <div class="offset-lg-3 offset-md-4 col-lg-5 col-md-8 order-2" id="places-list">
-    <p>The best work and study-friendly cafes, restaurants, libraries, and hotel lobbies in {{all_cafes[0].cafe.borough}}. Find venues with free and reliable Wi-Fi hotspots, ample power sockets, and comfy seating areas.</p>
+    <p>Check out the best cafes in {{all_cafes[0].cafe.borough}} for work and study sessions. Find cosy spots with free, reliable Wi-Fi, plenty of power outlets, comfy seating, and tasty coffee!</p>
     {%endif%}
     <!-- Vibes -->
     
@@ -292,7 +300,7 @@
     </div>
     <div class="card-body">
     <h3 class="card-title">Suggest a Venue</h3>
-    <p class="card-text">Work from your neighborhood</p>
+    <p class="card-text">Work from your borough</p>
     </div>
     </a>
     </div>

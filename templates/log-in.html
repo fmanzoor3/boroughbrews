@@ -8,14 +8,14 @@
 Log in
 </h1>
 <div class="col-md-4 offset-md-4">
-<div id="social">
+{# <div id="social">
 <p>Continue with</p>
 <div class="d-flex justify-content-around px-3">
 <form class="button_to" method="post" action="/users/auth/google_oauth2"><button class="btn btn-lg btn-default btn-block" type="submit">Google</button><input type="hidden" name="authenticity_token" value="B1mA_Zfqe-BbpoOiuD7teEgDU5mAxrLa8aye9-e72qAY9wj29hoiWEDB7Gvb_3E17O8Ro6MBWPzoW01vNLGClA" autocomplete="off"></form>
 </div>
 <br>
 <p>or use your email</p>
-</div>
+</div> #}
 {% with messages = get_flashed_messages() %}
       {% if messages %}
       {% for message in messages %}
@@ -42,7 +42,7 @@ Log in
 <input type="submit" name="commit" value="Log in" class="btn btn-default" data-disable-with="Log in">
 </div>
 </form><section>
-New to LaptopFriendly?
+New to BoroughBrews?
 <a href="{{ url_for('register') }}"><i class="fa fa-fw fa-caret-right"></i>Register
 </a></section>
 </div>

@@ -36,7 +36,7 @@
 
 -[x] Use a formula to calculate the cafe score [See txt file for break down]
 
--[] Report closed page
+-[x] Report closed page
 
 -[x] Add score and today's opening/closing time to cafes on location page
 
@@ -54,15 +54,9 @@
 
 -[] Edit code so we download thumbnails only when the submit button is pressed (suggest page)
 
--[] Make the API restful
-
 -[] Add a delete feature (later make it only accessible by admin)
 
 -[x] Fix bugs associated with 'i-like-it' criteria button on location page
-
--[] Change placeholder images
-
--[] Change colour scheme
 
 -[x] create front end of log-in, register and users pages
 
@@ -94,10 +88,28 @@
 
 -[] Improve code by passing 'make_slug' function into templates when slug names are needed, instead of 'location_slug' and 'cafe_slugged'
 
--[] Add delete review feature for user's own comments
-
 -[] Create 'Remember me' and 'Forgot password' features on log in page
 
 -[] Order reviews in order of most recent
 
 -[x] Add 'edit' review feature
+
+-[x] Change placeholder images
+
+-[x] Change colour scheme
+
+-[x] Check if uppercase text has become title case
+
+-[x] Disable 'Liked' button in location page if not signed in
+
+-[x] Fix bug that allows users to write more than one review per cafe
+
+-[x] Add delete review feature for user's own comments (need to create a form so can POST)
+
+-[x] Format Edit/Delete buttons in cafe page
+
+-[] Complete Top Rated Cafes section on home page
+
+-[] Make the API restful
+
+-[] Check footer links
