@@ -1,0 +1,9 @@
+Flask==2.3.2
+Bootstrap_Flask==2.3.3
+flask_sqlalchemy==3.1.1
+SQLAlchemy==2.0.25
+python-dotenv==0.19.2
+Flask_Login==0.6.3
+geopandas==0.14.4
+Shapely==2.0.4
+gunicorn==21.2.0

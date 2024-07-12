@@ -80,7 +80,7 @@ Anonymise my profile information on all reviews
 {%for cafe in current_user.visited_cafes%}
 <tr>
 <td><a href="{{url_for('show_location',location_slug=make_slug(cafe.borough))}}">{{cafe.borough}}</a></td>
-<td><a href="{{ url_for('show_cafe', location_slug=make_slug(cafe.borough), cafe_slug=make_slug(cafe.name), id=cafe.id) }}">{{cafe.name}}</a></td>
+<td><a href="{{ url_for('show_cafe', cafe_id=cafe.id) }}">{{cafe.name}}</a></td>
 </tr>
 {%endfor%}
 </tbody></table>

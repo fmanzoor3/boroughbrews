@@ -115,6 +115,77 @@ footer {
   footer .fa-stack-2x {
     color: white;
   }
+
+  /* Footer Styles */
+footer {
+  background-color: black;
+  color: #fff;
+  padding: 20px 0;
+  font-family: Arial, sans-serif;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  border-bottom: 1px solid #444;
+}
+
+.footer-content div {
+  max-width: 300px;
+}
+
+.footer-content h4 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.footer-content p {
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+.footer-content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-content ul li {
+  margin-bottom: 8px;
+}
+
+.footer-content ul li a {
+  color: #ddd;
+  text-decoration: none;
+}
+
+.footer-content ul li a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.social-media a {
+  color: #ddd;
+  margin: 0 10px;
+  text-decoration: none;
+  font-size: 1.5em;
+}
+
+.social-media a:hover {
+  color: #fff;
+}
+
+.footer-bottom p {
+  font-size: 0.8em;
+  margin: 0;
+}
+
   
   header.intro {
     width: 100%;
@@ -640,7 +711,7 @@ section hr {
 }
 
 #locations{
-  padding-top: 120px;
+  padding: 125px 0;
 }
 
 #locations h1 {
@@ -882,8 +953,7 @@ input, button, select, optgroup, textarea {
 
 
 #suggest {
-  padding-top: 100px !important;
-  padding-bottom: 60px;
+  padding: 145px 0 !important;
   min-height: 520px;
 }
 
@@ -1379,7 +1449,7 @@ body {
 
 /* Log in page */
 #login-register {
-  padding: 5rem 0;
+  padding: 8rem 0;
 }
 
 #login-register p {

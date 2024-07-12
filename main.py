@@ -24,11 +24,6 @@ from sqlalchemy import (
     Table,
     cast,
 )
-from geoalchemy2 import Geometry
-import enum
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, URL
 import json
 from dotenv import load_dotenv
 import os
@@ -626,15 +621,12 @@ def suggests():
         new_cafe_id = new_cafe.id
         create_slug(place_name)
         create_slug(borough)
-    return redirect(
-        url_for("under_review", cafe_name_slugged=make_slug(place_name), id=new_cafe_id)
-    )
+    return redirect(url_for("under_review", cafe_id=new_cafe_id))
 
 
 @app.route("/under-review//cafes/<cafe_id>", methods=["GET", "POST"])
 def under_review(cafe_id):
     cafe = db.get_or_404(Cafe, cafe_id)
-    cafe_name = make_slug_inverse(cafe.name)
     if request.method == "POST":
         like_level = request.form.get("criterion[i_like_it]")
         cafe.criterion = {

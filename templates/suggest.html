@@ -23,13 +23,13 @@
     </section>
     <section class="pt-0" id="step_exists" style="display: none;">
     <h3>
-    This place is already listed! Check it out
+    This place is already listed!
     <a class="text-primary" id="cafeLink" href="#">here</a>
     </h3>
     </section>
     <script>
         // Pass base URL from Flask to JavaScript
-        const showCafeUrlBase = "{{ url_for('show_cafe', location_slug='LOCATION_PLACEHOLDER', cafe_slug='CAFE_PLACEHOLDER', id='ID_PLACEHOLDER') }}";
+        const showCafeUrlBase = "{{ url_for('show_cafe', cafe_id='ID_PLACEHOLDER') }}";
     </script>
     <section class="pt-0" id="step2" style="display: none;">
     <div class="form-group">
