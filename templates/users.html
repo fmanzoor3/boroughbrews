@@ -2,7 +2,7 @@
 <div class="text-center" id="users">
 <!-- User Header -->
 <header class="container">
-<p><img class="img-circle" src="{{ url_for('static', filename='assets/images/profile-pics/' + current_user.photo_name) }}"></p>
+<p><img class="img-circle" src="/static/assets/images/profile-pics/{{current_user.photo_name}}"></p>
 <p>
 </p><h1>{{current_user.name | upper}} {{current_user.surname | upper}}</h1>
 {{current_user.email}}
