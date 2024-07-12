@@ -120,4 +120,8 @@
 
 -[] Check calculate score for bugs
 
--[] Create requirements.txt
+-[x] Create requirements.txt
+
+-[] Host on WSGI server using gunicorn
+
+-[] Transfer SQLite dbs to PostgreSQL
