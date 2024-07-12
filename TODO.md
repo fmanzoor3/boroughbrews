@@ -122,6 +122,18 @@
 
 -[x] Create requirements.txt
 
--[] Host on WSGI server using gunicorn
+-[x] Host on WSGI server using gunicorn
 
--[] Transfer SQLite dbs to PostgreSQL
+-[x] Transfer SQLite dbs to PostgreSQL
+
+-[] Make padding-bottom larger for pages
+
+-[] Fix sign up link on home page
+
+-[] Optimise home page image size
+
+-[x] Locations page bug- can't press anything
+
+-[x] Dropdown sometimes glitches and cant be pressed on mobile
+
+-[x] Map in suggest section too large on mobile

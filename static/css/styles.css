@@ -545,16 +545,15 @@ section hr {
   z-index: 1021;
 }
 
-/* Set the map container to occupy one third of the available width */
 #map-container {
   width: 33.33%; /* One third of the available width */
-  height: calc(100vh - 20px) !important; /* Full height of the viewport */
-  float: right !important; /* Float the map container to the right */
-  margin-bottom: 0 !important;
-  right: 0px !important;
-  position: fixed !important;
-  padding: 0 !important;
-  padding-top: 1.2rem !important;
+  height: calc(100vh - 60px); /* Full height of the viewport */
+  float: right; /* Float the map container to the right */
+  margin-bottom: 0;
+  right: 0px;
+  position: fixed;
+  padding: 0;
+  padding-top: 1.2rem;
 }
 
 /* Style the map to fill its container */
@@ -562,6 +561,25 @@ section hr {
   width: 100%;
   height: calc(100vh - 75px);
   overflow-y: scroll;
+}
+
+/* Hide map on small screens */
+@media (max-width: 767.98px) {
+  #map-container {
+      display: none;
+  }
+}
+
+/* Adjust layout for tablet screens */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  #map-container {
+      position: static;
+      width: 100%;
+      height: 50vh;
+  }
+  #map {
+      height: 100%;
+  }
 }
 
 
