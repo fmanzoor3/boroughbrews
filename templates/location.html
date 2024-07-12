@@ -3,7 +3,7 @@
 <div class="container-fluid" id="location">
     <div class="row">
     <div id="places-title">
-    <div class="position-relative d-lg-none my-2" id="filter-commands">
+    {# <div class="position-relative d-lg-none my-2" id="filter-commands">
     <button class="btn btn-default d-md-none" data-show="#places-filters" data-toggle="button" type="button">
     <i class="fa fa-fw fa-filter"></i>
     <span></span>
@@ -12,7 +12,7 @@
     <i class="fa fa-fw fa-map"></i>
     <span></span>
     </button>
-    </div>
+    </div> #}
     {%if all_cafes%}
     <h1 class="px-3 offset-lg-3 offset-md-4 col-lg-5 col-md-8">{{all_cafes[0].borough}}</h1>
     </div>
@@ -27,10 +27,10 @@
 {% if current_user.is_authenticated %}
     {% set disable_like_button = False %}
 {% endif %}
-    <h3>My Places</h3>
+    <h3 class="d-none d-md-block">My Places</h3>
     <div class="row no-gutters">
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-<button class="btn btn-filter" 
+<button class="btn btn-filter d-none d-md-block" 
         data-criteria="i-like-it" 
         data-action="liked" 
         data-toggle="button" 
@@ -43,10 +43,10 @@
     </button>
     </div>
     </div>
-    <h3>Productivity</h3>
+    <h3 class="d-none d-md-block">Productivity</h3>
     <div class="row no-gutters">
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="wifi" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="wifi" data-toggle="button">
     <i class="fa fa-fw fa-wifi"></i>
     <br>
     <span title="Stable Wi-Fi">
@@ -55,7 +55,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="sockets" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="sockets" data-toggle="button">
     <i class="fa fa-fw fa-plug"></i>
     <br>
     <span title="Power sockets">
@@ -64,7 +64,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="long-stay" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="long-stay" data-toggle="button">
     <i class="fa fa-fw fa-user-clock"></i>
     <br>
     <span title="Long stays">
@@ -73,7 +73,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="tables" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="tables" data-toggle="button">
     <i class="fa fa-fw fa-pen-square"></i>
     <br>
     <span title="Work-friendly tables">
@@ -82,7 +82,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="quiet" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="quiet" data-toggle="button">
     <i class="fa fa-fw fa-volume-down"></i>
     <br>
     <span title="Quiet">
@@ -91,7 +91,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="calls" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="calls" data-toggle="button">
     <i class="fa fa-fw fa-headset"></i>
     <br>
     <span title="Video/audio calls">
@@ -101,10 +101,10 @@
     </div>
     </div>
     
-    <h3>Community</h3>
+    <h3 class="d-none d-md-block">Community</h3>
     <div class="row no-gutters">
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="vibe" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="vibe" data-toggle="button">
     <i class="fa fa-fw fa-laptop"></i>
     <br>
     <span title="People working">
@@ -113,7 +113,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="groups" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="groups" data-toggle="button">
     <i class="fa fa-fw fa-users"></i>
     <br>
     <span title="Group tables">
@@ -123,10 +123,10 @@
     </div>
     </div>
     
-    <h3>Service</h3>
+    <h3 class="d-none d-md-block">Service</h3>
     <div class="row no-gutters">
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="coffee" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="coffee" data-toggle="button">
     <i class="fa fa-fw fa-coffee"></i>
     <br>
     <span title="Coffee">
@@ -135,7 +135,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="food" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="food" data-toggle="button">
     <i class="fa fa-fw fa-utensils"></i>
     <br>
     <span title="Food">
@@ -144,7 +144,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="veggie" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="veggie" data-toggle="button">
     <i class="fa fa-fw fa-leaf"></i>
     <br>
     <span title="Veggie">
@@ -153,7 +153,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="alcohol" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="alcohol" data-toggle="button">
     <i class="fa fa-fw fa-glass-martini"></i>
     <br>
     <span title="Alcohol">
@@ -162,7 +162,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="credit-cards" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="credit-cards" data-toggle="button">
     <i class="fa fa-fw fa-credit-card"></i>
     <br>
     <span title="Credit cards">
@@ -172,10 +172,10 @@
     </div>
     </div>
     
-    <h3>Space</h3>
+    <h3 class="d-none d-md-block">Space</h3>
     <div class="row no-gutters">
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="light" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="light" data-toggle="button">
     <i class="fa fa-fw fa-sun"></i>
     <br>
     <span title="Natural light">
@@ -184,7 +184,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="outdoor" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="outdoor" data-toggle="button">
     <i class="fa fa-fw fa-tree"></i>
     <br>
     <span title="Outdoor area">
@@ -193,7 +193,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="spacious" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="spacious" data-toggle="button">
     <i class="fa fa-fw fa-arrows-alt"></i>
     <br>
     <span title="Spacious">
@@ -202,7 +202,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="toilets" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="toilets" data-toggle="button">
     <i class="fa fa-fw fa-toilet-paper"></i>
     <br>
     <span title="Restroom">
@@ -211,7 +211,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="access" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="access" data-toggle="button">
     <i class="fa fa-fw fa-wheelchair"></i>
     <br>
     <span title="Accessible">
@@ -220,7 +220,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="ac" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="ac" data-toggle="button">
     <i class="fa fa-fw fa-thermometer-half"></i>
     <br>
     <span title="Air conditioned">
@@ -229,7 +229,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="pets" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="pets" data-toggle="button">
     <i class="fa fa-fw fa-dog"></i>
     <br>
     <span title="Pet friendly">
@@ -238,7 +238,7 @@
     </button>
     </div>
     <div class="col-3 col-xl-3 col-lg-4 py-1">
-    <button class="btn btn-filter" data-criteria="parking" data-toggle="button">
+    <button class="btn btn-filter d-none d-md-block" data-criteria="parking" data-toggle="button">
     <i class="fa fa-fw fa-car"></i>
     <br>
     <span title="Parking">
@@ -306,7 +306,7 @@
     </div>
     <!-- Places Map -->
     <script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}"></script>
-    <div id="map-container">
+    <div class="col-12 order-md-3 order-2 d-none d-md-block" id="map-container">
     <div id="map"></div>
   </div>
   <script>

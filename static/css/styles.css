@@ -591,6 +591,7 @@ section hr {
   width: 2.8rem;
 }
 
+
 .filters .fa, .filters svg {
   font-size: 12.8px;
   box-sizing: border-box;
@@ -712,6 +713,7 @@ section hr {
 
 #locations{
   padding: 125px 0;
+  padding-bottom: 160px;
 }
 
 #locations h1 {
@@ -954,6 +956,7 @@ input, button, select, optgroup, textarea {
 
 #suggest {
   padding: 145px 0 !important;
+  padding-bottom: 180px !important;
   min-height: 520px;
 }
 
@@ -1450,6 +1453,7 @@ body {
 /* Log in page */
 #login-register {
   padding: 8rem 0;
+  padding-bottom: 12rem;
 }
 
 #login-register p {
