@@ -439,76 +439,78 @@ def show_cafe(cafe_id):
 
 @app.route("/cafes/<cafe_id>/submitting-review", methods=["POST"])
 def submit_review(cafe_id):
-    cafe_info = db.get_or_404(Cafe, cafe_id)
-    current_date = datetime.now().strftime("%B %d, %Y")
+    if current_user.is_authenticated:
+        cafe_info = db.get_or_404(Cafe, cafe_id)
+        current_date = datetime.now().strftime("%B %d, %Y")
 
-    existing_review = (
-        db.session.query(Review)
-        .filter_by(author_id=current_user.id, cafe_id=cafe_info.id)
-        .first()
-    )
-
-    if existing_review:
-        existing_review.text = request.form.get("review[desc]")
-        existing_review.date = str(current_date)
-    else:
-        new_review = Review(
-            text=request.form.get("review[desc]"),
-            author=current_user,
-            date=str(current_date),
-            parent_cafe=cafe_info,
+        existing_review = (
+            db.session.query(Review)
+            .filter_by(author_id=current_user.id, cafe_id=cafe_info.id)
+            .first()
         )
-        db.session.add(new_review)
 
-    association = (
-        db.session.query(user_cafe_association)
-        .filter_by(user_id=current_user.id, cafe_id=cafe_info.id)
-        .first()
-    )
+        if existing_review:
+            existing_review.text = request.form.get("review[desc]")
+            existing_review.date = str(current_date)
+        else:
+            new_review = Review(
+                text=request.form.get("review[desc]"),
+                author=current_user,
+                date=str(current_date),
+                parent_cafe=cafe_info,
+            )
+            db.session.add(new_review)
 
-    if not association:
-        stmt = user_cafe_association.insert().values(
-            user_id=current_user.id,
-            cafe_id=cafe_info.id,
-            like_level="unknown",
-            score=cafe_info.score,
-        )
-        db.session.execute(stmt)
-
-    db.session.commit()
-    return redirect(url_for("show_cafe", cafe_id=cafe_info.id))
-
-
-@app.route("/cafes/<cafe_id>/deleting-review")
-def delete_review(cafe_id):
-    cafe_info = db.get_or_404(Cafe, cafe_id)
-
-    # Retrieve the existing review
-    existing_review = (
-        db.session.query(Review)
-        .filter_by(author_id=current_user.id, cafe_id=cafe_info.id)
-        .first()
-    )
-
-    if existing_review:
-        db.session.delete(existing_review)
-
-        # Optionally, you can remove the association if needed
         association = (
             db.session.query(user_cafe_association)
             .filter_by(user_id=current_user.id, cafe_id=cafe_info.id)
             .first()
         )
 
-        if association:
-            db.session.execute(
-                user_cafe_association.delete().where(
-                    (user_cafe_association.c.user_id == current_user.id)
-                    & (user_cafe_association.c.cafe_id == cafe_info.id)
-                )
+        if not association:
+            stmt = user_cafe_association.insert().values(
+                user_id=current_user.id,
+                cafe_id=cafe_info.id,
+                like_level="unknown",
+                score=cafe_info.score,
             )
+            db.session.execute(stmt)
 
         db.session.commit()
+    return redirect(url_for("show_cafe", cafe_id=cafe_info.id))
+
+
+@app.route("/cafes/<cafe_id>/deleting-review")
+def delete_review(cafe_id):
+    if current_user.is_authenticated:
+        cafe_info = db.get_or_404(Cafe, cafe_id)
+
+        # Retrieve the existing review
+        existing_review = (
+            db.session.query(Review)
+            .filter_by(author_id=current_user.id, cafe_id=cafe_info.id)
+            .first()
+        )
+
+        if existing_review:
+            db.session.delete(existing_review)
+
+            # Optionally, you can remove the association if needed
+            association = (
+                db.session.query(user_cafe_association)
+                .filter_by(user_id=current_user.id, cafe_id=cafe_info.id)
+                .first()
+            )
+
+            if association:
+                db.session.execute(
+                    user_cafe_association.delete().where(
+                        (user_cafe_association.c.user_id == current_user.id)
+                        & (user_cafe_association.c.cafe_id == cafe_info.id)
+                    )
+                )
+
+            db.session.commit()
 
     return redirect(url_for("show_cafe", cafe_id=cafe_id))
 
@@ -523,30 +525,34 @@ def report_closed(cafe_id):
 
 @app.route("/cafes/<cafe_id>/<like_score>")
 def i_like_it(cafe_id, like_score):
-    cafe = db.get_or_404(Cafe, cafe_id)
-    criterion = dict(cafe.criterion)
-    score = calculate_score(criterion, like_score)
+    if current_user.is_authenticated:
+        cafe = db.get_or_404(Cafe, cafe_id)
+        criterion = dict(cafe.criterion)
+        score = calculate_score(criterion, like_score)
 
-    # Check if the association exists
-    association = (
-        db.session.query(user_cafe_association)
-        .filter_by(user_id=current_user.id, cafe_id=cafe.id)
-        .first()
-    )
-
-    if association:
-        # Update the like_level if the association exists
-        db.session.query(user_cafe_association).filter_by(
-            user_id=current_user.id, cafe_id=cafe.id
-        ).update({"like_level": like_score, "score": score})
-    else:
-        # Add the cafe to the user's visited cafes with the like_level if the association does not exist
-        stmt = user_cafe_association.insert().values(
-            user_id=current_user.id, cafe_id=cafe.id, like_level=like_score, score=score
+        # Check if the association exists
+        association = (
+            db.session.query(user_cafe_association)
+            .filter_by(user_id=current_user.id, cafe_id=cafe.id)
+            .first()
         )
-        db.session.execute(stmt)
 
-    db.session.commit()
+        if association:
+            # Update the like_level if the association exists
+            db.session.query(user_cafe_association).filter_by(
+                user_id=current_user.id, cafe_id=cafe.id
+            ).update({"like_level": like_score, "score": score})
+        else:
+            # Add the cafe to the user's visited cafes with the like_level if the association does not exist
+            stmt = user_cafe_association.insert().values(
+                user_id=current_user.id,
+                cafe_id=cafe.id,
+                like_level=like_score,
+                score=score,
+            )
+            db.session.execute(stmt)
+
+        db.session.commit()
     return redirect(url_for("show_cafe", cafe_id=cafe_id))
 
 
@@ -667,6 +673,8 @@ def under_review(cafe_id):
 ## Authentication pages
 @app.route("/users", methods=["GET", "POST"])
 def users():
+    if not current_user.is_authenticated:
+        return redirect(url_for("log_in"))
     if request.method == "POST":
         id = current_user.id
         user = db.get_or_404(User, id)
@@ -752,7 +760,8 @@ def register():
 @app.route("/logout")
 @login_required
 def logout():
-    logout_user()
+    if current_user.is_authenticated:
+        logout_user()
     return redirect(url_for("home"))
 
 

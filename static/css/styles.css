@@ -731,7 +731,7 @@ section hr {
 
 #locations{
   padding: 125px 0;
-  padding-bottom: 160px;
+  padding-bottom: 250px;
 }
 
 #locations h1 {
@@ -974,7 +974,7 @@ input, button, select, optgroup, textarea {
 
 #suggest {
   padding: 145px 0 !important;
-  padding-bottom: 180px !important;
+  padding-bottom: 290px !important;
   min-height: 520px;
 }
 
@@ -1471,7 +1471,7 @@ body {
 /* Log in page */
 #login-register {
   padding: 8rem 0;
-  padding-bottom: 12rem;
+  padding-bottom: 18rem;
 }
 
 #login-register p {

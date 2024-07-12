@@ -137,3 +137,5 @@
 -[x] Dropdown sometimes glitches and cant be pressed on mobile
 
 -[x] Map in suggest section too large on mobile
+
+-[] Redirect certain routes if user is authenticated etc
