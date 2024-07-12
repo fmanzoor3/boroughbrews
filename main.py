@@ -333,6 +333,7 @@ def calculate_score(criterion, like_level):
 def download_image(url, save_path="image.jpg"):
     response = requests.get(url)
     if response.status_code == 200:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         with open(save_path, "wb") as file:
             file.write(response.content)
         return "Image successfully downloaded: " + save_path
@@ -761,7 +762,10 @@ def logout():
 def download_image_endpoint():
     data = request.json
     url = data.get("url")
-    save_path = f'static/assets/images/thumbnails/{data.get("id")}-{re.sub(r"[^a-z0-9-]", "", data.get("name").lower().replace(" ", "-"))}.jpg'
+    image_name = re.sub(r"[^a-z0-9-]", "", data.get("name").lower().replace(" ", "-"))
+    save_path = os.path.join(
+        "static", "assets", "images", "thumbnails", f'{data.get("id")}-{image_name}.jpg'
+    )
     result = download_image(url, save_path)
     return jsonify({"message": result, "path": save_path})
 
