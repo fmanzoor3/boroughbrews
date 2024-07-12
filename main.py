@@ -767,7 +767,14 @@ def download_image_endpoint():
         "static", "assets", "images", "thumbnails", f'{data.get("id")}-{image_name}.jpg'
     )
     result = download_image(url, save_path)
-    return jsonify({"message": result, "path": save_path})
+
+    # Construct the URL relative to the static folder
+    relative_path = os.path.join(
+        "assets", "images", "thumbnails", f'{data.get("id")}-{image_name}.jpg'
+    ).replace("\\", "/")
+    img_url = url_for("static", filename=relative_path)
+
+    return jsonify({"message": result, "path": img_url})
 
 
 @app.route("/api/check_cafe")

@@ -60,7 +60,7 @@ function getTextBeforeLondonPostcode(address) {
 var savePath;
 
 function downloadImage(url, name, id) {
-    fetch('http://127.0.0.1:5003/download_image', {
+    fetch('/download_image', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -69,11 +69,11 @@ function downloadImage(url, name, id) {
     })
     .then(response => response.json())
     .then(data => {
-        savePath = '/'+data.path;
+        savePath = data.path;
         console.log(data.message);
         console.log("Save Path:", savePath);
 
-        // Update the input element with the new save path
+        // Update the hidden input element with the new save path
         var inputElement = document.getElementById('place_img_url');
         if (inputElement) {
             inputElement.value = savePath;
