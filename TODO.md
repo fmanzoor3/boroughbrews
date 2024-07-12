@@ -126,9 +126,9 @@
 
 -[x] Transfer SQLite dbs to PostgreSQL
 
--[] Make padding-bottom larger for pages
+-[x] Make padding-bottom larger for pages
 
--[] Fix sign up link on home page
+-[x] Fix sign up link on home page
 
 -[] Optimise home page image size
 
@@ -136,6 +136,6 @@
 
 -[x] Dropdown sometimes glitches and cant be pressed on mobile
 
--[x] Map in suggest section too large on mobile
+-[] Map in suggest section too large on mobile
 
--[] Redirect certain routes if user is authenticated etc
+-[x] Redirect certain routes if user is authenticated etc
