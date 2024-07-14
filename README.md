@@ -31,7 +31,7 @@ Visit [BoroughBrews](https://boroughbrews.onrender.com/) to start exploring cafe
 4. **Cafe Details**
    ![Cafe Details_2](screenshots/cafe_details_1.png)
    ![Cafe Details_2](screenshots/cafe_details_2.png)
-   *Provides detailed information about a specific cafe, including opening times, location and ratings.*
+   *Provides detailed information about a specific cafe, including opening times, location, reviews and ratings.*
 
 6. **Suggest Cafe Form**
    ![Suggest Cafe Form_1](screenshots/suggest_cafe_1.png)
