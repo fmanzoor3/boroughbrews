@@ -153,6 +153,14 @@ class Cafe(db.Model):
         String(250), nullable=False, default="False"
     )
 
+    def get_numeric_score(self):
+        # Convert 'XX' to a numeric value (e.g., -1 for the lowest score or a very high number for the highest)
+        print(self.score)
+        if self.score == "XX":
+            return -1  # or a very high number depending on your sorting preference
+            print("XX")
+        return float(self.score)
+
 
 class Review(db.Model):
     __tablename__ = "reviews"
@@ -413,7 +421,9 @@ def show_location(location_slug):
     current_day = datetime.now().strftime("%a")
     return render_template(
         "location.html",
-        all_cafes=cafes_at_location,
+        all_cafes=sorted(
+            cafes_at_location, key=lambda cafe: cafe.get_numeric_score(), reverse=True
+        ),
         borough_lat=lat,
         borough_lng=lng,
         current_day=current_day,
