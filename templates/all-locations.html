@@ -2,10 +2,10 @@
 
 <div class="text-center" id="locations">
     <div class="container">
-        <h1>Search by Borough</h1>
+        <h1>Select a Borough</h1>
         <section>
             <h2>
-            <i class="fa fa-fw fa-map-marker"></i>
+            {# <i class="fa fa-fw fa-map-marker"></i> #}
             </h2>
             {% for borough in borough_names %}
             <a class="btn btn-default btn-lg" href="{{ url_for('show_location', location_slug=make_slug(borough)) }}">{{ borough }}</a>

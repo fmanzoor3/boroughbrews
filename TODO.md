@@ -136,6 +136,16 @@
 
 -[x] Dropdown sometimes glitches and cant be pressed on mobile
 
--[] Map in suggest section too large on mobile
+-[x] Map in suggest section too large on mobile
 
 -[x] Redirect certain routes if user is authenticated etc
+
+-[] Data seems to reset every once in a while on server; how to retain data?
+
+-[] Reduce number of criteria
+
+-[x] Space out footer better
+
+-[] Deal with overflow text for cafe-items
+
+-[x] Consider removing icon in boroughs page

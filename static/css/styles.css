@@ -99,7 +99,7 @@ header {
 .container {
   margin-top: 0; /* Adjust as needed */
 }
-
+/* Footer Styles */
 footer {
   background-color: black;
   color: white;
@@ -108,24 +108,17 @@ footer {
   font-size: 0.85rem;
 }
 
-  /* Footer icon color */
-  footer .fa-stack-1x {
-    color: black !important;
-  }
-  footer .fa-stack-2x {
-    color: white;
-  }
+footer .fa-stack-1x {
+  color: black !important;
+}
 
-  /* Footer Styles */
-footer {
-  background-color: black;
-  color: #fff;
-  padding: 20px 0;
-  font-family: Arial, sans-serif;
+footer .fa-stack-2x {
+  color: white;
 }
 
 .footer-content {
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   padding: 20px;
   border-bottom: 1px solid #444;
@@ -133,6 +126,7 @@ footer {
 
 .footer-content div {
   max-width: 300px;
+  margin-bottom: 20px;
 }
 
 .footer-content h4 {
@@ -165,10 +159,23 @@ footer {
 
 .footer-bottom {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   padding: 10px 20px;
+  border-top: 1px solid #444;
 }
+
+/* Media Queries for Small Screens */
+@media (min-width: 600px) {
+  .footer-content {
+    flex-direction: row;
+  }
+
+  .footer-bottom {
+    justify-content: flex-end;
+  }
+}
+
 
 .social-media a {
   color: #ddd;
@@ -311,7 +318,7 @@ height: 40px;
 }
 
 .cafe-item {
-  background-color: #F4EAE0;
+  background-color: white;
   border: 1px solid #ddd;
   padding: 2rem 1rem;
   width: 300px;
