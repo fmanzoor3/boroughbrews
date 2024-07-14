@@ -24,6 +24,10 @@ Visit [BoroughBrews](https://boroughbrews.onrender.com/) to start exploring cafe
    ![Homepage_2](screenshots/top_cafes.png)
    *Shows the top rated cafes on the site.*
 
+2. **Select Borough**
+    ![Select Borough](screenshots/select_borough.png)
+   *Users can select a borough to see all cafes listed in that area.*
+
 3. **Cafe Listing in a Borough**
    ![Cafe Listing](screenshots/cafe_listing_at_borough.png)
    *Displays cafes listed in a particular borough, allowing users to browse and filter based on criteria.*
@@ -33,11 +37,11 @@ Visit [BoroughBrews](https://boroughbrews.onrender.com/) to start exploring cafe
    ![Cafe Details_2](screenshots/cafe_details_2.png)
    *Provides detailed information about a specific cafe, including opening times, location, reviews and ratings.*
 
-6. **Suggest Cafe Form**
+5. **Suggest Cafe Form**
    ![Suggest Cafe Form_1](screenshots/suggest_cafe_1.png)
    ![Suggest Cafe Form_2](screenshots/suggest_cafe_2.png)
    *Illustrates the form where users can suggest new cafes to be added to the database.*
 
-8. **Rating Cafe Criteria Form**
+6. **Rating Cafe Criteria Form**
    ![Rating Cafe Criteria](screenshots/rating_screen.png)
    *Shows the form for users to rate cafes based on criteria.*
