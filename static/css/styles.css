@@ -347,6 +347,8 @@ height: 40px;
 
 .cafe-item p {
   margin-bottom: 0.5rem;
+  color: grey;
+  font-size: 0.85rem;
 }
 
 .cafe-item {

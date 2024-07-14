@@ -149,3 +149,5 @@
 -[] Deal with overflow text for cafe-items
 
 -[x] Consider removing icon in boroughs page
+
+-[] Fix size of image in cafe page

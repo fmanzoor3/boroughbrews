@@ -19,6 +19,7 @@
 <a class="cafe-item" href="{{ url_for('show_cafe', cafe_id=cafe.id) }}">
     <img alt="{{ cafe.name }}" src="{{ cafe.img_url }}" class="img-fluid">
     <h3>{{ cafe.name }}</h3>
+    <p>{{cafe.address}}</p>
     <div class="score" data-score="{{cafe.score}}">{{cafe.score}}% Rating</div>
     <div class="ratings">
     {% if cafe.criterion.wifi != 'unknown' %}
