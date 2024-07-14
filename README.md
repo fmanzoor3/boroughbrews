@@ -22,11 +22,11 @@ Visit [BoroughBrews](https://boroughbrews.onrender.com/) to start exploring cafe
    *Shows the main interface of BoroughBrews where users first land.*
 
    ![Homepage_2](screenshots/top_cafes.png)
-   *Shows the top cafes section.*
+   *Shows the top rated cafes on the site.*
 
 3. **Cafe Listing in a Borough**
-   ![Cafe Listing](screenshots/cafe_listing.png)
-   *Displays cafes categorised by borough, allowing users to browse.*
+   ![Cafe Listing](screenshots/cafe_listing_at_borough.png)
+   *Displays cafes listed in a particular borough, allowing users to browse and filter based on criteria.*
 
 4. **Cafe Details**
    ![Cafe Details](screenshots/cafe_details.png)
