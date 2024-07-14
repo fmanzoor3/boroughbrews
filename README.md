@@ -29,13 +29,15 @@ Visit [BoroughBrews](https://boroughbrews.onrender.com/) to start exploring cafe
    *Displays cafes listed in a particular borough, allowing users to browse and filter based on criteria.*
 
 4. **Cafe Details**
-   ![Cafe Details](screenshots/cafe_details.png)
-   *Provides detailed information about a specific cafe, including opening times and location.*
+   ![Cafe Details_2](screenshots/cafe_details_1.png)
+   ![Cafe Details_2](screenshots/cafe_details_2.png)
+   *Provides detailed information about a specific cafe, including opening times, location and ratings.*
 
-5. **Suggest Cafe Form**
-   ![Suggest Cafe Form](screenshots/add_cafe_form.png)
+6. **Suggest Cafe Form**
+   ![Suggest Cafe Form_1](screenshots/suggest_cafe_1.png)
+   ![Suggest Cafe Form_2](screenshots/suggest_cafe_2.png)
    *Illustrates the form where users can suggest new cafes to be added to the database.*
 
-6. **Rating Cafe Criteria Form**
-   ![Rating Cafe Criteria](screenshots/rating_cafe_criteria.png)
-   *Shows the form for users to rate cafes based on criteria like wifi quality.*
+8. **Rating Cafe Criteria Form**
+   ![Rating Cafe Criteria](screenshots/rating_screen.png)
+   *Shows the form for users to rate cafes based on criteria.*
